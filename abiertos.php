@@ -13,59 +13,61 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-$sql = "SELECT id_caso,c.año, c.numero,  c.nombre, c.descripcion FROM caso c inner join estado_caso e ON c.id_estado_caso=e.id_estado_caso WHERE e.estado='Abierto' AND id_caso!=1 ORDER BY fecha_alta_caso DESC";
-$resultado=mysqli_query($link, $sql);
-$count=mysqli_num_rows($resultado);
+if(isset($_SESSION['id_u'])) {
+
+    $sql = "SELECT id_caso,c.año, c.numero,  c.nombre, c.descripcion FROM caso c inner join estado_caso e ON c.id_estado_caso=e.id_estado_caso WHERE e.estado='Abierto' AND id_caso!=1 ORDER BY fecha_alta_caso DESC";
+    $resultado=mysqli_query($link, $sql);
+    $count=mysqli_num_rows($resultado);
 
 ?>
 
-<!DOCTYPE html>
-<html lang="es-ES">
-<head>
- <title>Nuevo Asunto</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<link rel="stylesheet" href="assets/css/main.css" />
+    <!DOCTYPE html>
+	<html lang="es-ES">
+	<head>
+ 	<title>Nuevo Asunto</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
 	
-	<!-- Pelayo -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/jquery.dropotron.min.js"></script>
-		<script src="assets/js/jquery.scrollex.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+		<!-- Pelayo -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
 			
-	<!-- Alonso -->
-		<script src="//code.jquery.com/jquery-latest.js"></script>
-		<script src="miscript.js"></script>
-		<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-		<script src="js/jquery-3.4.1.js"></script>
+	   <!-- Alonso -->
+			<script src="//code.jquery.com/jquery-latest.js"></script>
+			<script src="miscript.js"></script>
+			<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+			<script src="js/jquery-3.4.1.js"></script>
 
-</head>
+	</head>
 
-<body class="is-preload">
-	<div id="page-wrapper">
+	<body class="is-preload">
+		<div id="page-wrapper">
 
-	<!-- Main -->
-		<section id="main" class="container">
-			<header>
-				<h2>Casos</h2>
-				<p>Listado de casos abiertos</p>
-			</header>
+	   <!-- Main -->
+			<section id="main" class="container">
+				<header>
+					<h2>Casos</h2>
+					<p>Listado de casos abiertos</p>
+				</header>
 			
-			<div class="row">
-						<div class="col-12">
+				<div class="row">
+							<div class="col-12">
 
-							<!-- Table -->
-								<section class="box">
+								<!-- Table -->
+									<section class="box">
 									
-									<div class="table-wrapper">
+										<div class="table-wrapper">
 
-<?php 
+	<?php 
 
-if($count!=0) {
-?>
+    if($count!=0) {
+    ?>
 
 								<table>
 									<thead>
@@ -77,62 +79,62 @@ if($count!=0) {
 									</thead>
 									<tbody>
 			
-<?php
+	<?php
 
-$contador=0;
+    $contador=0;
 
-while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-    foreach ($line as $col_value) {
-        if ($contador==0) {
-            $id_caso=$col_value;
-            $contador++;
-        }
-        else {
-            if($contador==1) {
-                $año=substr($col_value,2,2); 
+    while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+        foreach ($line as $col_value) {
+            if ($contador==0) {
+                $id_caso=$col_value;
                 $contador++;
-            }
-            else {
-            if($contador==2) {
-                echo "
-				<tr>	
-					<td style='text-align: left'>";
-                    $id_caso=base64_encode($id_caso);
-?>
-						<a href="asunto.php?id_caso=<?php echo $id_caso;?>" style="color: black" >
-							<b><?php echo $col_value;?>_<?php echo $año;?></b>
-						</a>
-
-                
-                <?php 
-               
-                $contador++;
-            }
-            else {
-             
-                    if ($contador<4) {
-                        echo "<td align='left'>";
-                        echo $col_value;
-                        echo "</td>";
+              }
+               else {
+                   if($contador==1) {
+                        $año=substr($col_value,2,2); 
                         $contador++;
-                    }
+                   }
                     else {
-                        echo "<td align='left'>";
-                        echo $col_value;
-                        echo "</td>";
-                        $contador=0;						 
+                        if($contador==2) {
+                            echo "
+    				        <tr>	
+    					   <td style='text-align: left'>";
+                            $id_caso=base64_encode($id_caso);
+        ?>
+    						<a href="asunto.php?id_caso=<?php echo $id_caso;?>" style="color: black" >
+    							<b><?php echo $col_value;?>_<?php echo $año;?></b>
+    						</a>
+    
+                    
+        <?php 
+                   
+                    $contador++;
+                        }
+                        else {
+                 
+                            if ($contador<4) {
+                                echo "<td align='left'>";
+                                echo $col_value;
+                                echo "</td>";
+                                $contador++;
+                            }
+                            else {
+                                echo "<td align='left'>";
+                                echo $col_value;
+                                echo "</td>";
+                                $contador=0;						 
+                            }
+    				
+                        }
                     }
-				
-                }
-            }
-        } // else
+               } // else
 
         echo "</form>";
-    } // forecha
+        }// forecha
     
     echo "</tr>";
 
-} //while
+    }//while
 ?>
 						<tbody> 
 					</table>
@@ -140,12 +142,16 @@ while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
 			</section>
 			
 <?php
-}  // if
+    }  // if
 
-else {
+    else {
 ?>    
 	<header></header><h3> No hay casos abiertos</h3></header>
 <?php
+    }
+}
+else {
+    echo "Error";
 }
 ?>
 
