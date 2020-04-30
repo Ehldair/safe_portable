@@ -1,0 +1,51 @@
+
+body {
+}
+	.fondo {
+	background:linear-gradient(30deg, #F8FFFE, #F8FFFE, #BCF0FF);
+	background-attachment:fixed;
+	}
+    .inline{
+    display:inline;
+    }
+    .sinbordefondo {
+  	background-color: transparent;
+  	border: 0;
+    }
+    .estilo {
+    border-radius: 5px;
+    background-color: #def;
+    }
+    .admin {
+  	position: absolute;
+  	top: 50px;
+  	left: 50px;
+  	border-radius: 5px;
+    background-color: #def;
+	}
+	.evidencias {
+  	position: absolute;
+  	top: 375px;
+  	left: 650px;
+	background-color: #def;
+    border-style: none;
+	}
+	.h2 {
+  	position: absolute;
+  	top: 325px;
+  	left: 825px;
+	background-color: #def;
+    border-style: none;
+	}
+	.caso {
+  	position: absolute;
+  	top: 75px;
+  	left: 50px;
+  	border-radius: 5px;
+    background-color: #def;
+	}
+	
+	
+
+    
+    
