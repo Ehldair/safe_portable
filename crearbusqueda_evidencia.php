@@ -33,7 +33,7 @@ session_start();
 
 $myid_caso=$_SESSION['id_caso'];
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe");
+$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
 
 if (mysqli_connect_errno()) {
     printf("Falló la conexión: %s\n", mysqli_connect_error());

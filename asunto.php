@@ -3,7 +3,7 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
 
-    $link = mysqli_connect("localhost", "root", ".google.", "safe");
+    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -22,16 +22,17 @@ if(isset($_SESSION['id_u'])) {
     $respuesta=$_SESSION['respuesta'];
     $_SESSION['mod']=0;
     
-    $resultado = mysqli_query($link, "SELECT c.numero as num_caso, c.año as año_caso, c.nombre as nom_caso, c.descripcion as des_caso, t.id_tipo_caso as id_tipo, 
+    $sql= "SELECT c.numero as num_caso, c.año as año_caso, c.nombre as nom_caso, c.descripcion as des_caso, t.id_tipo_caso as id_tipo,
     t.nombre as nom_tipo, g.id_grupo_investigacion as id_grup, g.nombre_grupo as grup , ca.id_ca as id_ca,ca.nombre_ca as nom_ca, p.id_provincia as id_pro, p.nombre_provincia as nom_pro,
     com.id_comisaria as id_com, com.nombre_comisaria as nom_com
-    FROM caso c 
+    FROM caso c
     INNER JOIN tipo_caso t ON c.id_tipo_caso=t.id_tipo_caso
     INNER JOIN grupo_investigacion g ON c.id_grupo_investigacion=g.id_grupo_investigacion
     INNER JOIN comisaria com on g.id_comisaria=com.id_comisaria
     INNER JOIN provincia p on com.id_provincia=p.id_provincia
     INNER JOIN ca ca on com.id_ca=ca.id_ca
-    WHERE c.id_caso=$myid_caso");
+    WHERE c.id_caso=$myid_caso";
+    $resultado = mysqli_query($link, $sql);
     $ret = mysqli_fetch_array($resultado);
     $resultado2 = mysqli_query($link, "SELECT c.id_diligencias as id_dil, d.numero as num_d, d.año as año_d, j.id_juzgado as id_juz, j.nombre as nom_juz, j.numero as num_juz,j.jurisdiccion as jur FROM diligencias d
     INNER JOIN caso c ON d.id_diligencias=c.id_diligencias

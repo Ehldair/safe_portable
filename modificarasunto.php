@@ -4,7 +4,7 @@ session_start();
 if(isset($_SESSION['id_u'])) {
     
 
-    $link = mysqli_connect("localhost", "root", ".google.", "safe");
+    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -151,6 +151,7 @@ if(isset($_SESSION['id_u'])) {
     	document.getElementById('juzgado_nuevo').value=0;
     	document.getElementById('juzgado_nuevo').disabled=true;
     	document.getElementById('borrar').value=1;
+    	document.getElementById('btn1').style.display = 'none';
     }
     </script>
     <script>
@@ -162,6 +163,7 @@ if(isset($_SESSION['id_u'])) {
     	document.getElementById("juzgado_nuevo").disabled=false;
     	document.getElementById('juzgado_nuevo').remove(0);
     	document.getElementById('sonnuevas').value=2;
+    	document.getElementById('btn2').style.display = 'none';
     }
       </script>
     </head>
@@ -479,7 +481,7 @@ if(isset($_SESSION['id_u'])) {
     											echo "<li><input type='button' id='btn1' value='Borrar Diligencias' class='caso' onclick='eliminar()'></li>";
     										}
     										else {
-    											echo "<li><input type='button' id='btn1' value='Agregar Diligencias' class='caso' onclick='agregar()'></li>";
+    											echo "<li><input type='button' id='btn2' value='Agregar Diligencias' class='caso' onclick='agregar()'></li>";
     										}
     ?>
     										<li><input type="button" onclick="location.href='asunto.php';" value="Volver"></li>						

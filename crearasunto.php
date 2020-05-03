@@ -5,7 +5,7 @@ session_start();
 #imprimimos las variables que estas enviando para saber si estan llegando completas
 
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe");
+$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
 
 if (mysqli_connect_errno()) {
     printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -69,11 +69,28 @@ if($mod!="1") {
         $mygrupo = mysqli_real_escape_string($link,$_POST['grupo']);
     }
     if(!empty($_POST["diligencias"])) {
-        $sql = "SELECT d.id_diligencias FROM diligencias d where d.numero=$mydiligencias AND d.año=$myaño_diligencias AND d.id_juzgado=$myjuzgado";
+        $sql = "SELECT d.id_diligencias as id_dil FROM diligencias d where d.numero=$mydiligencias AND d.año=$myaño_diligencias AND d.id_juzgado=$myjuzgado";
         $result=mysqli_query($link,$sql);
+        $ret=mysqli_fetch_array($result);
         $count = mysqli_num_rows($result);
         if($count!=0) {
-            echo "Las diligencias ya existen en otro caso";
+            $sql_caso = "SELECT numero,año FROM caso  where id_diligencias=$ret[id_dil]";
+            $result_caso=mysqli_query($link,$sql_caso);
+            $ret_caso=mysqli_fetch_array($result_caso);
+            $count_caso = mysqli_num_rows($result_caso);
+            if($count_caso!=0) {
+                echo "Ya existen esas mismas diligencias en el caso ".$ret_caso['numero']."_".substr( $ret_caso['año'], 2);
+            }
+            else {
+                $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret[id_dil],$mytipo_caso,$mygrupo,$mynumero,'$myaño','$mynombre',NOW(),'$mydescripcion', 1)";
+                mysqli_query($link,$sql);
+                $sql = "SELECT id_caso FROM caso WHERE numero=$mynumero AND año=$myaño";
+                $resultado=mysqli_query($link,$sql);
+                $ret_caso=mysqli_fetch_array($resultado);
+                $_SESSION['respuesta']=8;
+                $_SESSION['id_caso']=$ret_caso['id_caso'];
+                echo 1;
+            }
         }
         else {
             $sql = "SELECT * FROM caso where numero=$mynumero AND año=$myaño";
@@ -85,7 +102,7 @@ if($mod!="1") {
             else {
                 $sql = "INSERT INTO diligencias(id_juzgado, numero, año, fecha) values ($myjuzgado,$mydiligencias,$myaño_diligencias,NOW())";
                 mysqli_query($link,$sql);
-                $sql = "SELECT id_diligencias FROM diligencias WHERE numero=$mydiligencias AND año=$myaño_diligencias";
+                $sql = "SELECT id_diligencias FROM diligencias WHERE numero=$mydiligencias AND año=$myaño_diligencias AND id_juzgado=$myjuzgado";
                 $result=mysqli_query($link,$sql);
                 $line = mysqli_fetch_array($result, MYSQLI_ASSOC);
                 foreach($line as $col_value) {
@@ -210,11 +227,12 @@ else {
             $count=mysqli_num_rows($resultado);
             if($count!=0) {
                 $ret=mysqli_fetch_array($resultado);
-                $sql="Select * FRom caso where id_diligencias=$ret[id_diligencias]";
+                $sql="Select numero,año FRom caso where id_diligencias=$ret[id_diligencias]";
                 $resultado=mysqli_query($link, $sql);
+                $ret=mysqli_fetch_array($resultado);
                 $count=mysqli_num_rows($resultado);
                 if($count!=0) {
-                    echo "Ya existen las mismas evidencias en otro caso.";
+                    echo "Ya existen las mismas evidencias en el caso ".$ret['numero']."_".substr( $ret['año'], 2);
                     $errordiligencias=1;
                     $errorcaso=1;
                 }
@@ -257,11 +275,12 @@ else {
             $count=mysqli_num_rows($resultado);
             if($count!=0) {
                 $ret=mysqli_fetch_array($resultado);
-                $sql="Select * FRom caso where id_diligencias=$ret[id_diligencias]";
+                $sql="Select numero,año FRom caso where id_diligencias=$ret[id_diligencias]";
                 $resultado=mysqli_query($link, $sql);
+                $ret=mysqli_fetch_array($resultado);
                 $count=mysqli_num_rows($resultado);
                 if($count!=0) {
-                    echo "Ya existen las mismas evidencias en otro caso.";
+                    echo "Ya existen las mismas evidencias en el caso ".$ret['numero']."_".substr( $ret['año'], 2);
                     $errordiligencias=1;
                     $errorcaso=1;
                 }

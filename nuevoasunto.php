@@ -83,10 +83,10 @@ if(isset($_SESSION['id_u'])) {
     						ctx.clearRect(0, 0, c.width, c.height);	
     						ctx.clearRect(0, 0, c.width, c.height);	
     						ctx.strokeStyle = "#FF0000";
-    						ctx.strokeRect(1, 1, 299, 29);
+    						ctx.strokeRect(1, 1, 349, 29);
     						ctx.fillStyle = "#FF0000";
     						ctx.textAlign = "center";
-    						ctx.fillText(respuesta,150,20);
+    						ctx.fillText(respuesta,175,20);
     					}
     				}
     			});
@@ -180,7 +180,7 @@ if(isset($_SESSION['id_u'])) {
     						<form method="post" id="myform" action="javascript:validar();">
     							Dar de alta un caso <br><br>
     							<div align="center">
-    							<canvas id="mensajes" width="300" height="30"></canvas>
+    							<canvas id="mensajes" width="350" height="30"></canvas>
     							</div>
     							<div class="row gtr-50 gtr-uniform">
     							

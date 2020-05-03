@@ -9,7 +9,7 @@ $myaño=0;
 $myaño=$_GET['año'];
 
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe");
+$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
 
 // comprobar la conexi�n
 if (mysqli_connect_errno()) {

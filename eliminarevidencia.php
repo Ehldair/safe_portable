@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe");
+$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
 
 if(isset($_POST['id_ev'])) {
     $myid_ev = mysqli_real_escape_string($link,$_POST['id_ev']);

@@ -9,6 +9,13 @@ if(isset($_SESSION['id_u'])) {
         $id_u=$_SESSION['id_u'];
         
         $respuesta=$_SESSION['respuesta'];
+        
+        $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+        
+        if (mysqli_connect_errno()) {
+            printf("Falló la conexión: %s\n", mysqli_connect_error());
+            exit();
+        }
     ?>
     
     <!DOCTYPE html>
@@ -72,13 +79,27 @@ if(isset($_SESSION['id_u'])) {
     			            }
     			        });
     			    });
-    			    $('#btn4').on('click', function(){
+    			    $('#btn2').on('click', function(){
     			    	var c = document.getElementById("mensaje");
     					var ctx = c.getContext("2d");
     			    	ctx.clearRect(0, 0, c.width, c.height);
     			        $.ajax({
     			            type: "POST",
     			            url: "nuevoasunto.php",
+    			          
+    			            success: function(response) {
+    			                $('#div-results').html(response);
+    			                
+    			            }
+    			        });
+    			    });  
+    			    $('#btn3').on('click', function(){
+    			    	var c = document.getElementById("mensaje");
+    					var ctx = c.getContext("2d");
+    			    	ctx.clearRect(0, 0, c.width, c.height);
+    			        $.ajax({
+    			            type: "POST",
+    			            url: "seleccionasunto.php",
     			          
     			            success: function(response) {
     			                $('#div-results').html(response);
@@ -98,7 +119,7 @@ if(isset($_SESSION['id_u'])) {
     
     			<!-- Header -->
     				<header id="header">
-    					<h1><a href="login.php">Safe ver. PORTABLE</a> Gesti&oacuten Secci&oacuten Ciberterrorismo</h1>
+    					<h1><a href="login.php">Safe Ver. PORTABLE Ciber</a> Gesti&oacuten Secci&oacuten Ciberterrorismo</h1>
     					<nav id="nav">
     						<ul>
     							<li><a href="inicio.php">Home</a></li>
@@ -131,10 +152,17 @@ if(isset($_SESSION['id_u'])) {
     							</div>
     						<div class="col-12">	
     									<ul class="actions special">
-    										<li><input type="button" id="btn4" value="Nuevo Caso"></li>
+    										<li><input type="button" id="btn2" value="Nuevo Caso"></li>
     										<li><input type="button" id="btn1" value="Casos Grabados"></li>
-    										
-    										
+<?php
+$sql=mysqli_query($link, "Select * from caso where id_caso!=1");
+$count=mysqli_num_rows($sql);
+if($count!=0) {
+    ?>
+    		  								<li><input type="button" id="btn3" value="Subir Datos"></li>
+    <?php 
+}
+         ?>                        
     									</ul>
     									
     						</div>

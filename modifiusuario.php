@@ -3,7 +3,7 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
 
-    $link = mysqli_connect("localhost", "root", ".google.", "safe");
+    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
         printf("Fallo la conexion: %s\n", mysqli_connect_error());
