@@ -218,6 +218,8 @@ if(isset($_SESSION['id_u'])) {
     		document.getElementById('radiopatron').style.display = 'block';
     		document.getElementById('aceptar').disabled=true;
     		document.getElementById('frase').style.display = 'inline';
+    		document.getElementById('frase').style.display = 'inline';
+    		$("#dibujo").empty();
     	}else if(value==false){
     		// deshabilitamos y habilitamos el resto
     		$('input[name=patron]').removeAttr('checked');
@@ -229,6 +231,7 @@ if(isset($_SESSION['id_u'])) {
     		document.getElementById('frase2').style.display = 'none';
     		document.getElementById('patron').checked = false;
     		var tiene=document.getElementById('check_alias').checked;
+    		activarTipoCapacidad();
     		habilitar_alias(tiene); 	 
     		$.ajax({
     
@@ -313,6 +316,7 @@ if(isset($_SESSION['id_u'])) {
     	  document.getElementById('tienepatron').style.display = 'inline';
     	  $("#nopatron *").attr("disabled", false);
     	  document.getElementById('botones').style.display = 'block';
+    	  activarTipoCapacidad();
       }
       </script>
     </head>
@@ -495,7 +499,6 @@ if(isset($_SESSION['id_u'])) {
         </select>
         
         <select name="subtipo" id="subtipo" onchange="cambiar(this.value);" required>
-        <option value='1'>HDD interno</option>
         </select>
         Disco:
         <select name="disco" id="disco">
@@ -537,15 +540,15 @@ if(isset($_SESSION['id_u'])) {
         <div id="frase3"> Patron grabado correctamente</div>
         
         <div align="center" id="radiopatron">
-        	<input type="radio" name="patron" id="patron" value="1" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="2" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="3" onchange="grabarnumero();"><br>
-    		<input type="radio" name="patron" id="patron" value="4" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="5" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="6" onchange="grabarnumero();"><br>
-    		<input type="radio" name="patron" id="patron" value="7" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="8" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="9" onchange="grabarnumero();"><br><br>
+        	<input type="radio" name="patron"  value="1" onchange="grabarnumero();">
+    		<input type="radio" name="patron"  value="2" onchange="grabarnumero();">
+    		<input type="radio" name="patron"  value="3" onchange="grabarnumero();"><br>
+    		<input type="radio" name="patron"  value="4" onchange="grabarnumero();">
+    		<input type="radio" name="patron"  value="5" onchange="grabarnumero();">
+    		<input type="radio" name="patron"  value="6" onchange="grabarnumero();"><br>
+    		<input type="radio" name="patron"  value="7" onchange="grabarnumero();">
+    		<input type="radio" name="patron"  value="8" onchange="grabarnumero();">
+    		<input type="radio" name="patron"  value="9" onchange="grabarnumero();"><br><br>
     		<input type="button" name="aceptar" id="aceptar" value="Aceptar" onclick="grabarpatron();" class="estilo">
     		<input type="button" name="reiniciar" id="reiniciar" value="Reiniciar" onclick="rein_patron();" class="estilo">
     		

@@ -49,10 +49,12 @@ if(isset($_SESSION['id_u'])) {
     $myid_ev=$ret['id_ev'];
     $_SESSION['id_ev']=$myid_ev;
     
-    /*incluyo estas tres lineas*/
-    $resultado_evidencias=mysqli_query($link, "SELECT tiene_subevidencias from evidencia where id_evidencia=$myid_ev");
-    $ret_evidencias=mysqli_fetch_array($resultado_evidencias);
-    $numero_evidencias= $ret_evidencias['tiene_subevidencias'];
+    /*incluyo estas dos lineas*/
+   
+    $resultado_dependientes=mysqli_query($link, "SELECT id_evidencia from evidencia where relacionado_con=$myid_ev");
+
+    $contador_relacionado_con=mysqli_num_rows($resultado_dependientes);
+
     
     
     ?>
@@ -108,8 +110,6 @@ if(isset($_SESSION['id_u'])) {
     				<?php $_SESSION['respuesta']=0; ?>
     				setTimeout(borrar,5000);
     			}
-    			
-    			
     		}
     </script>
     <script type="text/javascript">
@@ -534,8 +534,8 @@ if(isset($_SESSION['id_u'])) {
     echo "</form>";
     ?>
     
-    <input type='hidden' name="numero_evidencias" id="numero_evidencias" value="<?php echo $numero_evidencias;?>">
-    <input type="button" onclick="pregunta(<?php echo $numero_evidencias;?>)" value="Eliminar evidencias" class="estilo">
+    <input type='hidden' name="numero_evidencias" id="numero_evidencias" value="<?php echo $contador_relacionado_con;?>">
+    <input type="button" onclick="pregunta(<?php echo $contador_relacionado_con;?>)" value="Eliminar evidencias" class="estilo">
     
     <br>
     <input type="button" onclick="location.href='asunto.php';" value="Volver" class="estilo"><br>

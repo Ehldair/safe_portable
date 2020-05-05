@@ -33,7 +33,7 @@ $myid_ev=$_SESSION['id_ev'];
         } //while ($line_evidencias
     } // if($num_ev_reg!=0) 
     
-    //Segundo elimina la evidencia de la tabla evidencia
+    //Segundo elimina la evidencia de la tabla hash
     
     
     
