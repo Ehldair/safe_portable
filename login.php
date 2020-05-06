@@ -10,13 +10,13 @@
 
 			<!-- Header menus de la cabecera-->
 				<header id="header" class="alt">
-					<h1><a href="login.php">Safe Ciber</a> Comisar&iacute;a General de Informaci&oacute;n</h1>					
+					<h1><a href="login.php">Safe ver. PORTABLE Ciber</a> Comisar&iacute;a General de Informaci&oacute;n</h1>					
 				</header>
 
 			<!-- Login -->
 				<section id="banner">
 				
-					<h2>Safe Ciber</h2> 
+					<h2>Safe Portable Ciber</h2> 
 					<p>Gestión Sección Ciberterrorismo</p>
 					
 					

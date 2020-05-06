@@ -46,7 +46,20 @@ if(isset($_SESSION['id_u'])) {
     		<script>
     		function respuesta() {
     			var respuesta=<?php echo $respuesta; ?>;
-
+    			if(respuesta==1) {
+					var c = document.getElementById("mensaje");
+					var ctx = c.getContext("2d");
+					ctx.font = "bold 12px Verdana";
+					ctx.clearRect(0, 0, c.width, c.height);
+					ctx.strokeStyle = "#3DBA26";
+					ctx.strokeRect(1, 1, 299, 29);
+					ctx.fillStyle = "#3DBA26";
+					ctx.textAlign = "center";
+					ctx.fillText("Caso subido",150,20);
+					<?php $_SESSION['respuesta']=0; ?>
+					setTimeout(borrar,5000);
+				}
+    			else {
     				if(respuesta==2) {
     					var c = document.getElementById("mensaje");
     					var ctx = c.getContext("2d");
@@ -58,9 +71,15 @@ if(isset($_SESSION['id_u'])) {
     					ctx.textAlign = "center";
     					ctx.fillText("Caso eliminado",150,20);
     					<?php $_SESSION['respuesta']=0; ?>
+    					setTimeout(borrar,5000);
     				}
-    	        
+    			}
     	      }
+    		function borrar() {
+    			var c = document.getElementById("mensaje");
+    			var ctx = c.getContext("2d");
+    			ctx.clearRect(0, 0, c.width, c.height);
+    		}
     		</script>
     		
     		<script type="text/javascript">
