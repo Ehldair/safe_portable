@@ -60,10 +60,41 @@ if(isset($_SESSION['id_u'])) {
     		<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     		<script src="js/jquery-3.4.1.js"></script>
     		<script src="miscript.js"></script>
+    		
+    		<script>
+			function asignarnumero() {
+				
+				var numero = $.ajax({
+				    
+  				  type: "GET", 
+  		          url: 'obtenerintervencion.php',
+  		          async: false     //ponemos el parámetro asyn a falso
+  		      }).responseText;
+  			  
+  			  document.getElementById('numero').value=numero+" (las evidencias serán por ejemplo "+numero+"TEL1, "+numero+"HD1,....)";
+			}
+			function cambionumero() {
+				
+				var numero=$('input:text[name=numero]').val();
+				if (isNaN(numero)) {
+					asignarnumero();
+					document.getElementById("direccion").focus();
+				}
+				else {
+					document.getElementById('numero').value=numero+" (las evidencias serán por ejemplo "+numero+"TEL1, "+numero+"HD1,....)";
+					document.getElementById("direccion").focus();
+				}
+			}
+			function limpiar() {
+				alert("CIPOTE");
+			}
+			
+
+    		</script>
     
     </head>
     
-    <body class="is-preload">
+    <body class="is-preload" onload="asignarnumero()">
     	<div id="page-wrapper">
     
     	<!-- Main -->
@@ -139,6 +170,13 @@ if(isset($_SESSION['id_u'])) {
     										<div class="col-6 col-12-mobilep">
     											<h4>Datos de la intervención:</h4>
     <?php										
+    
+    echo "Número: ";
+    ?>
+   <input type='text' name='numero' id='numero' required pattern='\d*' oninput='cambionumero()' onfocus="this.value=''">
+    <?php    
+    
+    
     										echo "Tipo Intervención: ";
         									echo "<select name='tipo'>";
         $resultado = mysqli_query($link, "select * from tipo_intervencion");
