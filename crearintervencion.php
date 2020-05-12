@@ -18,6 +18,10 @@ $myid_caso = $_SESSION['id_caso'];
 $mydireccion = mysqli_real_escape_string($link,$_POST['direccion']);
 $mytipo = mysqli_real_escape_string($link,$_POST['tipo']);
 $mydescripcion = mysqli_real_escape_string($link,$_POST['descripcion']);
+$mynumero=mysqli_real_escape_string($link,$_POST['numero']);
+$mynumero=substr($mynumero, 0, 2);
+$mynumero=trim($mynumero,' ');
+
 
 
 $mysujeto= mysqli_real_escape_string($link,$_POST['sujeto']);
@@ -34,7 +38,7 @@ if($mymod==3) {
     </script>';
 }
 else {
-$sql= "INSERT INTO intervencion (id_caso,id_tipo_intervencion,id_sujeto_activo,numero_intervencion,direccion,descripcion) VALUES ($myid_caso,$mytipo,$mysujeto,$count,'$mydireccion','$mydescripcion')";
+$sql= "INSERT INTO intervencion (id_caso,id_tipo_intervencion,id_sujeto_activo,numero_intervencion,direccion,descripcion) VALUES ($myid_caso,$mytipo,$mysujeto,$mynumero,'$mydireccion','$mydescripcion')";
 mysqli_query($link,$sql);
     if($mymod==1 or $mymod==0) {
         $_SESSION['respuesta']=4;
