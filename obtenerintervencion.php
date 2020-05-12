@@ -15,9 +15,16 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-    $resultado = mysqli_query($link, "SELECT numero_intervencion FROM intervencion WHERE id_caso='$myid_caso' and numero_intervencion=(Select MAX(numero_intervencion) from intervencion)");
+    $sql="SELECT numero_intervencion FROM intervencion WHERE id_caso='$myid_caso' and numero_intervencion=(Select MAX(numero_intervencion) from intervencion)";
+    $resultado = mysqli_query($link, $sql);
+    $count=mysqli_num_rows($resultado); 
+    if($count!=0) {
     $ret=mysqli_fetch_array($resultado);
     $numero_intervencion=$ret['numero_intervencion']+1;
+    }
+    else {
+        $numero_intervencion=1;
+    }
     
     echo $numero_intervencion;
 

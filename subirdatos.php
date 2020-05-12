@@ -26,7 +26,8 @@ if(isset($_SESSION['id_u'])) {
     $comprobacion_caso=mysqli_query($link, "Select * from caso where numero=$ret_caso[numero] and año=$ret_caso[año]");
     $count_caso=mysqli_num_rows($comprobacion_caso);
 
-    // Primero comprobamos que no exista ningún caso con ese mismo número y año
+    // Primero comprobamos si existe algun caso con ese mismo número y año, para no añadirlo de nuevo
+    // En caso de que no exista comprobamos si el caso que queremos añadir tiene diligencias asociadas. Si no tiene se inserta el caso directamente.
     if($count_caso==0) {
         if(isset($ret_caso['id_diligencias'])) {
             $select_diligencias=mysqli_query($link_portable, "Select * FROM diligencias WHERE id_diligencias=$ret_caso[id_diligencias]");
@@ -76,7 +77,7 @@ if(isset($_SESSION['id_u'])) {
         }
     }
      
-        // Después comprobamos si el caso que queremos añadir tiene diligencias asociadas. Si no tiene se inserta el caso directamente.
+        
         
             $query_id_caso=mysqli_query($link, "SELECT id_caso from caso where numero=$ret_caso[numero] and año=$ret_caso[año]");
             $ret_id_caso=mysqli_fetch_array($query_id_caso);
@@ -87,9 +88,14 @@ if(isset($_SESSION['id_u'])) {
             $count_sujeto=mysqli_num_rows($result_sujeto);
             if($count_sujeto!=0) {
                 while ($fila_sujeto = mysqli_fetch_row($result_sujeto)) {
-                        $sql="INSERT INTO sujeto_activo(id_caso,nombre, apellido1,apellido2) values ($myid_caso_safe,'$fila_sujeto[1]', '$fila_sujeto[2]', '$fila_sujeto[3]')";
-                        mysqli_query($link, $sql);
-                        fputs($archivo,$sql.";\n");
+                        $sql="SELECT id_sujeto_activo FROM sujeto_activo where id_caso=$myid_caso_safe and nombre='$fila_sujeto[1]' and apellido1='$fila_sujeto[2]' and apellido2='$fila_sujeto[3]'";
+                        $result_sujeto_existe=mysqli_query($link, $sql);
+                        $count_sujeto_existe=mysqli_num_rows($result_sujeto_existe);
+                        if($count_sujeto_existe==0) {
+                            $sql="INSERT INTO sujeto_activo(id_caso,nombre, apellido1,apellido2) values ($myid_caso_safe,'$fila_sujeto[1]', '$fila_sujeto[2]', '$fila_sujeto[3]')";
+                            mysqli_query($link, $sql);
+                            fputs($archivo,$sql.";\n");
+                        }
                         $query_sujeto=mysqli_query($link, "Select id_sujeto_activo from sujeto_activo WHERE id_caso=$myid_caso_safe and nombre='$fila_sujeto[1]' AND apellido1='$fila_sujeto[2]' AND apellido2='$fila_sujeto[3]'");
                         $ret_sujeto_safe=mysqli_fetch_array($query_sujeto);
                     //se selecionan las intervenciones a añadir y se procede a ello, diferenciando si el id_sujeto_activo es 1(SIN DETENIDO) o no
@@ -427,10 +433,10 @@ if(isset($_SESSION['id_u'])) {
             }
 
      fclose($archivo);
-   /*$_SESSION['respuesta']=1;
+   $_SESSION['respuesta']=1;
    echo '<script type="text/javascript">
 	   location.href = "inicio.php";
-        </script>';*/
+        </script>';
         
 }
 else {
