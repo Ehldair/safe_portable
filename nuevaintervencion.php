@@ -22,7 +22,6 @@ if(isset($_SESSION['id_u'])) {
     
     $myid_caso=$_SESSION['id_caso'];
         
-        
     //cargo la lista de sujetos 
     
     $resultado = mysqli_query($link, "select distinct s.id_sujeto_activo, s.nombre, s.apellido1, s.apellido2
@@ -65,12 +64,12 @@ if(isset($_SESSION['id_u'])) {
 			function asignarnumero() {
 				
 				var numero = $.ajax({
-				    
+				
   				  type: "GET", 
   		          url: 'obtenerintervencion.php',
   		          async: false     //ponemos el parámetro asyn a falso
   		      }).responseText;
-  			  
+				document.getElementById("numero_envio").value=numero;
   			  document.getElementById('numero').value=numero+" (las evidencias serán por ejemplo "+numero+"TEL1, "+numero+"HD1,....)";
 			}
 			function cambionumero() {
@@ -81,12 +80,11 @@ if(isset($_SESSION['id_u'])) {
 					document.getElementById("direccion").focus();
 				}
 				else {
+					document.getElementById("numero_envio").value=numero;
 					document.getElementById('numero').value=numero+" (las evidencias serán por ejemplo "+numero+"TEL1, "+numero+"HD1,....)";
 					document.getElementById("direccion").focus();
-				}
-			}
-			function limpiar() {
-				alert("CIPOTE");
+					
+				}	
 			}
 			
 
@@ -173,7 +171,8 @@ if(isset($_SESSION['id_u'])) {
     
     echo "Número: ";
     ?>
-   <input type='text' name='numero' id='numero' required pattern='\d*' oninput='cambionumero()' onfocus="this.value=''">
+   <input type='text' name='numero' id='numero' required  onchange='cambionumero()' onfocus="this.value=''">
+   <input type='hidden' name='numero_envio' id='numero_envio'>
     <?php    
     
     

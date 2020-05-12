@@ -18,16 +18,13 @@ $myid_caso = $_SESSION['id_caso'];
 $mydireccion = mysqli_real_escape_string($link,$_POST['direccion']);
 $mytipo = mysqli_real_escape_string($link,$_POST['tipo']);
 $mydescripcion = mysqli_real_escape_string($link,$_POST['descripcion']);
-$mynumero=mysqli_real_escape_string($link,$_POST['numero']);
-$mynumero=substr($mynumero, 0, 2);
-$mynumero=trim($mynumero,' ');
+$mynumero=mysqli_real_escape_string($link,$_POST['numero_envio']);
+
 
 
 
 $mysujeto= mysqli_real_escape_string($link,$_POST['sujeto']);
 $sql= mysqli_query($link,"SELECT * FROM intervencion WHERE id_caso=$myid_caso");
-$count=mysqli_num_rows($sql);
-$count= $count+1;
 if($mymod==3) {
     $sql= "UPDATE intervencion SET id_sujeto_activo=$mysujeto, id_tipo_intervencion=$mytipo, direccion='$mydireccion', descripcion='$mydescripcion' WHERE id_intervencion=$myid_intervencion";
     echo $sql;

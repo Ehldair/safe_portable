@@ -2,7 +2,7 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -22,7 +22,7 @@ if(isset($_SESSION['id_u'])) {
     $respuesta=$_SESSION['respuesta'];
     $_SESSION['mod']=0;
     
-    $sql= "SELECT c.numero as num_caso, c.año as año_caso, c.nombre as nom_caso, c.descripcion as des_caso, t.id_tipo_caso as id_tipo,
+    $resultado = mysqli_query($link, "SELECT c.numero as num_caso, c.año as año_caso, c.nombre as nom_caso, c.descripcion as des_caso, t.id_tipo_caso as id_tipo,
     t.nombre as nom_tipo, g.id_grupo_investigacion as id_grup, g.nombre_grupo as grup , ca.id_ca as id_ca,ca.nombre_ca as nom_ca, p.id_provincia as id_pro, p.nombre_provincia as nom_pro,
     com.id_comisaria as id_com, com.nombre_comisaria as nom_com
     FROM caso c
@@ -31,12 +31,11 @@ if(isset($_SESSION['id_u'])) {
     INNER JOIN comisaria com on g.id_comisaria=com.id_comisaria
     INNER JOIN provincia p on com.id_provincia=p.id_provincia
     INNER JOIN ca ca on com.id_ca=ca.id_ca
-    WHERE c.id_caso=$myid_caso";
-    $resultado = mysqli_query($link, $sql);
+    WHERE c.id_caso=$myid_caso");
     $ret = mysqli_fetch_array($resultado);
     $resultado2 = mysqli_query($link, "SELECT c.id_diligencias as id_dil, d.numero as num_d, d.año as año_d, j.id_juzgado as id_juz, j.nombre as nom_juz, j.numero as num_juz,j.jurisdiccion as jur FROM diligencias d
     INNER JOIN caso c ON d.id_diligencias=c.id_diligencias
-    INNER JOIN juzgado j ON d.id_juzgado=j.id_juzgado 
+    INNER JOIN juzgado j ON d.id_juzgado=j.id_juzgado
     WHERE c.id_caso=$myid_caso");
     $count = mysqli_num_rows($resultado2);
     if ($count != 0) {
@@ -64,9 +63,9 @@ if(isset($_SESSION['id_u'])) {
     
     // comienzo carga de lista de evidencias
     
-    $resultado_evidencias = mysqli_query($link, "select  e.tiene_subevidencias, id_evidencia, e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo, e.observaciones from evidencia e 
-    inner join tipo_evidencia t on t.id_tipo_evidencia=e.id_tipo_evidencia 
-    inner join subtipo_evidencia s on s.id_subtipo_evidencia=e.id_subtipo_evidencia 
+    $resultado_evidencias = mysqli_query($link, "select  e.tiene_subevidencias, id_evidencia, e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo from evidencia e
+    inner join tipo_evidencia t on t.id_tipo_evidencia=e.id_tipo_evidencia
+    inner join subtipo_evidencia s on s.id_subtipo_evidencia=e.id_subtipo_evidencia
     inner join caso c on c.id_caso=e.id_caso
     where c.id_caso='$myid_caso' AND relacionado_con is null order By nombre asc");
     $count_evidencias = mysqli_num_rows($resultado_evidencias);
@@ -88,6 +87,7 @@ if(isset($_SESSION['id_u'])) {
     		<script src="assets/js/breakpoints.min.js"></script>
     		<script src="assets/js/util.js"></script>
     		<script src="assets/js/main.js"></script>
+    		
     			
     	<!-- Alonso -->
     		<script src="//code.jquery.com/jquery-latest.js"></script>
@@ -461,7 +461,7 @@ if(isset($_SESSION['id_u'])) {
     										
     									<!-- Lista de evidencias -->	
     									<div class="col-12 col-12-mobilep">
-    									<h4>Evidencias del caso</h4>
+    									<h4><b>Evidencias del caso<b></b></h4>
     
     <?php
     
@@ -472,7 +472,7 @@ if(isset($_SESSION['id_u'])) {
     									
     
     <?php
-        echo "<br><table><tr><th>Nombre</th><th>Depende de</th><th>Tipo Almacenamiento</th><th>Subtipo</th><th>Numero Serie</th><th>Capacidad</th><th>Marca</th><th>Modelo</th><th>Observaciones</th></tr>";
+        echo "<br><div class='table-wrapper'><table><thead><tr><th>Nombre</th><th>Depende de</th><th>Tipo Almacenamiento</th><th>Subtipo</th><th>Numero Serie</th><th>Capacidad</th><th>Marca</th><th>Modelo</th></tr></thead>";
         $contador = 0;
         $contador2 = 0;
         $tiene_sub = 0;
@@ -514,7 +514,7 @@ if(isset($_SESSION['id_u'])) {
                                 echo "<td></td>";
                                 $contador++;
                             }
-                            if ($contador <= 9) {
+                            if ($contador <= 8) {
                                 echo "<td align='center'>";
                                 echo $col_value;
                                 echo "</td>";
@@ -532,7 +532,7 @@ if(isset($_SESSION['id_u'])) {
                     if ($tiene_sub == 1 and $entra == 1) {
                         echo "</tr>";
                         $entra = 0;
-                        $result = mysqli_query($link, "select e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo, e.observaciones from evidencia e
+                        $result = mysqli_query($link, "select e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo from evidencia e
                         inner join tipo_evidencia t on t.id_tipo_evidencia=e.id_tipo_evidencia
                         inner join subtipo_evidencia s on s.id_subtipo_evidencia=e.id_subtipo_evidencia
                         inner join caso c on c.id_caso=e.id_caso
@@ -564,7 +564,7 @@ if(isset($_SESSION['id_u'])) {
                                         echo "</td>";
                                         $contador2 ++;
                                     }
-                                    if ($contador2 < 8) {
+                                    if ($contador2 < 7) {
                                         echo "<td align='center'>";
                                         echo $col_value;
                                         echo "</td>";
@@ -585,7 +585,7 @@ if(isset($_SESSION['id_u'])) {
             }
     
         }
-        echo "</table>";
+        echo "</table></div>";
     
     	echo "<a href='listado_intervenciones.php' class='button special small'>Agregar Evidencia </a> ";    
     	echo "<a href='busqueda_evidencia.php' class='button special icon solid fa-search small'>Buscar</a>";

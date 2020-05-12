@@ -636,12 +636,12 @@ if(!empty($ret['pin'])) {
     									<br>
     									<div class="col-12 col-12-mobilep">
     									
-    									<h4><p><b>Evidencias relacionadas con <?php echo $ret['nom_ev'];echo $ret['num_ev'];?></b></p></h4>
+    									
     									
     									<?php
     
     //compruebo si tiene subevidencias y en caso afirmativo cargo la tabla
-    $sql= "select e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo, e.observaciones from evidencia e
+    $sql= "select e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo from evidencia e
                         inner join tipo_evidencia t on t.id_tipo_evidencia=e.id_tipo_evidencia
                         inner join subtipo_evidencia s on s.id_subtipo_evidencia=e.id_subtipo_evidencia
                         inner join caso c on c.id_caso=e.id_caso
@@ -650,9 +650,9 @@ if(!empty($ret['pin'])) {
     $count=mysqli_num_rows($resultado_subevidencia);
     
     if($count!=0) {
-
+        echo "<h4><p><b>Evidencias relacionadas con ".$ret['nom_ev'].$ret['num_ev']."</b></p></h4>";
         
-        echo "<div class='table-wrapper'><table><thead><tr><th>Nombre</th><th>Tipo Almacenamiento</th><th>Subtipo</th><th>Numero Serie</th><th>Capacidad</th><th>Marca</th><th>Modelo</th><th>Observaciones</th></tr></thead>";
+        echo "<div class='table-wrapper'><table><thead><tr><th>Nombre</th><th>Tipo Almacenamiento</th><th>Subtipo</th><th>Numero Serie</th><th>Capacidad</th><th>Marca</th><th>Modelo</th></tr></thead>";
         $contador=0;
         while ($line_evidencias = mysqli_fetch_array($resultado_subevidencia, MYSQLI_ASSOC)) {
             foreach ($line_evidencias as $col_value) {
@@ -670,7 +670,7 @@ if(!empty($ret['pin'])) {
                             $contador ++;
                         }
                         else {
-                                if ($contador < 8) {
+                                if ($contador < 7) {
                                     echo "<td align='center'>";
                                     echo $col_value;
                                     echo "</td>";
@@ -697,7 +697,7 @@ if(!empty($ret['pin'])) {
                 $resultado_evidencia_padre=mysqli_query($link, $sql);
                 $ret2=mysqli_fetch_array($resultado_evidencia_padre);
                 if($ret2['rel']!=null) {
-                    $sql= "select e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo, e.observaciones from evidencia e
+                    $sql= "select e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo from evidencia e
                     inner join tipo_evidencia t on t.id_tipo_evidencia=e.id_tipo_evidencia
                     inner join subtipo_evidencia s on s.id_subtipo_evidencia=e.id_subtipo_evidencia
                     inner join caso c on c.id_caso=e.id_caso
@@ -706,7 +706,7 @@ if(!empty($ret['pin'])) {
                     $count=mysqli_num_rows($resultado_padre);
                     if($count!=0) {
                                           
-                        echo "<div class='table-wrapper'><table ><thead><tr><th>Nombre</th><th>Tipo Almacenamiento</th><th>Subtipo</th><th>Numero Serie</th><th>Capacidad</th><th>Marca</th><th>Modelo</th><th>Observaciones</th></tr></thead>";
+                        echo "<div class='table-wrapper'><table ><thead><tr><th>Nombre</th><th>Tipo Almacenamiento</th><th>Subtipo</th><th>Numero Serie</th><th>Capacidad</th><th>Marca</th><th>Modelo</th></tr></thead>";
                         $contador=0;
                         while ($line_padre = mysqli_fetch_array($resultado_padre, MYSQLI_ASSOC)) {
                         foreach ($line_padre as $col_value) {
@@ -724,7 +724,7 @@ if(!empty($ret['pin'])) {
                                     $contador ++;
                                 }
                                 else {
-                                    if ($contador < 8) {
+                                    if ($contador < 7) {
                                         echo "<td align='center'>";
                                         echo $col_value;
                                         echo "</td>";
