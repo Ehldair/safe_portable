@@ -12,7 +12,6 @@ if(isset($_SESSION['id_u'])) {
     }
     
     
-    $myid_caso=$_SESSION['id_caso'];
     $mynombre=mysqli_real_escape_string($link, $_POST['nombre']);
     $mynumero=mysqli_real_escape_string($link, $_POST['numero']);
     $myn_s=mysqli_real_escape_string($link, $_POST['n_s']);
@@ -366,7 +365,7 @@ if(isset($_SESSION['id_u'])) {
         echo "<option value='$myid_subtipo' selected>$mysubtipo</option>";
         echo "</select>";
     
-    echo "Disco";
+    echo "";
         
         echo "&nbsp; <select name='disco' id='disco'>";
         $resultado = mysqli_query($link, "select id_disco_almacenado, nombre From disco_almacenado");

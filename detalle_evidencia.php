@@ -37,6 +37,7 @@ if(isset($_SESSION['id_u'])) {
     $_SESSION['mod']=0;
     $_SESSION['patron']=null;
     
+    
     $resultado = mysqli_query($link, "SELECT i.numero_intervencion as nom_i, e.id_evidencia as id_ev, e.nombre as nom_ev, e.numero_evidencia as num_ev,i.id_intervencion as id_int,
     i.direccion as int_dir, e.id_tipo_evidencia as id_tip, e.numero_evidencia as num_ev, e.id_subtipo_evidencia as id_sub,t.nombre as nom_tip, s.nombre as nom_sub,
     e.id_disco_almacenado as id_disc, d.nombre as nom_disc, e.id_caso as id_caso, e.n_s as n_s, e.capacidad, e.marca, e.modelo, e.observaciones as obs_ev, e.alias as al, e.patron as pat,

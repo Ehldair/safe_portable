@@ -606,6 +606,7 @@ echo "</table>";
 	        									
 	        									<div class="col-2 col-12-mobilep">
 	        										<select name="disco" id="disco">
+	        										<option selected value=''>Disco Almacenamiento</option>
         <?php 
         $contador=0;
         $resultado = mysqli_query($link, "select id_disco_almacenado, nombre FROM disco_almacenado");
