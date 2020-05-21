@@ -3,7 +3,7 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -11,8 +11,8 @@ if(isset($_SESSION['id_u'])) {
         exit();
     }
     
+    
     $myid_caso=$_SESSION['id_caso'];
-    $mynombre=mysqli_real_escape_string($link, $_POST['nombre']);
     $mynombre=mysqli_real_escape_string($link, $_POST['nombre']);
     $mynumero=mysqli_real_escape_string($link, $_POST['numero']);
     $myn_s=mysqli_real_escape_string($link, $_POST['n_s']);
@@ -26,14 +26,12 @@ if(isset($_SESSION['id_u'])) {
     $myid_subtipo=mysqli_real_escape_string($link, $_POST['id_subtipo']);
     $mydisco=mysqli_real_escape_string($link, $_POST['disco']);
     $myid_disco=mysqli_real_escape_string($link, $_POST['id_disco']);
-    $myintervencion=mysqli_real_escape_string($link, $_POST['intervencion']);
-    $myid_intervencion=mysqli_real_escape_string($link, $_POST['id_intervencion']);
     $mynumero_intervencion=mysqli_real_escape_string($link, $_POST['numero_intervencion']);
     $myalias=mysqli_real_escape_string($link, $_POST['alias']);
     $mypin=mysqli_real_escape_string($link, $_POST['pin']);
     $mypatron=mysqli_real_escape_string($link, $_POST['patron']);
     if(isset($_POST['id_tipo_capacidad'])) {
-    $myid_tipo_capacidad=mysqli_real_escape_string($link, $_POST['id_tipo_capacidad']);
+        $myid_tipo_capacidad=mysqli_real_escape_string($link, $_POST['id_tipo_capacidad']);
     }
     $mytipo_capacidad=mysqli_real_escape_string($link, $_POST['tipo_capacidad']);
     
@@ -81,10 +79,10 @@ if(isset($_SESSION['id_u'])) {
     </script>
     <script>
     function activarTipoCapacidad() {
-    	document.getElementById('tipo_capacidad').hidden=false;
+    	document.getElementById('tipo_capacidad').disabled=false;
     	var valor=$('input:text[name=capacidad]').val();
     	if (($('input:text[name=capacidad]').val().length < 1) || (valor=='0')) {
-    		document.getElementById('tipo_capacidad').hidden=true;
+    		document.getElementById('tipo_capacidad').disabled=true;
     	}
     }
     function vaciarpatron() {
@@ -113,6 +111,7 @@ if(isset($_SESSION['id_u'])) {
     function prepararpagina() {
     	$('input[name=patron]').removeAttr('checked');
     	$("#nopatron *").attr("disabled", false);
+    	activarTipoCapacidad();
     	document.getElementById('botones').style.display = 'block';
     	document.getElementById('radiopatron').style.display = 'none';
     	document.getElementById('frase3').style.display = 'none';
@@ -305,7 +304,7 @@ if(isset($_SESSION['id_u'])) {
     }
     else {
     
-        echo "<select name='tipo_capacidad' id='tipo_capacidad' hidden>";
+        echo "<select name='tipo_capacidad' id='tipo_capacidad' disabled>";
     
         $resultado = mysqli_query($link, "select id_tipo_capacidad, tipo_capacidad FROM tipo_capacidad");
     }
@@ -394,39 +393,6 @@ if(isset($_SESSION['id_u'])) {
                     else {
                         echo " ".$col_value."</option>";
                         $contador2++;
-                    }
-                }
-            }
-        }
-    echo "</select>";
-    
-    echo "Intervencion";
-        
-        echo "<select name='id_intervencion' id='id_intervencion' disabled>";
-        echo "<option value='$myid_intervencion' selected>$myintervencion</option>";
-        $resultado = mysqli_query($link, "select i.id_intervencion, i.direccion from intervencion i inner join tipo_intervencion t on t.id_tipo_intervencion=i.id_tipo_intervencion where id_caso=$myid_caso");
-        $contador2=0;
-        $entro=0;
-        while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            foreach ($line as $col_value) {
-                if ($contador2==0) {
-                    if($col_value==$myid_intervencion) {
-                        $entro=1;
-                        $contador2++;
-                    }
-                    else {
-                        echo "<option value='$col_value'>";
-                        $contador2++;
-                    }
-                }
-                else {
-                    if($entro==1) {
-                        $entro=0;
-                        $contador2=0;
-                    }
-                    else {
-                        echo " ".$col_value."</option>";
-                        $contador2=0;
                     }
                 }
             }

@@ -314,15 +314,17 @@ if(!empty($ret['pin'])) {
     											<ul class="alt">
     												<li><b>Capacidad:</b> <?php echo $ret['capacidad'];?>
     												<input type="hidden" name="capacidad" id="capacidad" value="<?php echo $ret['capacidad']; ?>">
+    												<input type="hidden" name="capacidad" id="capacidad" value="<?php echo $ret['capacidad']; ?>">
     												
     												<?php
 														    if($ret['capacidad']!=null) {
-    echo $ret['tipo_capacidad'];
-    }
-    else {
-        echo "<input type='hidden'  name='tipo_capacidad' value='$ret[tipo_capacidad]'>";
-    }
-	 echo "<input type='hidden'  name='id_tipo_capacidad' value='$ret[id_tipo_capacidad]'>";
+                                                                echo $ret['tipo_capacidad'];
+                                                                echo "<input type='hidden'  name='tipo_capacidad' id='tipo_capacidad' value='$ret[tipo_capacidad]'>";
+                                                            }
+                                                            else {
+                                                                echo "<input type='hidden'  name='tipo_capacidad' id='tipo_capacidad' value='$ret[tipo_capacidad]'>";
+                                                            }
+	                                                        echo "<input type='hidden'  name='id_tipo_capacidad' id='id_tipo_capacidad' value='$ret[id_tipo_capacidad]'>";
 ?>
     												
     												</li>
