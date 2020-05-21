@@ -35,21 +35,31 @@ if($mymod==3) {
     </script>';
 }
 else {
-$sql= "INSERT INTO intervencion (id_caso,id_tipo_intervencion,id_sujeto_activo,numero_intervencion,direccion,descripcion) VALUES ($myid_caso,$mytipo,$mysujeto,$mynumero,'$mydireccion','$mydescripcion')";
-mysqli_query($link,$sql);
-    if($mymod==1 or $mymod==0) {
-        $_SESSION['respuesta']=4;
-        echo '<script type="text/javascript">
-	   location.href = "asunto.php";
-        </script>';
-    }
-    else {
-        if($mymod==2) {
-            $_SESSION['respuesta']=1;
+    $comprobacion_intervencion=mysqli_query($link,"Select * From INTERVENCION where id_caso=$myid_caso AND numero_intervencion=$mynumero");
+    $count=mysqli_num_rows($comprobacion_intervencion);
+    if($count==0) {
+        $sql= "INSERT INTO intervencion (id_caso,id_tipo_intervencion,id_sujeto_activo,numero_intervencion,direccion,descripcion) VALUES ($myid_caso,$mytipo,$mysujeto,$mynumero,'$mydireccion','$mydescripcion')";
+        mysqli_query($link,$sql);
+        if($mymod==1 or $mymod==0) {
+            $_SESSION['respuesta']=4;
             echo '<script type="text/javascript">
-	       location.href = "listado_intervenciones.php";
+	       location.href = "asunto.php";
             </script>';
         }
+        else {
+            if($mymod==2) {
+                $_SESSION['respuesta']=1;
+                echo '<script type="text/javascript">
+	           location.href = "listado_intervenciones.php";
+                </script>';
+            }
+        }
+    }
+    else {
+        $_SESSION['respuesta']=9;
+        echo '<script type="text/javascript">
+    	location.href = "asunto.php";
+        </script>';
     }
 }
 

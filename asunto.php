@@ -180,7 +180,18 @@ if(isset($_SESSION['id_u'])) {
     											<?php $_SESSION['respuesta']=0; ?>
     											setTimeout(borrar,5000);
     										}
-    									}
+    										else {
+        										if(respuesta==9) {
+        											ctx.strokeStyle = "#FF0000";
+        											ctx.strokeRect(1, 1, 299, 29);
+        											ctx.fillStyle = "#FF0000";
+        											ctx.textAlign = "center";
+        											ctx.fillText("Ya existe la intervención",150,20);
+        											<?php $_SESSION['respuesta']=0; ?>
+        											setTimeout(borrar,5000);
+        										}
+        									}
+    									}    									
     								}
     							}	
     						}

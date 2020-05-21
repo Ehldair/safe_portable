@@ -20,6 +20,8 @@ if(isset($_SESSION['id_u'])) {
     
     $_SESSION['mod']=$mod;
     
+    $respuesta=$_SESSION['respuesta'];
+    
     $myid_caso=$_SESSION['id_caso'];
         
     //cargo la lista de sujetos 
@@ -61,8 +63,24 @@ if(isset($_SESSION['id_u'])) {
     		<script src="miscript.js"></script>
     		
     		<script>
+    		function respuesta() {
+    			var respuesta=<?php echo $respuesta; ?>;
+    			var c = document.getElementById("mensaje");
+    			var ctx = c.getContext("2d");
+    			ctx.font = "bold 12px Verdana";
+    			ctx.clearRect(0, 0, c.width, c.height);	
+    			if(respuesta==1) {
+    				ctx.strokeStyle = "#FF0000";
+    				ctx.strokeRect(1, 1, 299, 29);
+    				ctx.fillStyle = "#FF0000";
+    				ctx.textAlign = "center";
+    				ctx.fillText("Ya existe esa intervención",150,20);
+    				<?php $_SESSION['respuesta']=0; ?>
+    				setTimeout(borrar,5000);
+    			}
+    		};
 			function asignarnumero() {
-				
+				respuesta();
 				var numero = $.ajax({
 				
   				  type: "GET", 
@@ -107,6 +125,9 @@ if(isset($_SESSION['id_u'])) {
     						
     							<form action='crearintervencion.php' method='post'>
     								<section class="box">
+    								<div align="center">
+    									<canvas id="mensaje" width="350" height="30"></canvas>
+    									</div>
     							
     																
     									<h3>Agregar nueva intervención al caso</h3>
@@ -116,7 +137,7 @@ if(isset($_SESSION['id_u'])) {
     										<h4>Seleccione  sujeto activo relacionado.</h4>
     										
     <?php
-    										echo "<input type='radio' name='sujeto' id='sujeto' value='$ret[id_su]'>";
+    										echo "<input type='radio' name='sujeto' id='sujeto' value='$ret[id_su]' required>";
     										echo"<label for='sujeto'>";
      											echo $ret['nom'];
      											echo " ".$ret['ape'];
