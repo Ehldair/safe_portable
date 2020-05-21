@@ -1,4 +1,4 @@
-<?php
+A<?php
 
 session_start();
 
@@ -189,14 +189,25 @@ if(isset($_SESSION['id_u'])) {
     								</div>
     								
     								<div class="col-2 col-12-mobilep">	
-    									<select name="año" id="año" onchange="escribir(this.value);">
-    								    	<option value="2016">2016</option>
-    								      	<option value="2017">2017</option>
-    								      	<option value="2018">2018</option>
-    								      	<option value="2019">2019</option>
-    								      	<option value="2020" selected>2020</option>
-    								    </select>
-    								</div>
+    								<?php 
+    								// cargo la lista de años
+    							
+    								echo "<select name='año' id='año' onchange='escribir(this.value);'>";
+    								$resultado = mysqli_query($link, "select año FROM año_viajes");
+    								$count=mysqli_num_rows($resultado);
+    								$contador=1;
+    								while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+    								    foreach ($line as $col_value) {
+    								        if($contador!=$count) {
+    								            echo "<option value='$col_value'>$col_value</option>'";
+    								            $contador++;
+    								        }
+    								        else {
+    								            echo "<option value='$col_value' selected>$col_value</option>'";    								        }
+    								    }
+    								}
+    								echo "</select> </div>";
+    								?>
     								
     								<div class="col-4 col-12-mobilep">									
     									<input type="text" name="nombre" id="nombre" placeholder="Nombre operación">
@@ -226,17 +237,27 @@ if(isset($_SESSION['id_u'])) {
     								</div>
     													
     								<div class="col-2 col-12-mobilep">	
-    									<select name="año_diligencias" id="año_diligencias" >
-    								    	<option value="2016">2016</option>
-    								      	<option value="2017">2017</option>
-    								      	<option value="2018">2018</option>
-    								      	<option value="2019">2019</option>
-    								      	<option value="2020" selected>2020</option>
-    								    </select>
-    								 </div>
+    									<?php 
+    								// cargo la lista de años de diligencias
+    							
+    								echo "<select name='año_diligencias' id='año_diligencias'>";
+    								$resultado = mysqli_query($link, "select año FROM año_viajes");
+    								$count=mysqli_num_rows($resultado);
+    								$contador=1;
+    								while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+    								    foreach ($line as $col_value) {
+    								        if($contador!=$count) {
+    								            echo "<option value='$col_value'>$col_value</option>'";
+    								            $contador++;
+    								        }
+    								        else {
+    								            echo "<option value='$col_value' selected>$col_value</option>'";    								        }
+    								    }
+    								}
+    								echo "</select> </div>";
     								 
     
-    							<?php
+    							
     
     								//cargo la lista de juzgados
     								echo "<div class='col-6 col-12-mobilep'> <select name='juzgado' id='juzgado'>";
