@@ -4,7 +4,7 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
     
-    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+    $link = mysqli_connect("localhost", "root", ".google.", "safe");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -1016,6 +1016,9 @@ if(!empty($ret['pin'])) {
     	</select>								
 								
 								</div>
+								<div class="col-12">
+    							<textarea name="descripcion" id="descripcion" placeholder="Observaciones" rows="2"></textarea>
+    						</div>	
 								
 								<div class="col-12">
 									<ul class="actions special">
