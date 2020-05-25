@@ -5,7 +5,7 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
     
-
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -159,7 +159,7 @@ if(isset($_SESSION['id_u'])) {
     $resultado=mysqli_query($link, $sql);
     $ret=mysqli_fetch_array($resultado);
     ?>
-    <form action="nuevaevidencia.php" method="post" id="myform">
+    <form action="listado_intervenciones.php" method="post" id="myform">
     <input type="hidden" name="intervencion" id="intervencion" value="<?php echo $ret['numero_intervencion']?>">
     <li><input type="submit" name="Agregar" id="Agregar" value="Agregar Evidencia"><li>
     </form>

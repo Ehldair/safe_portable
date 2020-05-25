@@ -95,7 +95,6 @@ if($mod!="1") {
         $mytipo=$ret['tipo'];
         
         $sql = "INSERT INTO evidencia(id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, numero_evidencia, alias, pin, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, id_tipo_capacidad, tiene_subevidencias) values ($mytipo,$mysubtipo,$mydisco,$myid_caso, $myintervencion, '$mynombre', '$mynumero', '$myalias', '$mypin', NOW(), '$myn_s', $mycapacidad, '$mymarca', '$mymodelo', '$myobservaciones',$mytipo_capacidad, 0 )";
-        echo $sql;
         mysqli_query($link,$sql);
         
         $sql=  "Select id_evidencia as id FROM evidencia WHERE id_caso=$myid_caso AND nombre='$mynombre' AND numero_evidencia=$mynumero";

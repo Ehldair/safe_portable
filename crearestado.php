@@ -12,7 +12,9 @@ if (mysqli_connect_errno()) {
     exit();
 }
 $mymod=$_SESSION['mod'];
-$myid_registro=$_SESSION['id_registro'];
+if(isset($_SESSION['id_registro'])) {
+    $myid_registro=$_SESSION['id_registro'];
+}
 $myid_ev=$_SESSION['id_ev'];
 $myusuario=mysqli_real_escape_string($link,$_POST['usuario']);
 $myestado=mysqli_real_escape_string($link,$_POST['estado']);
@@ -35,14 +37,14 @@ if (isset($_POST['detalles'])) {
     $myobservaciones=mysqli_real_escape_string($link,$_POST['detalles']);
 }
 else {
-    $myobservaciones="SIN OBSERVACIONES";
+    $myobservaciones='null';
 }
 
 if (!empty($_POST['num_hash'])) {
-$myhash=mysqli_real_escape_string($link,$_POST['num_hash']);
+    $myhash=mysqli_real_escape_string($link,$_POST['num_hash']);
 }
 else {
-$myhash='0';
+    $myhash='0';
 }
 if (!empty($_POST['num_hash_original'])) {
     $myhash_original=mysqli_real_escape_string($link,$_POST['num_hash_original']);
@@ -67,9 +69,9 @@ if($mymod!=1) {
     }
     
     else {
-    
-    $sql="INSERT INTO evidencia_registro (id_evidencia,id_estado_evidencia,id_usuario,id_programa,id_accion_programa,observaciones, fecha_alta_estado) VALUES ($myid_ev, $myestado, $myusuario, $myprograma, $myaccion_programa, '$myobservaciones', NOW())";
-    mysqli_query($link,  $sql);
+        
+        $sql="INSERT INTO evidencia_registro (id_evidencia,id_estado_evidencia,id_usuario,id_programa,id_accion_programa,observaciones, fecha_alta_estado) VALUES ($myid_ev, $myestado, $myusuario, $myprograma, $myaccion_programa, '$myobservaciones', NOW())";
+        mysqli_query($link,  $sql);
     }
     $_SESSION['respuesta']=2;
     echo "<script type='text/javascript'>
@@ -78,7 +80,7 @@ if($mymod!=1) {
     
 }
 else {
-
+    
     if($myhash!=$myhash_original AND $myhash!='0' AND $myhash_original!='0') {
         $sql="Update hash set id_tipo_hash=$mytipo_hash, hash='$myhash' WHERE id_hash=$myid_hash";
         mysqli_query($link, $sql);
@@ -94,7 +96,7 @@ else {
             $sql= mysqli_query($link, "SELECT id_hash FROM hash WHERE id_evidencia=$myid_ev and hash='$myhash'");
             $ret = mysqli_fetch_array($sql);
             $myid_hash=$ret['id_hash'];
-            mysqli_query($link, "UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa,id_hash='$myid_hash',observaciones='$myobservaciones' where id_evidencia_registro=$myid_registro");    
+            mysqli_query($link, "UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa,id_hash='$myid_hash',observaciones='$myobservaciones' where id_evidencia_registro=$myid_registro");
         }
         else {
             $sql="UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa, observaciones='$myobservaciones' WHERE id_evidencia_registro=$myid_registro";
@@ -109,10 +111,10 @@ else {
     </script>";
     
 }
-    
 
-   
-  
+
+
+
 mysqli_close($link);
 
 ?>
