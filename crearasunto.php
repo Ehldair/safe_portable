@@ -56,18 +56,10 @@ if($mod!="1") {
     if (isset($_POST["tipo_caso"])){
         $mytipo_caso = mysqli_real_escape_string($link,$_POST['tipo_caso']);
     }
-    if (isset($_POST["tipo_caso"])){
-        $myca = mysqli_real_escape_string($link,$_POST['ca']);
-    }
-    if (isset($_POST["provincia"])){
-        $myprovincia = mysqli_real_escape_string($link,$_POST['provincia']);
-    }
-    if (isset($_POST["comisaria"])){
-        $mycomisaria = mysqli_real_escape_string($link,$_POST['comisaria']);
-    }
     if (isset($_POST["grupo"])){
         $mygrupo = mysqli_real_escape_string($link,$_POST['grupo']);
     }
+    $myfecha=$_POST['fecha'];
     if(!empty($_POST["diligencias"])) {
         $sql = "SELECT d.id_diligencias as id_dil FROM diligencias d where d.numero=$mydiligencias AND d.año=$myaño_diligencias AND d.id_juzgado=$myjuzgado";
         $result=mysqli_query($link,$sql);
@@ -82,7 +74,7 @@ if($mod!="1") {
                 echo "Ya existen esas mismas diligencias en el caso ".$ret_caso['numero']."_".substr( $ret_caso['año'], 2);
             }
             else {
-                $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret[id_dil],$mytipo_caso,$mygrupo,$mynumero,'$myaño','$mynombre',NOW(),'$mydescripcion', 1)";
+                $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret[id_dil],$mytipo_caso,$mygrupo,$mynumero,'$myaño','$mynombre','$myfecha','$mydescripcion', 1)";
                 mysqli_query($link,$sql);
                 $sql = "SELECT id_caso FROM caso WHERE numero=$mynumero AND año=$myaño";
                 $resultado=mysqli_query($link,$sql);
@@ -108,7 +100,7 @@ if($mod!="1") {
                 foreach($line as $col_value) {
                     $myid_diligencias=$col_value;
                 }
-                $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($myid_diligencias,$mytipo_caso,$mygrupo,$mynumero,'$myaño','$mynombre',NOW(),'$mydescripcion', 1)";
+                $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($myid_diligencias,$mytipo_caso,$mygrupo,$mynumero,'$myaño','$mynombre','$myfecha','$mydescripcion', 1)";
                 mysqli_query($link,$sql);
                 $sql = "SELECT id_caso FROM caso WHERE numero=$mynumero AND año=$myaño";
                 $resultado=mysqli_query($link,$sql);
@@ -131,7 +123,7 @@ if($mod!="1") {
                 echo "Ya existe un caso con ese mismo número";
             }
             else {
-                $sql = "INSERT INTO caso( id_tipo_caso,  id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($mytipo_caso,$mygrupo,$mynumero,$myaño,'$mynombre',NOW(),'$mydescripcion', 1)";
+                $sql = "INSERT INTO caso( id_tipo_caso,  id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($mytipo_caso,$mygrupo,$mynumero,$myaño,'$mynombre','$myfecha','$mydescripcion', 1)";
                 mysqli_query($link,$sql);
                 if(mysqli_errno($link)!=0) {
                     echo "Faltan campos por rellenar";
@@ -144,7 +136,7 @@ if($mod!="1") {
                     $_SESSION['id_caso']=$ret_caso['id_caso'];
                     echo 1;
                 }
-            
+                
             }
         }
     }

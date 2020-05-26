@@ -1,4 +1,4 @@
-A<?php
+<?php
 
 session_start();
 
@@ -209,13 +209,19 @@ if(isset($_SESSION['id_u'])) {
     								echo "</select> </div>";
     								?>
     								
-    								<div class="col-4 col-12-mobilep">									
+    								<div class="col-2 col-12-mobilep">									
     									<input type="text" name="nombre" id="nombre" placeholder="Nombre operación">
     								</div>
+    								
+    								
+    							    <div class="col-3 col-12-mobilep">
+    							    	<input type='date' name='fecha' id='fecha' placeholder="Fecha" required> 
+    							    </div>
     							<?php 	
+    							    
     								//cargo la lista de tipos de caso 
     								
-    								echo "<div class='col-4 col-12-mobilep'>	<select name='tipo_caso' id='tipo_caso'>";
+    								echo "<div class='col-3 col-12-mobilep'>	<select name='tipo_caso' id='tipo_caso'>";
     								$resultado = mysqli_query($link, "select * FROM tipo_caso");
     								$contador=0;
     								while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
@@ -340,7 +346,9 @@ if(isset($_SESSION['id_u'])) {
     						</div>
     
     					    
-    					    </div>					    
+    					    </div>	
+    					    </div>
+    					    </div>				    
     					  </form>
     
     								    

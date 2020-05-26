@@ -3,8 +3,8 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-    
-    $link = mysqli_connect("localhost", "root", ".google.", "safe");
+
+    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -39,8 +39,8 @@ if(isset($_SESSION['id_u'])) {
     
     
     $resultado = mysqli_query($link, "SELECT i.numero_intervencion as nom_i, e.id_evidencia as id_ev, e.nombre as nom_ev, e.numero_evidencia as num_ev,i.id_intervencion as id_int,
-    i.direccion as int_dir, e.id_tipo_evidencia as id_tip, e.numero_evidencia as num_ev, e.id_subtipo_evidencia as id_sub,t.nombre as nom_tip, s.nombre as nom_sub,
-    e.id_disco_almacenado as id_disc, d.nombre as nom_disc, e.id_caso as id_caso, e.n_s as n_s, e.capacidad, e.marca, e.modelo, e.observaciones as obs_ev, e.alias as al, e.patron as pat,
+    i.direccion as int_dir, e.id_tipo_evidencia as id_tip, e.numero_evidencia as num_ev, e.id_subtipo_evidencia as id_sub,t.nombre as nom_tip, s.nombre as nom_sub, 
+    e.id_disco_almacenado as id_disc, d.nombre as nom_disc, e.id_caso as id_caso, e.n_s as n_s, e.capacidad, e.marca, e.modelo, e.observaciones as obs_ev, e.alias as al, e.patron as pat, 
     e.pin as pin, tp.tipo_capacidad as tipo_capacidad, e.id_tipo_capacidad as id_tipo_capacidad
     FROM evidencia e
     INNER JOIN tipo_evidencia t ON e.id_tipo_evidencia=t.id_tipo_evidencia
@@ -55,9 +55,9 @@ if(isset($_SESSION['id_u'])) {
     
     /*incluyo estas dos lineas*/
     $resultado_dependientes=mysqli_query($link, "SELECT id_evidencia from evidencia where relacionado_con=$myid_ev");
-    
+
     $contador_relacionado_con=mysqli_num_rows($resultado_dependientes);
-    
+ 
     
     
     ?>
@@ -790,7 +790,6 @@ if(!empty($ret['pin'])) {
     	";
         
         
-    //echo "<br><table border='1' style='border-collapse: collapse; margin:0 auto; background-color: #def;border-style: none;'><tr><th>Usuario</th><th>Estado</th><th>Fecha</th><th>Detalles</th><th>HASH</th></tr><tr>";
     
     $contador=0;
     while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
@@ -801,7 +800,7 @@ if(!empty($ret['pin'])) {
         $programa= $line['programa'];
         $accion_programa= $line['accion_programa'];
         $hash= $line['hash'];
-        $detalles= $line['observaciones'];
+        $observaciones= $line['observaciones'];
         $fecha= $line['fecha_alta_estado'];
         
         
@@ -814,7 +813,7 @@ if(!empty($ret['pin'])) {
         echo "<td>$programa</td>";
         echo "<td>$accion_programa</td>";
         echo "<td>$hash</td>";
-        echo "<td>$detalles</td>";
+        echo "<td>$observaciones</td>";
         echo "<td>$fecha</td>";
         
         
@@ -1017,7 +1016,7 @@ if(!empty($ret['pin'])) {
 								
 								</div>
 								<div class="col-12">
-    							<textarea name="descripcion" id="descripcion" placeholder="Observaciones" rows="2"></textarea>
+    							<textarea name="observaciones" id="observaciones" placeholder="Observaciones" rows="2"></textarea>
     						</div>	
 								
 								<div class="col-12">

@@ -24,7 +24,7 @@ if(isset($_SESSION['id_u'])) {
     
     $resultado = mysqli_query($link, "SELECT c.numero as num_caso, c.año as año_caso, c.nombre as nom_caso, c.descripcion as des_caso, t.id_tipo_caso as id_tipo,
     t.nombre as nom_tipo, g.id_grupo_investigacion as id_grup, g.nombre_grupo as grup , ca.id_ca as id_ca,ca.nombre_ca as nom_ca, p.id_provincia as id_pro, p.nombre_provincia as nom_pro,
-    com.id_comisaria as id_com, com.nombre_comisaria as nom_com
+    com.id_comisaria as id_com, com.nombre_comisaria as nom_com, date_format(fecha_alta_caso, '%d/%m/%Y') as fecha
     FROM caso c
     INNER JOIN tipo_caso t ON c.id_tipo_caso=t.id_tipo_caso
     INNER JOIN grupo_investigacion g ON c.id_grupo_investigacion=g.id_grupo_investigacion
@@ -274,6 +274,9 @@ if(isset($_SESSION['id_u'])) {
     													<input type='hidden' name='id_grupo' id='id_grupo' value='<?php echo $ret['id_grup'];?>'>
     													<input type='hidden' name='grupo' id='grupo' value='<?php echo $ret['grup'];?>'>
     												</li>
+    												<li>
+    													Fecha: <b><?php echo $ret['fecha'] ?></b>
+    												</li>
     											</ul>	
     											
     												
@@ -420,7 +423,7 @@ if(isset($_SESSION['id_u'])) {
                             }
                             else {
                             
-                                echo $nombre_sujeto . " " . $col_value . " - C\\ ";
+                                echo $nombre_sujeto . " " . $col_value . " - ";
                            
                                 $contador ++;
                                 $entro = 0;
@@ -653,6 +656,7 @@ if(isset($_SESSION['id_u'])) {
     											<li><input type="button" onclick="location.href='inicio.php';" value="Volver"><br></li>
     										  							
     										</ul>
+    										
     									</div>								
     									
     								</section>

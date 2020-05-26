@@ -2,7 +2,7 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -156,7 +156,7 @@ if(isset($_SESSION['id_u'])) {
     echo "Programa:
     <select id='programa' name='programa' onchange='accion(this.value);'>";
     
-    echo "<option value=$ret[id_programa] selected>$ret[programa]</option>";
+    echo "<option value=$ret[id_programa]>$ret[programa]</option>";
     $contador=0;
     $resultado = mysqli_query($link, "select id_programa, nombre FROM programa WHERE id_programa!=$ret[id_programa]");
     while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
@@ -200,8 +200,8 @@ if(isset($_SESSION['id_u'])) {
     
     // se cargan los detalles
     
-    echo "Detalles:
-    <input type='text' name='detalles' id ='detalles' value='$ret[obs]' size=80>";
+    echo "Observaciones:
+    <input type='text' name='observaciones' id ='observaciones' value='$ret[obs]' size=80>";
     
     // se carga el hash
     echo "<div class='auto' id='hash'>";

@@ -3,7 +3,7 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
     
-
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -163,7 +163,7 @@ if(isset($_SESSION['id_u'])) {
     	document.getElementById("juzgado_nuevo").disabled=false;
     	document.getElementById('juzgado_nuevo').remove(0);
     	document.getElementById('sonnuevas').value=2;
-    	document.getElementById('btn2').style.display = 'none';
+    	document.getElementById('btn1').style.display = 'none';
     }
       </script>
     </head>
@@ -222,7 +222,7 @@ if(isset($_SESSION['id_u'])) {
     							  <div class="col-12">
     <?php							  
     echo "Descripcion";
-    echo "<textarea name='descripcion'  id='descripcion' value='$mydescripcion' rows='4'></textarea>";
+    echo "<textarea name='descripcion'  id='descripcion' value='$mydescripcion' rows='4'>$mydescripcion</textarea>";
     ?>
     							</div>
     
@@ -481,7 +481,7 @@ if(isset($_SESSION['id_u'])) {
     											echo "<li><input type='button' id='btn1' value='Borrar Diligencias' class='caso' onclick='eliminar()'></li>";
     										}
     										else {
-    											echo "<li><input type='button' id='btn2' value='Agregar Diligencias' class='caso' onclick='agregar()'></li>";
+    											echo "<li><input type='button' id='btn1' value='Agregar Diligencias' class='caso' onclick='agregar()'></li>";
     										}
     ?>
     										<li><input type="button" onclick="location.href='asunto.php';" value="Volver"></li>						

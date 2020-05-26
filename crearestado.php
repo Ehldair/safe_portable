@@ -19,25 +19,18 @@ $myid_ev=$_SESSION['id_ev'];
 $myusuario=mysqli_real_escape_string($link,$_POST['usuario']);
 $myestado=mysqli_real_escape_string($link,$_POST['estado']);
 $mytipo_hash=mysqli_real_escape_string($link,$_POST['tipo_hash']);
-if (isset($_POST['programa'])) {
-    $myprograma=mysqli_real_escape_string($link,$_POST['programa']);
-}
-else {
+if (empty($_POST['programa'])) {
     $myprograma='null';
 }
-
-if (isset($_POST['accion_programa'])) {
-    $myaccion_programa=mysqli_real_escape_string($link,$_POST['accion_programa']);
-}
 else {
+    $myprograma=mysqli_real_escape_string($link,$_POST['programa']);
+}
+
+if (empty($_POST['accion_programa'])) {
     $myaccion_programa='null';
 }
-
-if (isset($_POST['detalles'])) {
-    $myobservaciones=mysqli_real_escape_string($link,$_POST['detalles']);
-}
 else {
-    $myobservaciones='null';
+    $myaccion_programa=mysqli_real_escape_string($link,$_POST['accion_programa']);
 }
 
 if (!empty($_POST['num_hash'])) {
@@ -57,6 +50,12 @@ if (isset($_POST['id_hash'])) {
 }
 else {
     $myid_hash='0';
+}
+if (isset($_POST['observaciones'])) {
+    $myobservaciones=mysqli_real_escape_string($link,$_POST['observaciones']);
+}
+else {
+    $myobservaciones=null;
 }
 if($mymod!=1) {
     if($myhash!='0') {
@@ -87,8 +86,6 @@ else {
         echo $sql;
         $sql= "UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa, observaciones='$myobservaciones' WHERE id_evidencia_registro=$myid_registro";
         mysqli_query($link, $sql);
-        echo $sql;
-        echo "Actualizo";
     }
     else {
         if($myhash!='0' and $myhash_original=='0') {
@@ -101,8 +98,7 @@ else {
         else {
             $sql="UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa, observaciones='$myobservaciones' WHERE id_evidencia_registro=$myid_registro";
             mysqli_query($link, $sql );
-            echo $sql;
-            echo "ENTRO AQUI";
+            
         }
     }
     $_SESSION['respuesta']=1;
