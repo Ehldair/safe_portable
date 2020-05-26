@@ -40,27 +40,30 @@ if(isset($_SESSION['id_u'])) {
     <script src="miscript.js"></script>
      <script type="text/javascript">
      function accion(opSelect){
-    	 
-    		
+    	 	var estado=document.getElementById("estado").value
     		var category=opSelect;
     		var url="obtenerprograma.php";
-    		var pro= $.ajax({
+    		if(estado!=3) {
+    			var pro= $.ajax({
+    				url:url,
+	    	        type:"POST",
+    		        data:{category:category}
     
-    			url:url,
-    	        type:"POST",
-    	        data:{category:category}
+    		      }).done(function(data){
     
-    	      }).done(function(data){
-    
-    	            $("#accion_programa").html(data);
-    	      })    
+    	    	        $("#accion_programa").html(data);
+    	      	})
+    		}	    
     	};
     </script>
     <script>
-    function cambiarhash(estado) {
-    	var est=estado;
+    function cambiarhash() {
+    	var est=document.getElementById('estado').value;
     	if(est==3) {
     		document.getElementById('hash').style.display = 'none';
+    		document.getElementById('tipo_hash').disabled = true;
+    		document.getElementById('accion_programa').disabled=true;
+    		document.getElementById('accion_programa').value='';
     	
     	}
     	else {
@@ -73,7 +76,7 @@ if(isset($_SESSION['id_u'])) {
     
     </head>
     
-    <body class="is-preload">
+    <body class="is-preload" onload="cambiarhash()">
     		<div id="page-wrapper">
     
     			<!-- Main -->
@@ -154,12 +157,21 @@ if(isset($_SESSION['id_u'])) {
     
     //se carga el programa ya grabado y se crea el select con el resto de programas
     
-    echo "Programa:
-    <select id='programa' name='programa' onchange='accion(this.value);'>";
+    echo "Programa:";
+   
     
+      
+    echo "<select id='programa' name='programa' onchange='accion(this.value);'>";
     echo "<option value=$ret[id_programa]>$ret[programa]</option>";
+    
+        
     $contador=0;
-    $resultado = mysqli_query($link, "select id_programa, nombre FROM programa WHERE id_programa!=$ret[id_programa]");
+    if($ret['id_programa']!=null OR $ret['id_programa']!='') {
+        $resultado = mysqli_query($link, "select id_programa, nombre FROM programa WHERE id_programa!=$ret[id_programa]");
+    }
+    else {
+        $resultado = mysqli_query($link, "select id_programa, nombre FROM programa");
+    }
     while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
         foreach ($line as $col_value) {
             if($contador==0) {
@@ -180,23 +192,7 @@ if(isset($_SESSION['id_u'])) {
     echo "Accion:
     
     <select id='accion_programa' name='accion_programa'>
-    <option value=$ret[id_accion_programa]>$ret[accion_programa]</option>";
-    $contador=0;
-    $resultado = mysqli_query($link, "select id_accion_programa, nombre FROM accion_programa where id_accion_programa!=$ret[id_accion_programa]");
-    while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-        foreach ($line as $col_value) {
-            if($contador==0) {
-                echo "<option value=$col_value>";
-                $contador++;
-            }
-            else {
-                echo "$col_value</option>";
-                $contador=0;
-            }
-        }
-    }
-    
-        	
+    <option value=$ret[id_accion_programa]>$ret[accion_programa]</option>";     	
     echo "</select>";
     
     // se cargan los detalles
@@ -216,7 +212,7 @@ if(isset($_SESSION['id_u'])) {
     
     // se cargan el select con los tipos de hash
     echo "Tipo HASH:
-    <select id='tipo_hash' name='tipo_hash'>";
+    <select id='tipo_hash' id='tipo_hash' name='tipo_hash'>";
     if($ret['id_tipo_hash']!=null) {
         echo "<option value=$ret[id_tipo_hash]>$ret[tipo_hash]</option>";
         $resultado = mysqli_query($link, "select id_tipo_hash,tipo_hash FROM tipo_hash where id_tipo_hash!=$ret[id_tipo_hash]");

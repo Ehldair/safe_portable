@@ -18,7 +18,6 @@ if(isset($_SESSION['id_registro'])) {
 $myid_ev=$_SESSION['id_ev'];
 $myusuario=mysqli_real_escape_string($link,$_POST['usuario']);
 $myestado=mysqli_real_escape_string($link,$_POST['estado']);
-$mytipo_hash=mysqli_real_escape_string($link,$_POST['tipo_hash']);
 $myfecha=mysqli_real_escape_string($link,$_POST['fecha']);
 if (empty($_POST['programa'])) {
     $myprograma='null';
@@ -58,6 +57,12 @@ if (isset($_POST['observaciones'])) {
 else {
     $myobservaciones=null;
 }
+if(isset($_POST['tipo_hash'])) {
+    $mytipo_hash=mysqli_real_escape_string($link,$_POST['tipo_hash']);
+}
+else {
+    $mytipo_hash='null';
+}
 if($mymod!=1) {
     if($myhash!='0') {
         $sql= mysqli_query($link, "INSERT INTO hash (id_evidencia,id_tipo_hash,hash) VALUES ($myid_ev, $mytipo_hash, '$myhash')");
@@ -65,7 +70,7 @@ if($mymod!=1) {
         $ret = mysqli_fetch_array($sql);
         $myid_hash=$ret['id_hash'];
         $sql= mysqli_query($link,"INSERT INTO evidencia_registro (id_evidencia,id_estado_evidencia,id_usuario,id_programa,id_accion_programa,id_hash,observaciones, fecha_alta_estado) VALUES ($myid_ev, $myestado, $myusuario, $myprograma, $myaccion_programa,$myid_hash,'$myobservaciones','$myfecha')");
-        
+        echo "INSERT INTO evidencia_registro (id_evidencia,id_estado_evidencia,id_usuario,id_programa,id_accion_programa,id_hash,observaciones, fecha_alta_estado) VALUES ($myid_ev, $myestado, $myusuario, $myprograma, $myaccion_programa,$myid_hash,'$myobservaciones','$myfecha')";
     }
     
     else {

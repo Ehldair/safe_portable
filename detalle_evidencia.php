@@ -142,19 +142,21 @@ if(isset($_SESSION['id_u'])) {
     		</script>
      <script type="text/javascript">
      function accion(opSelect){
-    		
+    	 	var estado=document.getElementById("estado").value
     		var category=opSelect;
     		var url="obtenerprograma.php";
-    		var pro= $.ajax({
+    		if(estado!=3) {
+    			var pro= $.ajax({
     
-    			url:url,
-    	        type:"POST",
-    	        data:{category:category}
+    				url:url,
+    	        	type:"POST",
+    	        	data:{category:category}
     
-    	      }).done(function(data){
+    	      	}).done(function(data){
     
-    	            $("#accion_programa").html(data);
-    	      })    
+    	        	    $("#accion_programa").html(data);
+    	      	})
+    		}    
     	};
     </script>
     <script>
@@ -163,7 +165,8 @@ if(isset($_SESSION['id_u'])) {
     	if(est==3) {
     		document.getElementById('num_hash').disabled = true;
     		document.getElementById('tipo_hash').disabled = true;
-    	
+    		document.getElementById('accion_programa').disabled=true;
+    		document.getElementById('accion_programa').value='';
     	}
     	else {
     		document.getElementById('num_hash').disabled = false;
@@ -956,24 +959,7 @@ if(!empty($ret['pin'])) {
 								<div class="col-4 col-12-mobilep">
  <select id="accion_programa" name="accion_programa">
     	  <option value=null>Accion del programa</option>
-    	  <?php
-            $contador=0;
-            $resultado = mysqli_query($link, "select id_accion_programa, nombre FROM accion_programa");
-            while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-                foreach ($line as $col_value) {
-                    if($contador==0) {
-                        echo "<option value=$col_value>";
-                        $contador++;
-                    }
-                    else {
-                        echo "$col_value</option>";
-                        $contador=0;
-                    }    
-                }
-            }
-            ?>
-        	
-    	    </select>								
+</select>								
 								</div>
 								
 								 <!--  
