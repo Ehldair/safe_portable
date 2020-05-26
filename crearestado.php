@@ -19,6 +19,7 @@ $myid_ev=$_SESSION['id_ev'];
 $myusuario=mysqli_real_escape_string($link,$_POST['usuario']);
 $myestado=mysqli_real_escape_string($link,$_POST['estado']);
 $mytipo_hash=mysqli_real_escape_string($link,$_POST['tipo_hash']);
+$myfecha=mysqli_real_escape_string($link,$_POST['fecha']);
 if (empty($_POST['programa'])) {
     $myprograma='null';
 }
@@ -63,13 +64,13 @@ if($mymod!=1) {
         $sql= mysqli_query($link, "SELECT id_hash FROM hash WHERE id_evidencia=$myid_ev and hash='$myhash'");
         $ret = mysqli_fetch_array($sql);
         $myid_hash=$ret['id_hash'];
-        $sql= mysqli_query($link,"INSERT INTO evidencia_registro (id_evidencia,id_estado_evidencia,id_usuario,id_programa,id_accion_programa,id_hash,observaciones, fecha_alta_estado) VALUES ($myid_ev, $myestado, $myusuario, $myprograma, $myaccion_programa,$myid_hash,'$myobservaciones', NOW())");
+        $sql= mysqli_query($link,"INSERT INTO evidencia_registro (id_evidencia,id_estado_evidencia,id_usuario,id_programa,id_accion_programa,id_hash,observaciones, fecha_alta_estado) VALUES ($myid_ev, $myestado, $myusuario, $myprograma, $myaccion_programa,$myid_hash,'$myobservaciones','$myfecha')");
         
     }
     
     else {
         
-        $sql="INSERT INTO evidencia_registro (id_evidencia,id_estado_evidencia,id_usuario,id_programa,id_accion_programa,observaciones, fecha_alta_estado) VALUES ($myid_ev, $myestado, $myusuario, $myprograma, $myaccion_programa, '$myobservaciones', NOW())";
+        $sql="INSERT INTO evidencia_registro (id_evidencia,id_estado_evidencia,id_usuario,id_programa,id_accion_programa,observaciones, fecha_alta_estado) VALUES ($myid_ev, $myestado, $myusuario, $myprograma, $myaccion_programa, '$myobservaciones', '$myfecha')";
         mysqli_query($link,  $sql);
     }
     $_SESSION['respuesta']=2;
@@ -83,8 +84,7 @@ else {
     if($myhash!=$myhash_original AND $myhash!='0' AND $myhash_original!='0') {
         $sql="Update hash set id_tipo_hash=$mytipo_hash, hash='$myhash' WHERE id_hash=$myid_hash";
         mysqli_query($link, $sql);
-        echo $sql;
-        $sql= "UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa, observaciones='$myobservaciones' WHERE id_evidencia_registro=$myid_registro";
+        $sql= "UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa, observaciones='$myobservaciones', fecha_alta_estado='$myfecha' WHERE id_evidencia_registro=$myid_registro";
         mysqli_query($link, $sql);
     }
     else {
@@ -93,12 +93,11 @@ else {
             $sql= mysqli_query($link, "SELECT id_hash FROM hash WHERE id_evidencia=$myid_ev and hash='$myhash'");
             $ret = mysqli_fetch_array($sql);
             $myid_hash=$ret['id_hash'];
-            mysqli_query($link, "UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa,id_hash='$myid_hash',observaciones='$myobservaciones' where id_evidencia_registro=$myid_registro");
+            mysqli_query($link, "UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa,id_hash='$myid_hash',observaciones='$myobservaciones', fecha_alta_estado='$myfecha' where id_evidencia_registro=$myid_registro");
         }
         else {
-            $sql="UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa, observaciones='$myobservaciones' WHERE id_evidencia_registro=$myid_registro";
+            $sql="UPDATE evidencia_registro set id_estado_evidencia=$myestado, id_usuario=$myusuario, id_programa=$myprograma, id_accion_programa=$myaccion_programa, observaciones='$myobservaciones', fecha_alta_estado='$myfecha' WHERE id_evidencia_registro=$myid_registro";
             mysqli_query($link, $sql );
-            
         }
     }
     $_SESSION['respuesta']=1;

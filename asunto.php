@@ -24,7 +24,7 @@ if(isset($_SESSION['id_u'])) {
     
     $resultado = mysqli_query($link, "SELECT c.numero as num_caso, c.año as año_caso, c.nombre as nom_caso, c.descripcion as des_caso, t.id_tipo_caso as id_tipo,
     t.nombre as nom_tipo, g.id_grupo_investigacion as id_grup, g.nombre_grupo as grup , ca.id_ca as id_ca,ca.nombre_ca as nom_ca, p.id_provincia as id_pro, p.nombre_provincia as nom_pro,
-    com.id_comisaria as id_com, com.nombre_comisaria as nom_com, date_format(fecha_alta_caso, '%d/%m/%Y') as fecha
+    com.id_comisaria as id_com, com.nombre_comisaria as nom_com, date_format(fecha_alta_caso, '%d/%m/%Y') as fecha, date_format(fecha_alta_caso, '%Y-%m-%d') as fecha_original
     FROM caso c
     INNER JOIN tipo_caso t ON c.id_tipo_caso=t.id_tipo_caso
     INNER JOIN grupo_investigacion g ON c.id_grupo_investigacion=g.id_grupo_investigacion
@@ -276,6 +276,7 @@ if(isset($_SESSION['id_u'])) {
     												</li>
     												<li>
     													Fecha: <b><?php echo $ret['fecha'] ?></b>
+    													<input type='hidden' name='fecha' id='fecha' value='<?php echo $ret['fecha_original'];?>'>
     												</li>
     											</ul>	
     											

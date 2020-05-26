@@ -3,7 +3,7 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -39,8 +39,8 @@ if(isset($_SESSION['id_u'])) {
     
     
     $resultado = mysqli_query($link, "SELECT i.numero_intervencion as nom_i, e.id_evidencia as id_ev, e.nombre as nom_ev, e.numero_evidencia as num_ev,i.id_intervencion as id_int,
-    i.direccion as int_dir, e.id_tipo_evidencia as id_tip, e.numero_evidencia as num_ev, e.id_subtipo_evidencia as id_sub,t.nombre as nom_tip, s.nombre as nom_sub, 
-    e.id_disco_almacenado as id_disc, d.nombre as nom_disc, e.id_caso as id_caso, e.n_s as n_s, e.capacidad, e.marca, e.modelo, e.observaciones as obs_ev, e.alias as al, e.patron as pat, 
+    i.direccion as int_dir, e.id_tipo_evidencia as id_tip, e.numero_evidencia as num_ev, e.id_subtipo_evidencia as id_sub,t.nombre as nom_tip, s.nombre as nom_sub,
+    e.id_disco_almacenado as id_disc, d.nombre as nom_disc, e.id_caso as id_caso, e.n_s as n_s, e.capacidad, e.marca, e.modelo, e.observaciones as obs_ev, e.alias as al, e.patron as pat,
     e.pin as pin, tp.tipo_capacidad as tipo_capacidad, e.id_tipo_capacidad as id_tipo_capacidad
     FROM evidencia e
     INNER JOIN tipo_evidencia t ON e.id_tipo_evidencia=t.id_tipo_evidencia
@@ -55,9 +55,9 @@ if(isset($_SESSION['id_u'])) {
     
     /*incluyo estas dos lineas*/
     $resultado_dependientes=mysqli_query($link, "SELECT id_evidencia from evidencia where relacionado_con=$myid_ev");
-
+    
     $contador_relacionado_con=mysqli_num_rows($resultado_dependientes);
- 
+    
     
     
     ?>
@@ -750,13 +750,14 @@ if(!empty($ret['pin'])) {
     }
 
 //creo la lista de registro
-    $sql = "select er.id_evidencia_registro,u.apodo,es.nombre as estado, p.nombre as programa, ap.nombre as accion_programa, h.hash, er.observaciones, er.fecha_alta_estado from evidencia_registro er
+    $sql = "select er.id_evidencia_registro,u.apodo,es.nombre as estado, p.nombre as programa, ap.nombre as accion_programa, h.hash, er.observaciones, 
+    date_format(er.fecha_alta_estado, '%d/%m/%Y %H:%i') as fecha_alta_estado from evidencia_registro er
     inner join usuario u on er.id_usuario=u.id_usuario
     inner join estado_evidencia es on er.id_estado_evidencia=es.id_estado_evidencia
     left join programa p on er.id_programa=p.id_programa
     left join accion_programa ap on er.id_accion_programa=ap.id_accion_programa
     left join hash h on er.id_hash=h.id_hash
-    where er.id_evidencia=$ret[id_ev] ORDER BY er.fecha_alta_estado ASC";
+    where er.id_evidencia=$ret[id_ev] ORDER BY er.fecha_alta_estado DESC";
     $resultado=mysqli_query($link, $sql);
     $count=mysqli_num_rows($resultado);
 
@@ -987,13 +988,18 @@ if(!empty($ret['pin'])) {
      </div>
     
     -->
+    							<div class="col-3 col-12-mobilep">
 								
-								<div class="col-4 col-12-mobilep">
+									<input type="datetime-local" name="fecha" id ="fecha" placeholder="fecha" required>
+								</div>
+								
+								<div class="col-3 col-12-mobilep">
 								
 									<input type="text" name="num_hash" id ="num_hash" placeholder="Hash">
 								</div>
 								
-								<div class="col-4 col-12-mobilep">
+								
+								<div class="col-2 col-12-mobilep">
 <select id="tipo_hash" name="tipo_hash" >
      <?php
             $contador=0;

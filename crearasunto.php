@@ -156,6 +156,7 @@ else {
     $myaño_original=mysqli_real_escape_string($link,$_POST['año_original']);
     $mynombre=mysqli_real_escape_string($link,$_POST['nombre']);
     $mydescripcion=mysqli_real_escape_string($link,$_POST['descripcion']);
+    $myfecha=mysqli_real_escape_string($link,$_POST['fecha']);
     if(isset($_POST['diligencias_nuevo'])) {
         $mydiligencias_nuevo = mysqli_real_escape_string($link, $_POST['diligencias_nuevo']);
     }
@@ -304,7 +305,7 @@ else {
         }
     }
     if($errorcaso!=1) {
-        $sql="UPDATE caso set id_tipo_caso=$mytipo_caso, id_grupo_investigacion=$mygrupo, id_estado_caso=$myestado, nombre='$mynombre', descripcion='$mydescripcion'";
+        $sql="UPDATE caso set id_tipo_caso=$mytipo_caso, id_grupo_investigacion=$mygrupo, id_estado_caso=$myestado, nombre='$mynombre', descripcion='$mydescripcion', fecha_alta_caso='$myfecha'";
         $sql2=" WHERE id_caso=$myid_caso";
         if($cambiarnumero==1) {
             $sql=$sql." ,numero=$mynumero_nuevo, año=$myaño_nuevo";

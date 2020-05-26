@@ -25,6 +25,8 @@ if(isset($_SESSION['id_u'])) {
     $myid_comisaria = mysqli_real_escape_string($link, $_POST['id_com']);
     $mycomisaria= mysqli_real_escape_string($link, $_POST['nom_com']);
     $mygrupo = mysqli_real_escape_string($link, $_POST['grupo']);
+    $mygrupo = mysqli_real_escape_string($link, $_POST['grupo']);
+    $myfecha = mysqli_real_escape_string($link, $_POST['fecha']);
     $borrar=0;
     ?>
     
@@ -208,8 +210,16 @@ if(isset($_SESSION['id_u'])) {
     ?>						
     								
     							  </div>
+    							  <div class="col-3 col-12-mobilep">
+   <?php
+   echo "Fecha <br>";
+   
+   echo "<input type='date' name='fecha'  id='fecha'  value='$myfecha' required>";
+   ?> 
+    							  	
+    							  </div>
     							  
-    							  <div class="col-6 col-12-mobilep">	
+    							  <div class="col-3 col-12-mobilep">	
     							  
     <?php
     echo "Nombre";

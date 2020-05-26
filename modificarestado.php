@@ -91,7 +91,7 @@ if(isset($_SESSION['id_u'])) {
     
     //se cargan todos los datos necesarios para la posterior modificación del estado de la evidencia
     $sql="select u.id_usuario,u.apodo as apodo,es.id_estado_evidencia,es.nombre as estado,p.id_programa, p.nombre as programa,ap.id_accion_programa, ap.nombre as accion_programa,
-    ti.id_tipo_hash, ti.tipo_hash, h.id_hash, h.hash as hash, er.observaciones as obs
+    ti.id_tipo_hash, ti.tipo_hash, h.id_hash, h.hash as hash, er.observaciones as obs, date_format(fecha_alta_estado, '%Y-%m-%dT%H:%i') as fecha_alta_estado
     from evidencia_registro er
     inner join usuario u on er.id_usuario=u.id_usuario
     inner join estado_evidencia es on er.id_estado_evidencia=es.id_estado_evidencia
@@ -105,6 +105,7 @@ if(isset($_SESSION['id_u'])) {
     
     
     //se carga el usuario ya grabado y se crea el select con el resto de usuarios
+
     echo "Usuario:";
     echo "<select name='usuario' id='usuario'>";
     echo "<option value=$ret[id_usuario] selected>$ret[apodo]</option>";
@@ -203,6 +204,11 @@ if(isset($_SESSION['id_u'])) {
     echo "Observaciones:
     <input type='text' name='observaciones' id ='observaciones' value='$ret[obs]' size=80>";
     
+    // se cargan la fecha
+    
+    echo "Fecha: <br>";
+    echo "<input type='datetime-local' name='fecha' id ='fecha' value='$ret[fecha_alta_estado]' size=80>";
+    
     // se carga el hash
     echo "<div class='auto' id='hash'>";
     echo "HASH:
@@ -243,7 +249,7 @@ if(isset($_SESSION['id_u'])) {
     <input type="hidden" name="id_hash" id="id_hash" value="<?php echo $ret['id_hash']?>">
     <input type="hidden" name="num_hash_original" id="num_hash_original" value="<?php echo $ret['hash']?>">
     <li><input type='submit' value='Modificar' /></li>
-    <li><input type="button" onclick="location.href='asunto.php';" value="Volver"><br></li>
+    <li><input type="button" onclick="location.href='detalle_evidencia.php';" value="Volver"><br></li>
     
     </ul>
     </div>		
