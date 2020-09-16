@@ -5,7 +5,7 @@ session_start();
 #imprimimos las variables que estas enviando para saber si estan llegando completas
 
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+$link = mysqli_connect("localhost", "root", ".google.", "safe");
 
 if (mysqli_connect_errno()) {
     printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -68,21 +68,15 @@ if($mod!="1") {
         if($count!=0) {
             $sql_caso = "SELECT numero,año FROM caso  where id_diligencias=$ret[id_dil]";
             $result_caso=mysqli_query($link,$sql_caso);
-            $ret_caso=mysqli_fetch_array($result_caso);
-            $count_caso = mysqli_num_rows($result_caso);
-            if($count_caso!=0) {
-                echo "Ya existen esas mismas diligencias en el caso ".$ret_caso['numero']."_".substr( $ret_caso['año'], 2);
-            }
-            else {
-                $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret[id_dil],$mytipo_caso,$mygrupo,$mynumero,'$myaño','$mynombre','$myfecha','$mydescripcion', 1)";
-                mysqli_query($link,$sql);
-                $sql = "SELECT id_caso FROM caso WHERE numero=$mynumero AND año=$myaño";
-                $resultado=mysqli_query($link,$sql);
-                $ret_caso=mysqli_fetch_array($resultado);
-                $_SESSION['respuesta']=8;
-                $_SESSION['id_caso']=$ret_caso['id_caso'];
-                echo 1;
-            }
+            $ret_caso=mysqli_fetch_array($result_caso);  
+            $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret[id_dil],$mytipo_caso,$mygrupo,$mynumero,'$myaño','$mynombre','$myfecha','$mydescripcion', 1)";
+            mysqli_query($link,$sql);
+            $sql = "SELECT id_caso FROM caso WHERE numero=$mynumero AND año=$myaño";
+            $resultado=mysqli_query($link,$sql);
+            $ret_caso=mysqli_fetch_array($resultado);
+            $_SESSION['respuesta']=8;
+            $_SESSION['id_caso']=$ret_caso['id_caso'];
+            echo 1;
         }
         else {
             $sql = "SELECT * FROM caso where numero=$mynumero AND año=$myaño";
@@ -224,12 +218,6 @@ else {
                 $resultado=mysqli_query($link, $sql);
                 $ret=mysqli_fetch_array($resultado);
                 $count=mysqli_num_rows($resultado);
-                if($count!=0) {
-                    echo "Ya existen las mismas evidencias en el caso ".$ret['numero']."_".substr( $ret['año'], 2);
-                    $errordiligencias=1;
-                    $errorcaso=1;
-                }
-                else {
                     if($mydiligencias_nuevo==0) {
                         echo "Las diligencias no pueden ser 0.";
                         $errordiligencias=1;
@@ -240,7 +228,6 @@ else {
                         $cambiardiligencias=1;
                         $errordiligencias=0;
                     }
-                }
             }
             else {
                 if($mydiligencias_nuevo==0) {
@@ -272,12 +259,6 @@ else {
                 $resultado=mysqli_query($link, $sql);
                 $ret=mysqli_fetch_array($resultado);
                 $count=mysqli_num_rows($resultado);
-                if($count!=0) {
-                    echo "Ya existen las mismas evidencias en el caso ".$ret['numero']."_".substr( $ret['año'], 2);
-                    $errordiligencias=1;
-                    $errorcaso=1;
-                }
-                else {
                     if($mydiligencias_nuevo==0) {
                         echo "Las diligencias no pueden ser 0.";
                         $errordiligencias=1;
@@ -288,7 +269,6 @@ else {
                         $nuevasdiligencias=0;
                         $cambiardiligencias=1;
                     }
-                }
             }
             else {
                 if($mydiligencias_nuevo==0) {

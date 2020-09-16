@@ -1,12 +1,10 @@
 <?php
 session_start();
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+$link = mysqli_connect("localhost", "root", ".google.", "safe");
 
-if(isset($_POST['id_ev'])) {
-    $myid_ev = mysqli_real_escape_string($link,$_POST['id_ev']);
-}
-$myid_ev=$_SESSION['id_ev'];
+
+$myid_ev=mysqli_real_escape_string($link,$_POST["category"]);
    
     //ELIMINA LA EVIDENCIA SI NO TIENE ASOCIADAS 
     //Primero elimina los registros asociados de la evidencia en la tabla evidencia_registro
@@ -49,7 +47,19 @@ $myid_ev=$_SESSION['id_ev'];
                 
             	<?php
     }
-
+    
+    //compruebo si hay alguna evidencia que dependa de la misma evidencia, en el caso de que la evidencia a eliminar fuera dependiente
+    $sql="Select relacionado_con from evidencia where id_evidencia=$myid_ev";
+    $resultado=mysqli_query($link, $sql);
+    $ret=mysqli_fetch_array($resultado);
+    
+    $sql="Select * from evidencia where relacionado_con=$ret[relacionado_con] AND id_evidencia!=$myid_ev";
+    $resultado=mysqli_query($link, $sql);
+    $count=mysqli_num_rows($resultado);
+    if($count==0) {
+        $sql="Update Evidencia set tiene_subevidencias=0 where id_evidencia=$ret[relacionado_con]";
+        mysqli_query($link, $sql);
+    }
            
     //Tercero elimina la evidencia de la tabla evidencia
     

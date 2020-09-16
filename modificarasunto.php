@@ -3,8 +3,8 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
     
-    
-    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+
+    $link = mysqli_connect("localhost", "root", ".google.", "safe");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -27,25 +27,19 @@ if(isset($_SESSION['id_u'])) {
     $mygrupo = mysqli_real_escape_string($link, $_POST['grupo']);
     $mygrupo = mysqli_real_escape_string($link, $_POST['grupo']);
     $myfecha = mysqli_real_escape_string($link, $_POST['fecha']);
+    $myestado = mysqli_real_escape_string($link, $_POST['estado']);
     $borrar=0;
     ?>
     
     <!DOCTYPE html>
     <html lang="es-ES">
     <head>
-     <title>Nuevo Asunto</title>
+     <title>Modificar Asunto</title>
     	<meta charset="utf-8" />
     	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     	<link rel="stylesheet" href="assets/css/main.css" />
     	
-    	<!-- Pelayo -->
-    		<script src="assets/js/jquery.min.js"></script>
-    		<script src="assets/js/jquery.dropotron.min.js"></script>
-    		<script src="assets/js/jquery.scrollex.min.js"></script>
-    		<script src="assets/js/browser.min.js"></script>
-    		<script src="assets/js/breakpoints.min.js"></script>
-    		<script src="assets/js/util.js"></script>
-    		<script src="assets/js/main.js"></script>
+
     			
     	<!-- Alonso -->
     		<script src="//code.jquery.com/jquery-latest.js"></script>
@@ -172,6 +166,95 @@ if(isset($_SESSION['id_u'])) {
     
     <body class="is-preload">
     		<div id="page-wrapper">
+	<!-- Header -->
+    				<header id="header">
+    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
+    					<nav id="nav">
+    						<ul>
+    							<li><a href="inicio.php">Home</a></li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Casos</a>
+    								<ul>
+    									<li><a href="busqueda_Caso.php">Buscar</a></li>
+    									<li><a href="nuevoasunto.php">Nuevo</a></li>
+    
+    									<li>
+    										<a href="#">Listar</a>
+    										<ul>
+    											<li><a href="abiertos.php">Abiertos</a></li>
+    											<li><a href="cerrados.php">Cerrados</a></li>
+    											<li><a href="todos.php">Todos</a></li>
+    										</ul>
+    									</li>
+    									
+    								</ul>
+    							</li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Gestión</a>
+    								<ul>
+    									<li><a href="compensacion_usuario.php">Compensaciones</a></li>
+    									<li><a href="viajes_año.php">Viajes</a></li>
+    								</ul>	
+    							</li>
+    							<?php if ($_SESSION['admin'] ==2) {?>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Administración</a>
+    								<ul>
+    									<li>
+    										<a href="#">Usuario</a>
+    										<ul>
+    											<li><a href="nuevousuario.php">Nuevo</a></li>
+    											<li><a href="#">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Viajes</a>
+    										<ul>
+    											<li><a href="nuevoviaje.php">Nuevo</a></li>
+    											<li><a href="viajes.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Compensaciones</a>
+    										<ul>
+    											<li><a href="nuevosdias.php">Añadir días</a></li>
+    											<li><a href="pedirdias.php">Pedir días</a></li>
+    											<li><a href="gestion_dias.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Desplegables</a>
+    										<ul>
+    											<li><a href="#">Grupo</a>
+    											<ul>
+    												<li><a href="nuevogrupo.php">Nuevo grupo</a></li>
+    												<li><a href="gestion_grupo.php">Gestión grupo</a></li></ul>
+    											</li>
+    											<li><a href="#">Comisaría</a>
+    											<ul>
+    												<li><a href="nuevogrupo_comisaria.php">Nueva Comisaría</a></li>
+    												<li><a href="gestion_comisaria.php">Gestión comisaría</a></li></ul>
+    											</li>
+    											<li><a href="#">Juzgado</a>
+    											<ul>
+    												<li><a href="nuevojuzgado.php">Nuevo juzgado</a></li>
+    												<li><a href="gestion_juzgado.php">Gestión juzgado</a></li></ul>
+    											</li>
+    										</ul>
+    									</li>
+    								</ul>	
+    							</li>
+    							<?php }?>
+    							
+    							
+    							<li><a href="login.php" class="button">Cerrar</a></li>
+    						</ul>
+    					</nav>
+    				</header>
+    			
     
     			<!-- Main -->
     				<section id="main" class="container">
@@ -181,7 +264,7 @@ if(isset($_SESSION['id_u'])) {
     					</header>
     					
     					<div class="box">
-    						<form method="post" id="myform" action="javascript:validar()";>
+    						<form method="post" id="myform" action="javascript:validar();">
     							Datos del caso <br><br>
     							
     							<div class="row gtr-50 gtr-uniform">
@@ -252,6 +335,7 @@ if(isset($_SESSION['id_u'])) {
         $myid_juzgado = mysqli_real_escape_string($link, $_POST['id_juzgado']);
         $myjuzgado = mysqli_real_escape_string($link, $_POST['juzgado']);
         $mynum_juzgado = mysqli_real_escape_string($link, $_POST['num_juzgado']);
+        $myjurisdiccion = mysqli_real_escape_string($link, $_POST['jurisdiccion']);
     
     ?>
     
@@ -293,22 +377,23 @@ if(isset($_SESSION['id_u'])) {
     // cargo la lista de juzgados
     	echo "Juzgado";
         echo "<select name='juzgado_nuevo' id='juzgado_nuevo'>";
-        echo "<option value='$myid_juzgado' selected>$myjuzgado $mynum_juzgado</option>";
-        $resultado = mysqli_query($link, "select id_juzgado, nombre, numero FROM juzgado where id_juzgado!=0 and id_juzgado!=$myid_juzgado");
-        $contador = 2;
+        echo "<option value='$myid_juzgado' selected>$myjuzgado $mynum_juzgado, $myjurisdiccion</option>";
+        $resultado = mysqli_query($link, "select id_juzgado, nombre, numero, jurisdiccion FROM juzgado where id_juzgado!=0 and id_juzgado!=$myid_juzgado");
+        $contador = 3;
         while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
             foreach ($line as $col_value) {
-                if ($contador == 2) {
+                if ($contador==3) {
                     echo "<option value='$col_value'>";
-                    $contador = 0;
-                } else {
-                    if ($contador == 0) {
-                        echo $col_value;
-                        $contador ++;
-                    } else {
-                        echo " " . $col_value . "</option>";
-                        $contador ++;
-                    }
+                    $contador=0;
+                }
+                else {
+                    if($contador<=1) {
+                        echo $col_value." ";
+                        $contador++;	           }
+                        else {
+                            echo ", ".$col_value."</option>";
+                            $contador++;
+                        }
                 }
             }
         }
@@ -342,24 +427,25 @@ if(isset($_SESSION['id_u'])) {
         echo "</select>";
         					echo "</div>";
     						echo "<div class='col-4 col-12-mobilep'>  ";
-    	echo "Tipo Delictivo";
+    	echo "Juzgado";
         echo "<select name='juzgado_nuevo' id='juzgado_nuevo' disabled>";
         echo "<option value='0' selected></option>";
-        $resultado = mysqli_query($link, "select id_juzgado, nombre, numero FROM juzgado where id_juzgado!=0");
-        $contador = 2;
+        $resultado = mysqli_query($link, "select id_juzgado, nombre, numero, jurisdiccion FROM juzgado where id_juzgado!=0");
+        $contador = 3;
         while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
             foreach ($line as $col_value) {
-                if ($contador == 2) {
+                if ($contador==3) {
                     echo "<option value='$col_value'>";
-                    $contador = 0;
-                } else {
-                    if ($contador == 0) {
-                        echo $col_value;
-                        $contador ++;
-                    } else {
-                        echo " " . $col_value . "</option>";
-                        $contador ++;
-                    }
+                    $contador=0;
+                }
+                else {
+                    if($contador<=1) {
+                        echo $col_value." ";
+                        $contador++;	           }
+                        else {
+                            echo ", ".$col_value."</option>";
+                            $contador++;
+                        }
                 }
             }
         }
@@ -462,6 +548,19 @@ if(isset($_SESSION['id_u'])) {
     echo " Grupo";
     echo "<select id='grupo' name='grupo' required>";
     echo "<option value=$myid_grupo>$mygrupo</option>";
+    $resultado = mysqli_query($link, "select id_grupo_investigacion,nombre_grupo FROM grupo_investigacion where id_grupo_investigacion!=$myid_grupo and id_grupo_investigacion!=1 and id_comisaria=$myid_comisaria");
+    $contador = 0;
+    while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+        foreach ($line as $col_value) {
+            if ($contador == 0) {
+                echo "<option value='$col_value'>";
+                $contador ++;
+            } else {
+                echo " " . $col_value . "</option>";
+                $contador = 0;
+            }
+        }
+    }
     echo "</select>";
     ?>							
     							</div>
@@ -470,8 +569,14 @@ if(isset($_SESSION['id_u'])) {
     <?php
     echo "Estado: ";
     echo "<select name='estado' id='estado'>";
+    if($myestado==1) {
     echo "<option value='1'> Abierto </option>";
     echo "<option value='2'> Cerrado </option>";
+    }
+    else {
+        echo "<option value='2'> Cerrado </option>";
+        echo "<option value='1'> Abierto </option>";
+    }
     echo "</select>";
     ?>							
     							</div>
@@ -506,8 +611,21 @@ else {
 }
 ?>
 						</div>
+						</div>
 							
 						</form>
 					</div>
 			</section>
 	</div>
+	
+	    	<!-- Pelayo -->
+    		<script src="assets/js/jquery.min.js"></script>
+    		<script src="assets/js/jquery.dropotron.min.js"></script>
+    		<script src="assets/js/jquery.scrollex.min.js"></script>
+    		<script src="assets/js/browser.min.js"></script>
+    		<script src="assets/js/breakpoints.min.js"></script>
+    		<script src="assets/js/util.js"></script>
+    		<script src="assets/js/main.js"></script>	
+    		
+</body>	
+</html>	

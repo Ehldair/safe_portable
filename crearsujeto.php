@@ -5,14 +5,16 @@ session_start();
 #imprimimos las variables que estas enviando para saber si estan llegando completas
 
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+$link = mysqli_connect("localhost", "root", ".google.", "safe");
 
 if (mysqli_connect_errno()) {
     printf("Falló la conexión: %s\n", mysqli_connect_error());
     exit();
 }
 
-$myid_su=$_SESSION['id_su'];
+if (isset($_SESSION['id_su'])) {
+    $myid_su=$_SESSION['id_su'];
+}
 $mymod=$_SESSION['mod'];
 
 $myid_caso = $_SESSION['id_caso'];

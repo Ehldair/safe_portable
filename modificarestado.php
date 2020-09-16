@@ -2,8 +2,8 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-    
-    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+
+    $link = mysqli_connect("localhost", "root", ".google.", "safe");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -23,14 +23,7 @@ if(isset($_SESSION['id_u'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
     
-    <!-- Pelayo -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.dropotron.min.js"></script>
-    <script src="assets/js/jquery.scrollex.min.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
+
     
     <!-- Alonso -->
     <script src="//code.jquery.com/jquery-latest.js"></script>
@@ -39,6 +32,7 @@ if(isset($_SESSION['id_u'])) {
     <script src="js/jquery-3.4.1.js"></script>
     <script src="miscript.js"></script>
      <script type="text/javascript">
+     
      function accion(opSelect){
     	 	var estado=document.getElementById("estado").value
     		var category=opSelect;
@@ -60,15 +54,17 @@ if(isset($_SESSION['id_u'])) {
     function cambiarhash() {
     	var est=document.getElementById('estado').value;
     	if(est==3) {
-    		document.getElementById('hash').style.display = 'none';
+    		document.getElementById('num_hash').disabled = true;
     		document.getElementById('tipo_hash').disabled = true;
     		document.getElementById('accion_programa').disabled=true;
     		document.getElementById('accion_programa').value='';
     	
     	}
     	else {
-    		document.getElementById('hash').style.display = 'block';
-    	
+    		
+    		document.getElementById('accion_programa').disabled=false;
+    		document.getElementById('num_hash').disabled = false;
+    		document.getElementById('tipo_hash').disabled = false;
     	}
     }
     
@@ -78,7 +74,96 @@ if(isset($_SESSION['id_u'])) {
     
     <body class="is-preload" onload="cambiarhash()">
     		<div id="page-wrapper">
+	<!-- Header -->
+    				<header id="header">
+    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
+    					<nav id="nav">
+    						<ul>
+    							<li><a href="inicio.php">Home</a></li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Casos</a>
+    								<ul>
+    									<li><a href="busqueda_Caso.php">Buscar</a></li>
+    									<li><a href="nuevoasunto.php">Nuevo</a></li>
     
+    									<li>
+    										<a href="#">Listar</a>
+    										<ul>
+    											<li><a href="abiertos.php">Abiertos</a></li>
+    											<li><a href="cerrados.php">Cerrados</a></li>
+    											<li><a href="todos.php">Todos</a></li>
+    										</ul>
+    									</li>
+    									
+    								</ul>
+    							</li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Gestión</a>
+    								<ul>
+    									<li><a href="compensacion_usuario.php">Compensaciones</a></li>
+    									<li><a href="viajes_año.php">Viajes</a></li>
+    								</ul>	
+    							</li>
+    							<?php if ($_SESSION['admin'] ==2) {?>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Administración</a>
+    								<ul>
+    									<li>
+    										<a href="#">Usuario</a>
+    										<ul>
+    											<li><a href="nuevousuario.php">Nuevo</a></li>
+    											<li><a href="#">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Viajes</a>
+    										<ul>
+    											<li><a href="nuevoviaje.php">Nuevo</a></li>
+    											<li><a href="viajes.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Compensaciones</a>
+    										<ul>
+    											<li><a href="nuevosdias.php">Añadir días</a></li>
+    											<li><a href="pedirdias.php">Pedir días</a></li>
+    											<li><a href="gestion_dias.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Desplegables</a>
+    										<ul>
+    											<li><a href="#">Grupo</a>
+    											<ul>
+    												<li><a href="nuevogrupo.php">Nuevo grupo</a></li>
+    												<li><a href="gestion_grupo.php">Gestión grupo</a></li></ul>
+    											</li>
+    											<li><a href="#">Comisaría</a>
+    											<ul>
+    												<li><a href="nuevogrupo_comisaria.php">Nueva Comisaría</a></li>
+    												<li><a href="gestion_comisaria.php">Gestión comisaría</a></li></ul>
+    											</li>
+    											<li><a href="#">Juzgado</a>
+    											<ul>
+    												<li><a href="nuevojuzgado.php">Nuevo juzgado</a></li>
+    												<li><a href="gestion_juzgado.php">Gestión juzgado</a></li></ul>
+    											</li>
+    										</ul>
+    									</li>
+    								</ul>	
+    							</li>
+    							<?php }?>
+    							
+    							
+    							<li><a href="login.php" class="button">Cerrar</a></li>
+    						</ul>
+    					</nav>
+    				</header>
+    			
+    			
     			<!-- Main -->
     				<section id="main" class="container">
     					
@@ -88,16 +173,23 @@ if(isset($_SESSION['id_u'])) {
     					
     					<div class="box">
     						<form method="post" id="myform" action="crearestado.php">
-    							Modificar Estado<br><br>
+    							<h3>Modificar Estado</h3>
+    							
+    							<div class="row gtr-50 gtr-uniform">
+    							
+    								<div class="col-3 col-12-mobilep">	
+    							
+    							
     										
     <?php 
     
     //se cargan todos los datos necesarios para la posterior modificación del estado de la evidencia
     $sql="select u.id_usuario,u.apodo as apodo,es.id_estado_evidencia,es.nombre as estado,p.id_programa, p.nombre as programa,ap.id_accion_programa, ap.nombre as accion_programa,
-    ti.id_tipo_hash, ti.tipo_hash, h.id_hash, h.hash as hash, er.observaciones as obs, date_format(fecha_alta_estado, '%Y-%m-%dT%H:%i') as fecha_alta_estado
+    ti.id_tipo_hash, ti.tipo_hash, h.id_hash, h.hash as hash, er.observaciones as obs, date_format(fecha_alta_estado, '%Y-%m-%dT%H:%i') as fecha_alta_estado,er.id_ordenadores, o.nombre_ordenadores
     from evidencia_registro er
     inner join usuario u on er.id_usuario=u.id_usuario
     inner join estado_evidencia es on er.id_estado_evidencia=es.id_estado_evidencia
+    left join ordenadores o ON o.id_ordenadores=er.id_ordenadores
     left join programa p on er.id_programa=p.id_programa
     left join accion_programa ap on er.id_accion_programa=ap.id_accion_programa
     left join hash h on er.id_hash=h.id_hash
@@ -109,11 +201,10 @@ if(isset($_SESSION['id_u'])) {
     
     //se carga el usuario ya grabado y se crea el select con el resto de usuarios
 
-    echo "Usuario:";
+    
     echo "<select name='usuario' id='usuario'>";
     echo "<option value=$ret[id_usuario] selected>$ret[apodo]</option>";
     $contador=0;
-    $entro=0;
     $resultado = mysqli_query($link, "select id_usuario, apodo FROM usuario where id_usuario!=$ret[id_usuario]");
     while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
         foreach ($line as $col_value) {
@@ -130,9 +221,14 @@ if(isset($_SESSION['id_u'])) {
     }
     
     echo "</select>";
-    
+?>
+	</div>
+	
+	<div class="col-3 col-12-mobilep">	
+ 
+<?php    
     //se carga el estado ya grabado y se crea el select con el resto de estados 
-     echo "Estado:
+     echo "
     
     <select name='estado' id='estado' required onchange='cambiarhash(this.value);'>";
     $contador=0;
@@ -157,20 +253,27 @@ if(isset($_SESSION['id_u'])) {
     
     //se carga el programa ya grabado y se crea el select con el resto de programas
     
-    echo "Programa:";
+?>
+	</div>
+	
+	<div class="col-3 col-12-mobilep">	
+		
+<?php
    
     
       
     echo "<select id='programa' name='programa' onchange='accion(this.value);'>";
-    echo "<option value=$ret[id_programa]>$ret[programa]</option>";
+   
     
         
     $contador=0;
     if($ret['id_programa']!=null OR $ret['id_programa']!='') {
         $resultado = mysqli_query($link, "select id_programa, nombre FROM programa WHERE id_programa!=$ret[id_programa]");
+        echo "<option value=$ret[id_programa]>$ret[programa]</option>";
     }
     else {
         $resultado = mysqli_query($link, "select id_programa, nombre FROM programa");
+        echo "<option value=''>Selecciona el programa</option>";
     }
     while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
         foreach ($line as $col_value) {
@@ -186,32 +289,86 @@ if(isset($_SESSION['id_u'])) {
     }
     
     echo "</select>";
+
+?>
+		</div>
+		
+		<div class="col-3 col-12-mobilep">	
+	
+<?php
     
     //cargo la accion de programa ya grabada y creo el select con el resto de acciones de programa
     
-    echo "Accion:
-    
+    echo "    
     <select id='accion_programa' name='accion_programa'>
     <option value=$ret[id_accion_programa]>$ret[accion_programa]</option>";     	
     echo "</select>";
-    
-    // se cargan los detalles
-    
-    echo "Observaciones:
-    <input type='text' name='observaciones' id ='observaciones' value='$ret[obs]' size=80>";
-    
+
+?>
+		</div>
+		
+	
+	
+	
+	<div class="col-3 col-12-mobilep">	
+<?php    
+		
     // se cargan la fecha
     
-    echo "Fecha: <br>";
+    
     echo "<input type='datetime-local' name='fecha' id ='fecha' value='$ret[fecha_alta_estado]' size=80>";
-    
+?>
+
+	</div>
+	<div class="col-5 col-12-mobilep">		
+<?php 
+
+   
     // se carga el hash
-    echo "<div class='auto' id='hash'>";
-    echo "HASH:
-    <input type='text' name='num_hash' id ='num_hash' value='$ret[hash]' size=40>";
+    	
+    echo "
+    <input type='text' name='num_hash' id ='num_hash' value='$ret[hash]' placeholder='Hash'>";
+ ?>
+ 	
+ 	</div>
+ 	
+ 	<div class="col-2 col-12-mobilep">
+ 	<select name="ordenador" id="ordenador">
+ 	<option value="">Selecciona el ordenador</option>
+    <?php
+    $contador=0;
+    if($ret['nombre_ordenadores']=='' OR $ret['nombre_ordenadores']==null) {
+        $resultado = mysqli_query($link, "select id_ordenadores,nombre_ordenadores FROM ordenadores");
+        
+    }
+    else {
+        $resultado = mysqli_query($link, "select id_ordenadores,nombre_ordenadores FROM ordenadores where id_ordenadores!=$ret[id_ordenadores]");
+        echo "<option value='$ret[id_ordenadores]' selected>$ret[nombre_ordenadores]</option>";
+    }
     
+   
+    while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+        foreach ($line as $col_value) {
+            if($contador==0) {
+                echo "<option value=$col_value>";
+                $contador++;
+            }
+            else {
+                echo "$col_value</option>";
+                $contador=0;
+            }
+            
+            
+        }
+    }
+    ?>
+        </select>
+ 	</div>
+ 	
+ 		<div class="col-2	 col-12-mobilep">	
+<?php 		   
     // se cargan el select con los tipos de hash
-    echo "Tipo HASH:
+    echo "
     <select id='tipo_hash' id='tipo_hash' name='tipo_hash'>";
     if($ret['id_tipo_hash']!=null) {
         echo "<option value=$ret[id_tipo_hash]>$ret[tipo_hash]</option>";
@@ -237,9 +394,23 @@ if(isset($_SESSION['id_u'])) {
     }
     
     echo "</select>
-    </div><br>";
+
+    ";
     
     ?>
+
+    </div>
+        		<div class="col-12">		
+
+<?php
+    
+    // se cargan los detalles
+    
+    echo "
+   
+		<textarea name='observaciones' id='observaciones' value='$ret[obs]' placeholder='Observaciones...' rows='4'>$ret[obs]</textarea>";
+?>
+	</div>
     <div class="col-12">
     <ul class="actions special">
     <input type="hidden" name="id_hash" id="id_hash" value="<?php echo $ret['id_hash']?>">
@@ -251,14 +422,21 @@ if(isset($_SESSION['id_u'])) {
     </div>		
     
     
-    
+    </div>
     
     </form>
     </div>
     </section>
     </div>
     
-    
+    <!-- Pelayo -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.dropotron.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>    
     </body>
     
     <?php 

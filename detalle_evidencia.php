@@ -3,8 +3,8 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-    
-    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+
+    $link = mysqli_connect("localhost", "root", ".google.", "safe");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -31,7 +31,15 @@ if(isset($_SESSION['id_u'])) {
     else {
         $mynumero=$_SESSION['numero'];
     }
-    
+    if(isset($_GET['id_evidencia'])) {
+        $myid_evidencia=base64_decode($_GET['id_evidencia']);
+        $_SESSION['id_evidencia']=$myid_evidencia;
+    }
+    else {
+        if(isset($_SESSION['id_evidencia'])) {
+            $myid_evidencia=$_SESSION['id_evidencia'];
+        }
+    }
     
     $respuesta=$_SESSION['respuesta'];
     $_SESSION['mod']=0;
@@ -39,8 +47,8 @@ if(isset($_SESSION['id_u'])) {
     
     
     $resultado = mysqli_query($link, "SELECT i.numero_intervencion as nom_i, e.id_evidencia as id_ev, e.nombre as nom_ev, e.numero_evidencia as num_ev,i.id_intervencion as id_int,
-    i.direccion as int_dir, e.id_tipo_evidencia as id_tip, e.numero_evidencia as num_ev, e.id_subtipo_evidencia as id_sub,t.nombre as nom_tip, s.nombre as nom_sub,
-    e.id_disco_almacenado as id_disc, d.nombre as nom_disc, e.id_caso as id_caso, e.n_s as n_s, e.capacidad, e.marca, e.modelo, e.observaciones as obs_ev, e.alias as al, e.patron as pat,
+    i.direccion as int_dir, e.id_tipo_evidencia as id_tip, e.numero_evidencia as num_ev, e.id_subtipo_evidencia as id_sub,t.nombre as nom_tip, s.nombre as nom_sub, 
+    e.id_disco_almacenado as id_disc, d.nombre as nom_disc, e.id_caso as id_caso, e.n_s as n_s, e.capacidad, e.marca, e.modelo, e.observaciones as obs_ev, e.alias as al, e.patron as pat, 
     e.pin as pin, tp.tipo_capacidad as tipo_capacidad, e.id_tipo_capacidad as id_tipo_capacidad
     FROM evidencia e
     INNER JOIN tipo_evidencia t ON e.id_tipo_evidencia=t.id_tipo_evidencia
@@ -52,12 +60,13 @@ if(isset($_SESSION['id_u'])) {
     $ret = mysqli_fetch_array($resultado);
     $myid_ev=$ret['id_ev'];
     $_SESSION['id_ev']=$myid_ev;
+    $category=$myid_ev;
     
     /*incluyo estas dos lineas*/
     $resultado_dependientes=mysqli_query($link, "SELECT id_evidencia from evidencia where relacionado_con=$myid_ev");
-    
+
     $contador_relacionado_con=mysqli_num_rows($resultado_dependientes);
-    
+ 
     
     
     ?>
@@ -70,14 +79,7 @@ if(isset($_SESSION['id_u'])) {
     	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     	<link rel="stylesheet" href="assets/css/main.css" />
     	
-    	<!-- Pelayo -->
-    		<script src="assets/js/jquery.min.js"></script>
-    		<script src="assets/js/jquery.dropotron.min.js"></script>
-    		<script src="assets/js/jquery.scrollex.min.js"></script>
-    		<script src="assets/js/browser.min.js"></script>
-    		<script src="assets/js/breakpoints.min.js"></script>
-    		<script src="assets/js/util.js"></script>
-    		<script src="assets/js/main.js"></script>
+
     			
     	<!-- Alonso -->
     		<script src="//code.jquery.com/jquery-latest.js"></script>
@@ -128,10 +130,44 @@ if(isset($_SESSION['id_u'])) {
     				<?php $_SESSION['respuesta']=0; ?>
     				setTimeout(borrar,5000);
     			}
+    			if(respuesta==4) {
+    				var c = document.getElementById("mensaje");
+    				var ctx = c.getContext("2d");
+    				ctx.font = "bold 12px Verdana";
+    				ctx.clearRect(0, 0, c.width, c.height);
+    				ctx.strokeStyle = "#3DBA26";
+    				ctx.strokeRect(1, 1, 299, 29);
+    				ctx.fillStyle = "#3DBA26";
+    				ctx.textAlign = "center";
+    				ctx.fillText("Evidencia creada",150,20);
+    				<?php $_SESSION['respuesta']=0; ?>
+    				setTimeout(borrar,5000);
+    			}
+    			
     			
     			
     		}
     </script>
+    <script type="text/javascript">
+    	function preguntaRegistro(opSelect){ 
+        	var category=opSelect;
+        	var url="eliminarregistro.php";
+    		if (confirm('¿Estas seguro de eliminar el registro?')){ 
+    			$.ajax({
+    				url:url,
+    		        type:"POST",
+    		        data:{category:category}
+
+    		      }).done(function(data){
+						
+    		    	  location.href = "detalle_evidencia.php";   
+    		      });  
+       		}
+     		else {
+     			location.href = "detalle_evidencia.php";
+     	 	} 	
+    	} 
+    	</script> 
     <script type="text/javascript">
     		function borrar() {
     			var c = document.getElementById("mensaje");
@@ -171,6 +207,7 @@ if(isset($_SESSION['id_u'])) {
     	else {
     		document.getElementById('num_hash').disabled = false;
     		document.getElementById('tipo_hash').disabled = false;
+    		document.getElementById('accion_programa').disabled=false;
     	
     	}
     }
@@ -180,30 +217,27 @@ if(isset($_SESSION['id_u'])) {
     <!-- XXXXXX incluyo esto  -->
     
     <script type="text/javascript">
-    	function pregunta(num_evidencias){ 
+    	function pregunta(num_evidencias,opSelect){ 
     		var nev=num_evidencias;
-    		if(nev==0) {
+    		var category=opSelect;
+    		var url="eliminarevidencia.php";
+    		if(nev==0) {	
     			if (confirm('¿Estas seguro de eliminar los datos de la evidencia?')){ 
     				$.ajax({
-    					type: "POST",
-    					url: "eliminarevidencia.php",
-    					contentType: false,
-    					processData: false,
-    					success: function(respuesta) {
-    						location.href = "asunto.php";
-    					}
-    				});
-       			}
-     			else {
-     				location.href = "detalle_evidencia.php";
-     	 	 	} 
-    		}
+    					url:url,
+    		        	type:"POST",
+    		        	data:{category:category}
+    				}).done(function(data){
+						
+  		    		location.href = "asunto.php";   
+  		      		});  
+     			}
+   				else {
+   					location.href = "asunto.php";
+   	 			} 	
+  			} 
     		else {
-    
     			alert("No se puede eliminar la evidencia porque hay otras dependiendo de ella");
-    
-    				
-    
     		}
     	}
     	</script> 
@@ -216,52 +250,114 @@ if(isset($_SESSION['id_u'])) {
 
 	<body class="is-preload" onload="respuesta();">
     	<div id="page-wrapper">
-    	
-    		<!-- Header -->
+	<!-- Header -->
     				<header id="header">
-    					<h1><a href="login.php">Safe Ciber</a> Gesti&oacuten Secci&oacuten Ciberterrorismo</h1>
+    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
     					<nav id="nav">
     						<ul>
     							<li><a href="inicio.php">Home</a></li>
     							<li>
     								<a href="#" class="icon solid fa-angle-down">Casos</a>
     								<ul>
-    									<li><a href="generic.html">Buscar</a></li>
-    									<li><a href="contact.html">Nuevo</a></li>
+    									<li><a href="busqueda_Caso.php">Buscar</a></li>
+    									<li><a href="nuevoasunto.php">Nuevo</a></li>
     
     									<li>
     										<a href="#">Listar</a>
     										<ul>
-    											<li><a href="#">Abiertos</a></li>
-    											<li><a href="#">Cerrados</a></li>
-    											<li><a href="#">Todos</a></li>
+    											<li><a href="abiertos.php">Abiertos</a></li>
+    											<li><a href="cerrados.php">Cerrados</a></li>
+    											<li><a href="todos.php">Todos</a></li>
     										</ul>
     									</li>
+    									
     								</ul>
     							</li>
-    							<li><a href="#" class="button">Sign Up</a></li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Gestión</a>
+    								<ul>
+    									<li><a href="compensacion_usuario.php">Compensaciones</a></li>
+    									<li><a href="viajes_año.php">Viajes</a></li>
+    								</ul>	
+    							</li>
+    							<?php if ($_SESSION['admin'] ==2) {?>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Administración</a>
+    								<ul>
+    									<li>
+    										<a href="#">Usuario</a>
+    										<ul>
+    											<li><a href="nuevousuario.php">Nuevo</a></li>
+    											<li><a href="#">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Viajes</a>
+    										<ul>
+    											<li><a href="nuevoviaje.php">Nuevo</a></li>
+    											<li><a href="viajes.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Compensaciones</a>
+    										<ul>
+    											<li><a href="nuevosdias.php">Añadir días</a></li>
+    											<li><a href="pedirdias.php">Pedir días</a></li>
+    											<li><a href="gestion_dias.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Desplegables</a>
+    										<ul>
+    											<li><a href="#">Grupo</a>
+    											<ul>
+    												<li><a href="nuevogrupo.php">Nuevo grupo</a></li>
+    												<li><a href="gestion_grupo.php">Gestión grupo</a></li></ul>
+    											</li>
+    											<li><a href="#">Comisaría</a>
+    											<ul>
+    												<li><a href="nuevogrupo_comisaria.php">Nueva Comisaría</a></li>
+    												<li><a href="gestion_comisaria.php">Gestión comisaría</a></li></ul>
+    											</li>
+    											<li><a href="#">Juzgado</a>
+    											<ul>
+    												<li><a href="nuevojuzgado.php">Nuevo juzgado</a></li>
+    												<li><a href="gestion_juzgado.php">Gestión juzgado</a></li></ul>
+    											</li>
+    										</ul>
+    									</li>
+    								</ul>	
+    							</li>
+    							<?php }?>
+    							
+    							
+    							<li><a href="login.php" class="button">Cerrar</a></li>
     						</ul>
     					</nav>
     				</header>
+
    
     	<!-- Main -->
     		<section id="main" class="container">
     			<header>
-    				<h2>Operación <?php echo $ret_caso['numero']."_".substr($ret_caso['año'], 2, 2) ?></h2>
-    				<h3><p>Detalle de Evidencia</p></h3>
+    				<h2>Caso <?php echo $ret_caso['numero']."_".substr($ret_caso['año'], 2, 2) ?></h2>
+    				<h3><p>Detalle de <?php echo $ret['nom_ev'];echo $ret['num_ev'];?></p></h3>
     			</header>
-    			<div align="center">
-    				<canvas id="mensaje" width="300" height="30"></canvas>
-    			</div>
+    			
     			<div class="row">
     						<div class="col-12">
-    
+    							
     							<!-- Lists -->
     							<form action='modificarevidencia.php' method='post'>
-    							
-    							
+    								
+    								<div align="center">
+					    				<canvas id="mensaje" width="300" height="30"></canvas>
+					    			</div>
     								<section class="box">
-
+			
     									<h3>Evidencia <b><?php echo $ret['nom_ev'];echo $ret['num_ev'];?></b></h3>
     									
     									<div class="row">
@@ -286,6 +382,7 @@ if(isset($_SESSION['id_u'])) {
     if(!empty($ret['al'])) {
 ?>
 													<li><b>Alias :</b> <?php echo $ret['al'];?></li>
+													<input type='hidden' name='alias' id='alias' value='<?php echo $ret['al'];?>'>
         
 <?php        
     }
@@ -350,278 +447,284 @@ if(!empty($ret['pin'])) {
     											</ul>
 <?php    												
     											
-    											if(!empty($ret['pat'])) {
-        echo "<b>Patron:</><br>";
-        $primeronumero=0;
-        $patron=$ret['pat'];
-        $longitud=strlen($patron)-1;
-        echo "<svg width='250' height='75'>";
-        for ($i = 0; $i <= $longitud; $i++) {
-            $numero=substr($patron, $i, 1);
-            if(is_numeric(substr($patron, $i, 1))) {
+        if(!empty($ret['pat'])) {
+            echo "<b>Patron:</><br>";
+            $primeronumero=0;
+            $patron=$ret['pat'];
+            $longitud=strlen($patron)-1;
+            echo "<svg width='250' height='90'>";
+            for ($i = 0; $i <= $longitud; $i++) {
                 $numero=substr($patron, $i, 1);
-                $siguiente=substr($patron, $i+2, 1);
-                $ultimo=substr($patron,$longitud-1,1);
-                if($numero==1) {
-                    if($primeronumero==0) {
-                        $x1=90;
-                        $y1=15;
+                if(is_numeric(substr($patron, $i, 1))) {
+                    $numero=substr($patron, $i, 1);
+                    $siguiente=substr($patron, $i+2, 1);
+                    $ultimo=substr($patron,$longitud-1,1);
+                    echo "<text x=85 y=35 fill='black' style='font-size: 20px'>*</text>";
+                    echo "<text x=120 y=35 fill='black' style='font-size: 20px'>*</text>";
+                    echo "<text x=155 y=35 fill='black' style='font-size: 20px'>*</text>";
+                    echo "<text x=155 y=60 fill='black' style='font-size: 20px'>*</text>";
+                    echo "<text x=155 y=85 fill='black' style='font-size: 20px'>*</text>";
+                    if($numero==1) {
+                        if($primeronumero==0) {
+                            $x1=90;
+                            $y1=25;
+                            $primeronumero=1;
+                            if($siguiente==2 or $siguiente==3) {
+                                $x3=$x1-12;
+                                $y3=$y1+5;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                            else if ($siguiente==4 or $siguiente==7) {
+                                $x3=$x1-6;
+                                $y3=$y1-1;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                            else {
+                                $x3=$x1-12;
+                                $y3=$y1;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                        }
+                        else {
+                            $x2=90;
+                            $y2=25;
+                            
+                            echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
+                            $x1=$x2;
+                            $y1=$y2;
+                            if($ultimo==1) {
+                                $x3=$x1-12;
+                                $y3=$y1+4;
+                                echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            }   
+                        }
+                    } else if ($numero==2) {
+                        if($primeronumero==0) {
+                            $x1=125;
+                            $y1=25;
+                            $x3=$x1-6;
+                            $y3=$y1-1;
+                            $primeronumero=1;
+                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                        }
+                        else {
+                            $x2=125;
+                            $y2=25;
+                            
+                            echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
+                            $x1=$x2;
+                            $y1=$y2;
+                            if($ultimo==2) {
+                                $x3=$x1-6;
+                                $y3=$y1-1;
+                                echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            }  
+                        }
+                    } else if ($numero==3) {
+                        if($primeronumero==0) {
+                            $x1=160;
+                            $y1=25;
+                            $primeronumero=1;
+                            if($siguiente==1 or $siguiente==2) {
+                                $x3=$x1;
+                                $y3=$y1+5;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                            else if ($siguiente==6 or $siguiente==9) {
+                                $x3=$x1-6;
+                                $y3=$y1-1;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                            else {
+                                $x3=$x1;
+                                $y3=$y1;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                        }
+                        else {
+                            $x2=160;
+                            $y2=25;
+                           
+                            echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
+                            $x1=$x2;
+                            $y1=$y2;
+                            if($ultimo==3) {
+                                $x3=$x1;
+                                $y3=$y1+4;
+                                echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            }   
+                        }
                         $primeronumero=1;
-                        if($siguiente==2 or $siguiente==3) {
+                    } else if ($numero==4) {
+                        if($primeronumero==0) {
+                            $x1=90;
+                            $y1=50;
+                            $primeronumero=1;
                             $x3=$x1-12;
                             $y3=$y1+5;
                             echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
                         }
-                        else if ($siguiente==4 or $siguiente==7) {
-                            $x3=$x1-6;
-                            $y3=$y1-1;
-                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                        }
                         else {
-                            $x3=$x1-12;
-                            $y3=$y1;
-                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            $x2=90;
+                            $y2=50;
+                                     
+                            echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
+                            $x1=$x2;
+                            $y1=$y2;
+                            if($ultimo==4) {
+                                $x3=$x1-12;
+                                $y3=$y1+6;
+                                echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            }  
                         }
-                    }
-                    else {
-                        $x2=90;
-                        $y2=15;
-                        
-                        echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
-                        $x1=$x2;
-                        $y1=$y2;
-                        if($ultimo==1) {
-                            $x3=$x1-12;
-                            $y3=$y1+4;
-                            echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
-                        }   
-                    }
-                } else if ($numero==2) {
-                    if($primeronumero==0) {
-                        $x1=125;
-                        $y1=15;
-                        $x3=$x1-6;
-                        $y3=$y1-1;
-                        $primeronumero=1;
-                        echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                    }
-                    else {
-                        $x2=125;
-                        $y2=15;
-                        
-                        echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
-                        $x1=$x2;
-                        $y1=$y2;
-                        if($ultimo==2) {
+                    } else if ($numero==5) {
+                        if($primeronumero==0) {
+                            $x1=125;
+                            $y1=50;
+                            $primeronumero=1;
                             $x3=$x1-6;
-                            $y3=$y1-1;
-                            echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
-                        }  
-                    }
-                } else if ($numero==3) {
-                    if($primeronumero==0) {
-                        $x1=160;
-                        $y1=15;
-                        $primeronumero=1;
-                        if($siguiente==1 or $siguiente==2) {
-                            $x3=$x1;
                             $y3=$y1+5;
                             echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                        }
-                        else if ($siguiente==6 or $siguiente==9) {
-                            $x3=$x1-6;
-                            $y3=$y1-1;
-                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                           
                         }
                         else {
-                            $x3=$x1;
-                            $y3=$y1;
-                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                        }
-                    }
-                    else {
-                        $x2=160;
-                        $y2=15;
-                       
-                        echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
-                        $x1=$x2;
-                        $y1=$y2;
-                        if($ultimo==3) {
-                            $x3=$x1;
-                            $y3=$y1+4;
-                            echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
-                        }   
-                    }
-                    $primeronumero=1;
-                } else if ($numero==4) {
-                    if($primeronumero==0) {
-                        $x1=90;
-                        $y1=40;
-                        $primeronumero=1;
-                        $x3=$x1-12;
-                        $y3=$y1+5;
-                        echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                    }
-                    else {
-                        $x2=90;
-                        $y2=40;
+                            $x2=125;
+                            $y2=50;
                                  
-                        echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
-                        $x1=$x2;
-                        $y1=$y2;
-                        if($ultimo==4) {
-                            $x3=$x1-12;
-                            $y3=$y1+6;
-                            echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
-                        }  
-                    }
-                } else if ($numero==5) {
-                    if($primeronumero==0) {
-                        $x1=125;
-                        $y1=40;
-                        $primeronumero=1;
-                        $x3=$x1-6;
-                        $y3=$y1+5;
-                        echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                       
-                    }
-                    else {
-                        $x2=125;
-                        $y2=40;
-                             
-                        echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
-                        $x1=$x2;
-                        $y1=$y2;
-                        if($ultimo==5) {
-                            $x3=$x1-6;
+                            echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
+                            $x1=$x2;
+                            $y1=$y2;
+                            if($ultimo==5) {
+                                $x3=$x1-6;
+                                $y3=$y1+5;
+                                echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            }
+                        }
+                    } else if ($numero==6) {
+                        if($primeronumero==0) {
+                            $x1=160;
+                            $y1=50;
+                            $primeronumero=1;
+                            $x3=$x1;
                             $y3=$y1+5;
-                            echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                           
                         }
-                    }
-                } else if ($numero==6) {
-                    if($primeronumero==0) {
-                        $x1=160;
-                        $y1=40;
-                        $primeronumero=1;
-                        $x3=$x1;
-                        $y3=$y1+5;
-                        echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                       
-                    }
-                    else {
-                        $x2=160;
-                        $y2=40;
-                                
-                        echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
-                        $x1=$x2;
-                        $y1=$y2;
-                        if($ultimo==6) {
-                            $x3=$x1;
-                            $y3=$y1+6;
-                            echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                        else {
+                            $x2=160;
+                            $y2=50;
+                                    
+                            echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
+                            $x1=$x2;
+                            $y1=$y2;
+                            if($ultimo==6) {
+                                $x3=$x1;
+                                $y3=$y1+6;
+                                echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            }
                         }
-                    }
-                } else if ($numero==7) {
-                    if($primeronumero==0) {
-                        $x1=90;
-                        $y1=65;
-                        $primeronumero=1;
-                        if($siguiente==1 or $siguiente==4) {
+                    } else if ($numero==7) {
+                        if($primeronumero==0) {
+                            $x1=90;
+                            $y1=75;
+                            $primeronumero=1;
+                            if($siguiente==1 or $siguiente==4) {
+                                $x3=$x1-6;
+                                $y3=$y1+11;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                            else if ($siguiente==8 or $siguiente==9) {
+                                $x3=$x1-12;
+                                $y3=$y1+6;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                            else {
+                                $x3=$x1-12;
+                                $y3=$y1+8;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            } 
+                        }
+                        else {
+                            $x2=90;
+                            $y2=75;
+                            
+                            echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
+                            $x1=$x2;
+                            $y1=$y2;
+                            if($ultimo==7) {
+                                $x3=$x1-12;
+                                $y3=$y1+8;
+                                echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            }       
+                        }
+                    } else if ($numero==8) {
+                        if($primeronumero==0) {
+                            $x1=125;
+                            $y1=75;
                             $x3=$x1-6;
                             $y3=$y1+11;
-                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                        }
-                        else if ($siguiente==8 or $siguiente==9) {
-                            $x3=$x1-12;
-                            $y3=$y1+6;
+                            $primeronumero=1;
                             echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
                         }
                         else {
-                            $x3=$x1-12;
-                            $y3=$y1+8;
-                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                        } 
-                    }
-                    else {
-                        $x2=90;
-                        $y2=65;
-                        
-                        echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
-                        $x1=$x2;
-                        $y1=$y2;
-                        if($ultimo==7) {
-                            $x3=$x1-12;
-                            $y3=$y1+8;
-                            echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
-                        }       
-                    }
-                } else if ($numero==8) {
-                    if($primeronumero==0) {
-                        $x1=125;
-                        $y1=65;
-                        $x3=$x1-6;
-                        $y3=$y1+11;
-                        $primeronumero=1;
-                        echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                    }
-                    else {
-                        $x2=125;
-                        $y2=65;
-                        
-                        echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
-                        $x1=$x2;
-                        $y1=$y2;
-                        if($ultimo==8) {
-                            $x3=$x1-6;
-                            $y3=$y1+11;
-                            echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
-                        }    
-                    }
-                } else if ($numero==9) {
-                    if($primeronumero==0) {
-                        $x1=160;
-                        $y1=65;
-                        $primeronumero=1;
-                        if($siguiente==8 or $siguiente==7) {
-                            $x3=$x1;
-                            $y3=$y1+6;
-                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            $x2=125;
+                            $y2=75;
+                            
+                            echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
+                            $x1=$x2;
+                            $y1=$y2;
+                            if($ultimo==8) {
+                                $x3=$x1-6;
+                                $y3=$y1+11;
+                                echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            }    
                         }
-                        else if ($siguiente==6 or $siguiente==3) {
-                            $x3=$x1-6;
-                            $y3=$y1+11;
-                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                    } else if ($numero==9) {
+                        if($primeronumero==0) {
+                            $x1=160;
+                            $y1=75;
+                            $primeronumero=1;
+                            if($siguiente==8 or $siguiente==7) {
+                                $x3=$x1;
+                                $y3=$y1+6;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                            else if ($siguiente==6 or $siguiente==3) {
+                                $x3=$x1-6;
+                                $y3=$y1+11;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            }
+                            else {
+                                $x3=$x1;
+                                $y3=$y1+10;
+                                echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
+                            } 
                         }
                         else {
-                            $x3=$x1;
-                            $y3=$y1+10;
-                            echo "<text x=$x3 y=$y3 fill='green' style='font-size: 20px'>●</text>";
-                        } 
-                    }
-                    else {
-                        $x2=160;
-                        $y2=65;
-                        echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
-                        $x1=$x2;
-                        $y1=$y2;
-                        if($ultimo==9) {
-                            $x3=$x1;
-                            $y3=$y1+8;
-                            echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
-                        }       
+                            $x2=160;
+                            $y2=75;
+                            echo "<line x1=$x1 y1=$y1 x2=$x2 y2=$y2 stroke='black' stroke-width='3'></line>";
+                            $x1=$x2;
+                            $y1=$y2;
+                            if($ultimo==9) {
+                                $x3=$x1;
+                                $y3=$y1+8;
+                                echo "<text x=$x3 y=$y3 fill='red' style='font-size: 20px'>●</text>";
+                            }       
+                        }
                     }
                 }
             }
+            echo "</svg>";
+            echo "<input type='hidden' name='patron' id='patron' value='$ret[pat]'>";
         }
-        echo "</svg>";
-        echo "<input type='hidden' name='patron' id='patron' value='$ret[pat]'>";
-    }
-    else {
-        echo "<input type='hidden' name='patron' id='patron' value=''>";
-    }
+        else {
+            echo "<input type='hidden' name='patron' id='patron' value=''>";
+        }
     											
 ?>    											
     											
+    										</div>
     										</div>
     										
     										
@@ -635,7 +738,7 @@ if(!empty($ret['pin'])) {
     												<li><input type='submit' value='Modificar' class="button special small"></li>
     											
     												<li><input type='hidden' name="numero_evidencias" id="numero_evidencias" value="<?php echo $contador_relacionado_con;?>" ></li>
-    												<li><input type="button" onclick="pregunta(<?php echo $contador_relacionado_con;?>)" value="Eliminar evidencias" class="button special small"></li>
+    												<li><input type="button" onclick="pregunta(<?php echo $contador_relacionado_con;?>,<?php echo $category;?>)" value="Eliminar evidencias" class="button special small"></li>
     												<li><input type="button" onclick="location.href='asunto.php';" value="Volver" class="button special small"></li>
     											</ul>
     									</div>
@@ -711,7 +814,7 @@ if(!empty($ret['pin'])) {
                     $resultado_padre=mysqli_query($link, $sql);
                     $count=mysqli_num_rows($resultado_padre);
                     if($count!=0) {
-                                          
+                        echo "<h4><p><b>Evidencia de la que depende ".$ret['nom_ev'].$ret['num_ev']."</b></p></h4>";
                         echo "<div class='table-wrapper'><table ><thead><tr><th>Nombre</th><th>Tipo Almacenamiento</th><th>Subtipo</th><th>Numero Serie</th><th>Capacidad</th><th>Marca</th><th>Modelo</th></tr></thead>";
                         $contador=0;
                         while ($line_padre = mysqli_fetch_array($resultado_padre, MYSQLI_ASSOC)) {
@@ -754,13 +857,14 @@ if(!empty($ret['pin'])) {
 
 //creo la lista de registro
     $sql = "select er.id_evidencia_registro,u.apodo,es.nombre as estado, p.nombre as programa, ap.nombre as accion_programa, h.hash, er.observaciones, 
-    date_format(er.fecha_alta_estado, '%d/%m/%Y %H:%i') as fecha_alta_estado from evidencia_registro er
+    date_format(er.fecha_alta_estado, '%d/%m/%Y %H:%i') as fecha_alta_estado, o.nombre_ordenadores as id_ordenadores from evidencia_registro er
     inner join usuario u on er.id_usuario=u.id_usuario
     inner join estado_evidencia es on er.id_estado_evidencia=es.id_estado_evidencia
+    left join ordenadores o ON o.id_ordenadores=er.id_ordenadores
     left join programa p on er.id_programa=p.id_programa
     left join accion_programa ap on er.id_accion_programa=ap.id_accion_programa
     left join hash h on er.id_hash=h.id_hash
-    where er.id_evidencia=$ret[id_ev] ORDER BY er.fecha_alta_estado DESC";
+    where er.id_evidencia=$ret[id_ev] ORDER BY er.fecha_alta_estado ASC";
     $resultado=mysqli_query($link, $sql);
     $count=mysqli_num_rows($resultado);
 
@@ -770,7 +874,7 @@ if(!empty($ret['pin'])) {
     									
     									<div class="col-12 col-12-mobilep">
     										
-    										<h4><p><b>Historial de la evidencia <?php echo $ret['nom_ev'];echo $ret['num_ev'];?></b></p></h4>
+    										<h3>Historial de la evidencia <?php echo $ret['nom_ev'];echo $ret['num_ev'];?></h3>
     										
  <?php   									
       if($count!=0) {
@@ -781,12 +885,13 @@ if(!empty($ret['pin'])) {
     									<thead>
     										<tr>
                                                 <th>Estado</th>
-    											<th>Usuario</th> 
+    											
     											<th>Programa</th>
                                                 <th>Acción Programa</th>
                                                 <th>HASH</th>
-                                                <th>Observaciones</th>
+                                           
                                                 <th>Fecha</th>
+                                                <th>Ordenador</th>
     										</tr>
     									</thead>
     									<tbody>
@@ -797,15 +902,16 @@ if(!empty($ret['pin'])) {
     
     $contador=0;
     while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-        
+        $id_re=$line['id_evidencia_registro'];
         $id_registro= $line['id_evidencia_registro'];
         $estado= $line['estado'];
-        $nombre = $line['apodo'];
+       // $nombre = $line['apodo'];
         $programa= $line['programa'];
         $accion_programa= $line['accion_programa'];
         $hash= $line['hash'];
-        $observaciones= $line['observaciones'];
+        
         $fecha= $line['fecha_alta_estado'];
+        $ordenador= $line['id_ordenadores'];
         
         
         echo "<tr>
@@ -813,12 +919,16 @@ if(!empty($ret['pin'])) {
                         	<form>";
         $id_registro=base64_encode($id_registro);
         echo "<td><a href='detalle_registro.php?id_registro=$id_registro'>$estado</a></td>";
-        echo "<td>$nombre</td>"; 
+        //echo "<td>$nombre</td>"; 
         echo "<td>$programa</td>";
         echo "<td>$accion_programa</td>";
         echo "<td>$hash</td>";
-        echo "<td>$observaciones</td>";
+       
         echo "<td>$fecha</td>";
+        echo "<td>$ordenador</td>";
+        echo "<td><a href='#' onclick='preguntaRegistro($id_re);'>
+    	<img src='img/eliminar.png' alt='Enlace' width=20 height=20/>
+    	</a></td>";
         
         
         echo "</form>";
@@ -844,32 +954,32 @@ if(!empty($ret['pin'])) {
     									
     									
     									
+</section>
+</form>
+</div>
+</div>
 
-  									</div> <!-- row -->
-    									
-    								</section>
-    							
-    								
-    							</form>
-    						</div> <!-- col12 -->
+  									
     						
     						
     						
-    						
-    			</div> <!-- row -->
+    				 		
+    			
     			
     			
 				
 			</section>
 			
+			
+			
 			<section id="main" class="container">
-
+					<h2>Registro Estado Evidencia</h2>
 					<div class="box">
-						<h4><p><b>Agregar nuevo estado<b></b></p></h4>
+						<h3>Agregar nuevo estado</h3>
 						<form  method="POST" action="crearestado.php" id="myform">
 							<div class="row gtr-50 gtr-uniform">
 
-								<div class="col-4 col-12-mobilep">
+								<div class="col-3 col-12-mobilep">
 									    <select name="usuario" id="usuario">
     <?php
     $resultado = mysqli_query($link, "select apodo FROM usuario where id_usuario=$myid_u");
@@ -911,7 +1021,7 @@ if(!empty($ret['pin'])) {
         
 								</div>
 								
-								<div class="col-4 col-12-mobilep">
+								<div class="col-3 col-12-mobilep">
 <select name="estado" id="estado" required onchange="cambiarhash(this.value);">
     <?php
     $contador=0;
@@ -934,7 +1044,31 @@ if(!empty($ret['pin'])) {
         </select>								
 								</div>
 								
-								<div class="col-4 col-12-mobilep">
+								<div class="col-3 col-12-mobilep">
+<select name="ordenador" id="ordenador">
+<option value=''>Ordenador de guardado	</option>
+    <?php
+    $contador=0;
+    $resultado = mysqli_query($link, "select id_ordenadores,nombre_ordenadores FROM ordenadores");
+    while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+        foreach ($line as $col_value) {
+            if($contador==0) {
+                echo "<option value=$col_value>";
+                $contador++;
+            }
+            else {
+                echo "$col_value</option>";
+                $contador=0;
+            }
+            
+            
+        }
+    }
+    ?>
+        </select>								
+								</div>
+								
+								<div class="col-3 col-12-mobilep">
 <select id="programa" name="programa" onchange="accion(this.value);">
     	  <option value=null>Selecciona un programa</option>
     	  <?php
@@ -1023,6 +1157,15 @@ if(!empty($ret['pin'])) {
 		  </section>
 				
   		</div> <!-- pag wrapper -->
+  		
+  		    	<!-- Pelayo -->
+    		<script src="assets/js/jquery.min.js"></script>
+    		<script src="assets/js/jquery.dropotron.min.js"></script>
+    		<script src="assets/js/jquery.scrollex.min.js"></script>
+    		<script src="assets/js/browser.min.js"></script>
+    		<script src="assets/js/breakpoints.min.js"></script>
+    		<script src="assets/js/util.js"></script>
+    		<script src="assets/js/main.js"></script>
 
 
 

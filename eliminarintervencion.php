@@ -1,6 +1,6 @@
 <?php
 session_start();
-$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+$link = mysqli_connect("localhost", "root", ".google.", "safe");
 
 if (mysqli_connect_errno()) {
     printf("Falló la conexión: %s\n", mysqli_connect_error());

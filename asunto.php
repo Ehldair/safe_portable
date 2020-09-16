@@ -3,7 +3,10 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
     
-    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+  
+    
+    
+    $link = mysqli_connect("localhost", "root", ".google.", "safe");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -24,7 +27,7 @@ if(isset($_SESSION['id_u'])) {
     
     $resultado = mysqli_query($link, "SELECT c.numero as num_caso, c.año as año_caso, c.nombre as nom_caso, c.descripcion as des_caso, t.id_tipo_caso as id_tipo,
     t.nombre as nom_tipo, g.id_grupo_investigacion as id_grup, g.nombre_grupo as grup , ca.id_ca as id_ca,ca.nombre_ca as nom_ca, p.id_provincia as id_pro, p.nombre_provincia as nom_pro,
-    com.id_comisaria as id_com, com.nombre_comisaria as nom_com, date_format(fecha_alta_caso, '%d/%m/%Y') as fecha, date_format(fecha_alta_caso, '%Y-%m-%d') as fecha_original
+    com.id_comisaria as id_com, com.nombre_comisaria as nom_com, date_format(fecha_alta_caso, '%d/%m/%Y') as fecha, date_format(fecha_alta_caso, '%Y-%m-%d') as fecha_original, c.id_estado_caso
     FROM caso c
     INNER JOIN tipo_caso t ON c.id_tipo_caso=t.id_tipo_caso
     INNER JOIN grupo_investigacion g ON c.id_grupo_investigacion=g.id_grupo_investigacion
@@ -41,6 +44,14 @@ if(isset($_SESSION['id_u'])) {
     if ($count != 0) {
         $ret2 = mysqli_fetch_array($resultado2);
     }
+    $resultado_disco=mysqli_query($link, "SELECT distinct d.nombre as nom from disco_almacenado d
+    inner join evidencia e on e.id_disco_almacenado=d.id_disco_almacenado
+    where e.id_caso=$myid_caso");
+    echo "SELECT distinct d.nombre as nom from disco_almacenado d
+    inner join evidencia e on e.id_disco_almacenado=d.id_disco_almacenado
+    where e.id_caso=$myid_caso";
+    $count_disco = mysqli_num_rows($resultado_disco);
+
     
     
     // cargo lista de sujetos
@@ -52,7 +63,8 @@ if(isset($_SESSION['id_u'])) {
     
     // cargo lista de intervenciones
     
-    $resultado_intervenciones = mysqli_query($link, "select i.id_intervencion,  t.nombre as nom_tipo, t.descripcion as des_tipo, s.nombre, s.apellido1, s.apellido2, i.direccion, i.descripcion
+    $resultado_intervenciones = mysqli_query($link, "select i.id_intervencion as id_int,  t.nombre as nom_tipo, t.descripcion as des_tipo, 
+    s.nombre as nom, s.apellido1 as ape1, s.apellido2 as ape2, i.direccion as dir, i.descripcion as des, numero_intervencion as num
     FROM intervencion i
     INNER JOIN tipo_intervencion t ON t.id_tipo_intervencion=i.id_tipo_intervencion
     INNER JOIN sujeto_activo s ON s.id_sujeto_activo=i.id_sujeto_activo
@@ -63,38 +75,42 @@ if(isset($_SESSION['id_u'])) {
     
     // comienzo carga de lista de evidencias
     
-    $resultado_evidencias = mysqli_query($link, "select  e.tiene_subevidencias, id_evidencia, e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo from evidencia e
+    $resultado_evidencias = mysqli_query($link, "select  e.tiene_subevidencias, e.id_evidencia, e.nombre, e.numero_evidencia, s.nombre as nom_sub,  e.n_s, e.capacidad, e.marca, e.modelo, e.alias
+    from evidencia e
     inner join tipo_evidencia t on t.id_tipo_evidencia=e.id_tipo_evidencia
     inner join subtipo_evidencia s on s.id_subtipo_evidencia=e.id_subtipo_evidencia
     inner join caso c on c.id_caso=e.id_caso
-    where c.id_caso='$myid_caso' AND relacionado_con is null order By nombre asc");
+    inner join evidencia_registro er ON er.id_evidencia=e.id_evidencia
+    where c.id_caso=$myid_caso AND relacionado_con is null 
+    GROUP BY e.id_evidencia	
+    order By nombre asc, numero_evidencia");
     $count_evidencias = mysqli_num_rows($resultado_evidencias);
+    
+    $resultado_evidencias_total=mysqli_query($link, "Select * from evidencia where id_caso=$myid_caso");
+    $count_total=mysqli_num_rows($resultado_evidencias_total);
+    
+    $resultado_evidencias_total=mysqli_query($link, "Select * from evidencia where id_caso=$myid_caso");
+    $count_total=mysqli_num_rows($resultado_evidencias_total);
+    $resultado_evidencias_terminadas=mysqli_query($link, "select distinct e.id_evidencia from evidencia e
+    inner join evidencia_registro er on er.id_evidencia=e.id_evidencia
+    where id_caso=$myid_caso and (er.id_estado_evidencia=3 or er.id_estado_evidencia=7 or er.id_estado_evidencia=8)");
+    $count_evidencias_terminadas=mysqli_num_rows($resultado_evidencias_terminadas);
     ?>
     
     <!DOCTYPE html>
     <html lang="es-ES">
     <head>
-     <title>Detalle	 Asunto</title>
+     <title>Detalles del Caso</title>
     	<meta charset="utf-8" />
     	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     	<link rel="stylesheet" href="assets/css/main.css" />
-    	
-    	<!-- Pelayo -->
-    		<script src="assets/js/jquery.min.js"></script>
-    		<script src="assets/js/jquery.dropotron.min.js"></script>
-    		<script src="assets/js/jquery.scrollex.min.js"></script>
-    		<script src="assets/js/browser.min.js"></script>
-    		<script src="assets/js/breakpoints.min.js"></script>
-    		<script src="assets/js/util.js"></script>
-    		<script src="assets/js/main.js"></script>
+		
     		
     			
     	<!-- Alonso -->
-    		<script src="//code.jquery.com/jquery-latest.js"></script>
-    		<script src="miscript.js"></script>
     		<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     		<script src="js/jquery-3.4.1.js"></script>
-    		<script src="miscript.js"></script>
+    		
     		<script>
     		function respuesta() {
     			var respuesta=<?php echo $respuesta; ?>;
@@ -201,6 +217,26 @@ if(isset($_SESSION['id_u'])) {
     		}
     		</script>
     		<script type="text/javascript">
+    		function preguntaEvidencia(opSelect){ 
+        		var category=opSelect;
+        		var url="eliminarevidencia.php";
+    			if (confirm('¿Estas seguro de eliminar la evidencia?')){ 
+    				$.ajax({
+    					url:url,
+    		        	type:"POST",
+    		        	data:{category:category}
+
+    		      	}).done(function(data){
+						
+    		    		  location.href = "asunto.php";   
+    		      	});  
+       			}
+     			else {
+     				
+     	 		} 	
+    		} 
+    	</script> 
+    		<script type="text/javascript">
     		function borrar() {
     			var c = document.getElementById("mensaje");
     			var ctx = c.getContext("2d");
@@ -231,29 +267,121 @@ if(isset($_SESSION['id_u'])) {
     
     <body class="is-preload" onload="respuesta();">
     	<div id="page-wrapper">
+	<!-- Header -->
+    				<header id="header">
+    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
+    					<nav id="nav">
+    						<ul>
+    							<li><a href="inicio.php">Home</a></li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Casos</a>
+    								<ul>
+    									<li><a href="busqueda_Caso.php">Buscar</a></li>
+    									<li><a href="nuevoasunto.php">Nuevo</a></li>
     
+    									<li>
+    										<a href="#">Listar</a>
+    										<ul>
+    											<li><a href="abiertos.php">Abiertos</a></li>
+    											<li><a href="cerrados.php">Cerrados</a></li>
+    											<li><a href="todos.php">Todos</a></li>
+    										</ul>
+    									</li>
+    									
+    								</ul>
+    							</li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Gestión</a>
+    								<ul>
+    									<li><a href="compensacion_usuario.php">Compensaciones</a></li>
+    									<li><a href="viajes_año.php">Viajes</a></li>
+    								</ul>	
+    							</li>
+    							<?php if ($_SESSION['admin'] ==2) {?>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Administración</a>
+    								<ul>
+    									<li>
+    										<a href="#">Usuario</a>
+    										<ul>
+    											<li><a href="nuevousuario.php">Nuevo</a></li>
+    											<li><a href="#">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Viajes</a>
+    										<ul>
+    											<li><a href="nuevoviaje.php">Nuevo</a></li>
+    											<li><a href="viajes.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Compensaciones</a>
+    										<ul>
+    											<li><a href="nuevosdias.php">Añadir días</a></li>
+    											<li><a href="pedirdias.php">Pedir días</a></li>
+    											<li><a href="gestion_dias.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Desplegables</a>
+    										<ul>
+    											<li><a href="#">Grupo</a>
+    											<ul>
+    												<li><a href="nuevogrupo.php">Nuevo grupo</a></li>
+    												<li><a href="gestion_grupo.php">Gestión grupo</a></li></ul>
+    											</li>
+    											<li><a href="#">Comisaría</a>
+    											<ul>
+    												<li><a href="nuevogrupo_comisaria.php">Nueva Comisaría</a></li>
+    												<li><a href="gestion_comisaria.php">Gestión comisaría</a></li></ul>
+    											</li>
+    											<li><a href="#">Juzgado</a>
+    											<ul>
+    												<li><a href="nuevojuzgado.php">Nuevo juzgado</a></li>
+    												<li><a href="gestion_juzgado.php">Gestión juzgado</a></li></ul>
+    											</li>
+    										</ul>
+    									</li>
+    								</ul>	
+    							</li>
+    							<?php }?>
+    							
+    							
+    							<li><a href="login.php" class="button">Cerrar</a></li>
+    						</ul>
+    					</nav>
+    				</header>
+
     	<!-- Main -->
     		<section id="main" class="container">
     			<header>
-    				<h2>Operación <?php echo $ret['num_caso'];?>_<?php echo substr($ret['año_caso'], 2);?></h2>
-    				<h3><p>Detalle del caso</p></h3>
+    				<h2>Caso <?php echo $ret['num_caso'];?>_<?php echo substr($ret['año_caso'], 2);?></h2>
+    				<h3><p>Operación <?php echo $ret['nom_caso'];?></p></h3>
     			</header>
-    			<div align="center">
-    				<canvas id="mensaje" width="300" height="30"></canvas>
-    			</div>
+    			    			
     			<div class="row">
     						<div class="col-12">
-    
+    							
     							<!-- Lists -->
     							<form action='modificarasunto.php' method='post'>
     								<section class="box">
-    									<h3>Número de caso: <b><?php echo $ret['num_caso'];?>_<?php echo substr($ret['año_caso'], 2);?></b></h3>
+    									<div align="center">
+		    								<canvas id="mensaje" width="300" height="30"></canvas>
+		    							</div>
+    									<div><h2><em><b>Detalles del Caso</b></em></h3></div>
+    									
     									<input type='hidden' name='numero' id='numero' value=<?php echo $ret['num_caso'] ?>>
     									<input type='hidden' name='año' id='año' value=<?php echo $ret['año_caso'] ?>>
     									<div class="row">
     										<div class="col-6 col-12-mobilep">
-    
+    											<h4></b></h3>
     											<ul class="alt">
+    												<li>Número de caso: <b><?php echo $ret['num_caso'];?>_<?php echo substr($ret['año_caso'], 2);?></b></li>
+    												
     												<li>Operación: <b><?php echo $ret['nom_caso'];?></b></li>
     												
     												<li>Descripción: <b><?php echo $ret['des_caso'];?></b></li>
@@ -261,7 +389,7 @@ if(isset($_SESSION['id_u'])) {
     													<input type='hidden' name='nombre' id='nombre' value='<?php echo $ret['nom_caso'];?>'>
     													<input type='hidden' name='descripcion' id='descripcion' value='<?php echo $ret['des_caso'];?>'>
     													<input type='hidden' name='id_tipo' id='id_tipo' value='<?php echo $ret['id_tipo'];?>'>
-    													<input type='hidden' name='tipo_caso' id='tipo_casp' value='<?php echo $ret['nom_tipo'];?>'>
+    													<input type='hidden' name='tipo_caso' id='tipo_caso' value='<?php echo $ret['nom_tipo'];?>'>
     												</li>
     												<li>
     													Grupo Investigación: <b><?php echo $ret['grup'] ?></b>
@@ -273,9 +401,27 @@ if(isset($_SESSION['id_u'])) {
     													<input type='hidden' name='nom_com' id='nom_com' value='<?php echo $ret['nom_com'];?>'>																		
     													<input type='hidden' name='id_grupo' id='id_grupo' value='<?php echo $ret['id_grup'];?>'>
     													<input type='hidden' name='grupo' id='grupo' value='<?php echo $ret['grup'];?>'>
+    													<input type='hidden' name='estado' id='estado' value='<?php echo $ret['id_estado_caso'];?>'>
     												</li>
     												<li>
     													Fecha: <b><?php echo $ret['fecha'] ?></b>
+    													<input type='hidden' name='fecha' id='fecha' value='<?php echo $ret['fecha_original'];?>'>
+    												</li>
+    												<li>
+    													Disco: <b><?php 
+    													$i=0;
+    													if($count_disco!=0) {
+    													   while ($line = mysqli_fetch_array($resultado_disco, MYSQLI_ASSOC)) {
+    													       $disco=$line['nom'];
+    													       echo $disco;   
+    													       if($count_disco>1 and $i<$count_disco-1) {        
+    													               echo ", ";
+    													               $i++;					           
+    													       }
+    													    }
+    													       
+    													}?>
+    													    </b>
     													<input type='hidden' name='fecha' id='fecha' value='<?php echo $ret['fecha_original'];?>'>
     												</li>
     											</ul>	
@@ -327,8 +473,8 @@ if(isset($_SESSION['id_u'])) {
     
     ?>	
     										
-    											<h4><b>Sujetos activos relacionados</b></h4>
-    											<ol>
+    											<h3><b>Sujetos activos relacionados</b></h4>
+    											<ul>
     <?php
         $contador = 0;
         $entro = 0;
@@ -357,11 +503,11 @@ if(isset($_SESSION['id_u'])) {
             echo "</li>";
         }
     
-    											echo " </ol> ";     
+    											echo " </ul> ";     
     } else {
     ?>
     										
-    											<h4>Sujetos activos relacionados</h4>											
+    											<h3>Sujetos activos relacionados</h4>											
     											<ul>
     												<li>No hay sujetos activos relacionados con esta operación</li>												
     											</ul>  
@@ -376,81 +522,80 @@ if(isset($_SESSION['id_u'])) {
     											
     											<a href='nuevosujeto.php' class='button special small'>Agregar Sujeto</a>
     											
+
     											
-    											<br><br>
-    											
-    <!-- LISTA DE INTERVENCIONES -->											
-    											
-    <?php
+    												
+    									</div>
+    									 
+    									<!-- Lista de intervenciones -->	
+    
+    									<div class="col-12 col-12-mobilep">
+    										
+    										 <?php
     if ($count_intervenciones != 0) {
     
     ?>											
-    											<h4><b>Intervenciones del caso</b></h4>
-    											<ol>										
+    											<h3><b>Intervenciones del caso</b></h4>
+    											<ul>										
     
     <?php
         $contador = 0;
         $entro = 0;
         $entro2 = 0;
+        
         while ($line_intervenciones = mysqli_fetch_array($resultado_intervenciones, MYSQLI_ASSOC)) {
+            $id_int=$line_intervenciones['id_int'];
+            $nom_tipo=$line_intervenciones['nom_tipo'];
+            $des_tipo=$line_intervenciones['des_tipo'];
+            $nom=$line_intervenciones['nom'];
+            $ape1=$line_intervenciones['ape1'];
+            $ape2=$line_intervenciones['ape2'];
+            $dir=$line_intervenciones['dir'];
+            $desc=$line_intervenciones['des'];
+            $num=$line_intervenciones['num'];
     		echo "<li>";
-            $nombre_sujeto = "";
-            foreach ($line_intervenciones as $col_value) {
-                if($contador==0) {
-                    $id_intervencion=base64_encode($col_value);
-                    $contador++;
-                }
-                else {
-                    if ($contador == 1) {
-                	
-                        if ($entro2 == 0) {
-                            echo "<a href='detalle_intervencion.php?id_intervencion=$id_intervencion'>".$col_value."</a>"; 
-                            echo " - ";
-                            $entro2 = 1;
-                        } 
-                        else {
-                            echo $col_value;
-                       
-                            $entro2 = 0;
-                            $contador ++;
-                        
-                        }
+            $id_intervencion=base64_encode($id_int);
+            echo "<a href='detalle_intervencion.php?id_intervencion=$id_intervencion'>".$num."</a>"; 
+            echo " - ".$nom_tipo;
+            echo " - ";
+            echo $nom." ".$ape1." ".$ape2;
+            echo " - ";
+            echo $dir;
+            if(!empty($desc)) {
+               echo " [".$desc."]";
+            }
+            $result_equipo=mysqli_query($link, "Select apodo from equipo_intervencion e
+            inner join usuario u ON u.id_usuario=e.id_usuario
+            where id_intervencion=$id_int");
+            $count_equipo=mysqli_num_rows($result_equipo);
+            if($count_equipo!=0) {
+                $contador=0;
+                echo "[Equipo: ";
+                while($line_equipo=mysqli_fetch_array($result_equipo)) {
+                    $apodo=$line_equipo['apodo'];
+                    if($contador==0) {
+                        echo $apodo;
+                        $contador++;
                     }
                     else {
-                        if ($contador == 2) {
-                            if ($entro < 2) {
-                                $nombre_sujeto = $nombre_sujeto . " " . $col_value;
-                                $entro ++;
-                            }
-                            else {
-                            
-                                echo $nombre_sujeto . " " . $col_value . " - ";
-                           
-                                $contador ++;
-                                $entro = 0;
-                            }
+                        if($contador==$count_equipo-1) {
+                            echo " y ".$apodo."]";
                         }
                         else {
-                            if ($contador < 4) {
-                            
-                                echo $col_value . " [ ";
-                            
-                                $contador ++;
-                            } 
-                            else {
-                            
-                                echo $col_value . " ] ";
-                            
-                                $contador = 0;
-                            }
+                            echo ", ".$apodo;
+                            $contador++;
                         }
+                    }
+                    if($count_equipo==1) {
+                        echo "]";
                     }
                 }
             }
+            
             echo "</li>";
         }
     
-    											echo " </ol> ";
+    											echo " </ul>   ";
     
     } else {
     ?>
@@ -462,149 +607,228 @@ if(isset($_SESSION['id_u'])) {
     <?php   
     }									
     ?>									
-    
     											
     											
-    												<a href="nuevaintervencion.php" class="button special small">Agregar Intervención </a>
-    											
-    												
+    											<ul class="actions small">
+													<li><a href="nuevaintervencion.php" class="button special small">Agregar Intervención </a></li>
+    											</ul>
+    									
     									</div>
     									
-    									<!-- Lista de intervenciones -->	
-    
-    
+    									<!--  Botones -->
+    									<div class="col-12">
+    										<ul class="actions special">										  
+    											<li><br><input type='submit' value='Modificar' /></li>
+    											<?php
+    											$sql_borrar_evidencia="Select * FROM evidencia where id_caso=$myid_caso";
+    											$resultado_borrar_evidencia=mysqli_query($link, $sql_borrar_evidencia);
+    											$count_borrar_evidencia=mysqli_num_rows($resultado_borrar_evidencia);
+                                                if ($count_borrar_evidencia==0) {
+                                                    $sql_borrar_intervencion="Select * FROM intervencion where id_caso=$myid_caso";
+                                                    $resultado_borrar_intervencion=mysqli_query($link, $sql_borrar_intervencion);
+                                                    $count_borrar_intervencion=mysqli_num_rows($resultado_borrar_intervencion);
+                                                    if($count_borrar_intervencion==0) {
+                                                        $sql_borrar_sujeto="Select * FROM sujeto_activo where id_caso=$myid_caso";
+                                                        $resultado_borrar_sujeto=mysqli_query($link, $sql_borrar_sujeto);
+                                                        $count_borrar_sujeto=mysqli_num_rows($resultado_borrar_sujeto);
+                                                        if($count_borrar_sujeto==0) {
+                                                            echo "<li><br><input type='button' onclick='pregunta();' value='Eliminar'><br></li>";
+                                                        }
+                                                        else {
+                                                            //no se muetra el boton eliminar
+                                                        }
+                                                    }
+                                                    else {
+                                                        //no se muetra el boton eliminar
+                                                    }
+                                                }
+                                                else {
+                                                    //no se muetra el boton eliminar
+                                                }
+                                                ?>
+    											<li><br><input type="button" onclick="location.href='inicio.php';" value="Volver"><br></li>
+    										  							
+    										</ul>
+    										
+
+    									</div>	
+    									
     										
     									<!-- Lista de evidencias -->	
     									<div class="col-12 col-12-mobilep">
-    									<h4><b>Evidencias del caso<b></b></h4>
+    									<h3><b>Evidencias del caso</b> <a href="listado_intervenciones.php"> <img src="images/add.png"> </a>(   <?php echo $count_total;?>   Evidencias, <?php echo $count_evidencias_terminadas;?> Finalizadas, <?php echo $count_total-$count_evidencias_terminadas;?> Pendientes)</h3> 
+    									
+    									
+    									
     
     <?php
-    
+									
     								if ($count_evidencias != 0) {
     
-    ?>																		
-    									
-    									
-    
-    <?php
-        echo "<br><div class='table-wrapper'><table><thead><tr><th>Nombre</th><th>Depende de</th><th>Tipo Almacenamiento</th><th>Subtipo</th><th>Numero Serie</th><th>Capacidad</th><th>Marca</th><th>Modelo</th></tr></thead>";
-        $contador = 0;
-        $contador2 = 0;
+
+    ?>								  
+
+								<table>
+									<thead>
+										<tr>
+											<th>Nombre</th>
+                                            <th>Depende de</th>
+                                            <th>Subtipo</th>
+                                            <th>N/S</th>
+                                            <th>Marca</th>
+                                            <th>Modelo</th>
+                                            <th>Estado</th>
+                                            <th>Ordenador Extracción</th>
+                                            <th></th>   
+										</tr>
+									</thead>
+									<tbody>
+
+
+<?php
+
+        
+
+
+
+		$contador = 0;
         $tiene_sub = 0;
         $entra = 0;
     
-        $entra_nombre = 0;
     
     
     
         while ($line_evidencias = mysqli_fetch_array($resultado_evidencias, MYSQLI_ASSOC)) {
-            echo "<tr>";
-            foreach ($line_evidencias as $col_value) {
-                if ($contador == 0) {
-                    $entra = 0;
-                    $tiene_sub = $col_value;
-                    $contador ++;
-                } else {
-                    if ($contador == 1) {
-                        $id = $col_value;
-                        $contador ++;
-                    } else {
-                        if ($contador == 2) {
-                            if ($entra_nombre == 0) {
-                                echo "<td>";
-                                $nombre_original = $col_value;
-                                $nombre=base64_encode($nombre_original);
-                                $entra_nombre = 1;
-                            } else {
-                                if ($entra_nombre == 1) {
-                                    $numero=base64_encode($col_value);
-                                    echo "<a style='color:#000000;' href='detalle_evidencia.php?nombre=$nombre&numero=$numero'>$nombre_original$col_value</a>";
-                                    echo "</td>";
-                                    $contador ++;
-                                    $entra_nombre = 0;
-                                }
-                            }
-                        } else {
-                            if($contador==3) {
-                                echo "<td></td>";
-                                $contador++;
-                            }
-                            if ($contador <= 8) {
-                                echo "<td align='center'>";
-                                echo $col_value;
-                                echo "</td>";
-                                $contador ++;
-                            }
-                            else {
-                                echo "<td align='center'>";
-                                echo $col_value;
-                                echo "</td>";
-                                $contador = 0;
-                                $entra = 1;
-                            }
-                        }
-                    }
-                    if ($tiene_sub == 1 and $entra == 1) {
+            $tiene_sub=$line_evidencias['tiene_subevidencias'];
+            $id_evidencia=$line_evidencias['id_evidencia'];
+            $nombre=$line_evidencias['nombre'];
+            $numero_evidencia=$line_evidencias['numero_evidencia'];
+            $subtipo=$line_evidencias['nom_sub'];
+            $n_s=$line_evidencias['n_s'];
+      //      $capacidad=$line_evidencias['capacidad'];
+            $marca=$line_evidencias['marca'];
+            $modelo=$line_evidencias['modelo'];
+            $alias=$line_evidencias['alias'];
+            echo "<tr>";   
+            echo "<td>";
+            $entra = 0;
+            $nombre_original = $nombre;
+            $nombre=base64_encode($nombre_original);
+            $numero=base64_encode($numero_evidencia);
+            echo "<a style='color:#000000;' href='detalle_evidencia.php?nombre=$nombre&numero=$numero'>$nombre_original$numero_evidencia</a>";
+            if(!empty($alias)) {
+                echo "<br>($alias)";
+            }
+            echo "</td>";
+            echo "<td></td>";
+            echo "<td>".$subtipo."</td>";
+            echo "<td>".$n_s."</td>";
+        //    echo "<td>".$capacidad."</td>";
+            echo "<td>".$marca."</td>";
+            echo "<td>".$modelo."</td>";
+            $resultado_estado=mysqli_query($link, "select max(er.id_estado_evidencia) as id_estado from evidencia_registro er
+            where id_evidencia=$id_evidencia");
+            $ret_estado=mysqli_fetch_array($resultado_estado);
+            $resultado_estado_nombre=mysqli_query($link, "select nombre from estado_evidencia where id_estado_evidencia=$ret_estado[id_estado]");
+            $ret_nombre=mysqli_fetch_array($resultado_estado_nombre);
+            $resultado_ordenador=mysqli_query($link, "select o.nombre_ordenadores as ordenador from evidencia_registro er
+            Inner join ordenadores o on o.id_ordenadores=er.id_ordenadores
+            where id_evidencia=$id_evidencia");
+            $ret_ordenador=mysqli_fetch_array($resultado_ordenador); 
+            echo "<td>".$ret_nombre['nombre']."</td>";
+            if(!empty($ret_ordenador['ordenador'])) {
+                echo "<td>".$ret_ordenador['ordenador']."</td>";
+            }
+            else {
+                echo "<td></td>";
+            }
+            $entra = 1;
+            if($tiene_sub!=1) {
+                echo "<td><a href='#' onclick='preguntaEvidencia($id_evidencia);'>
+                <img src='img/eliminar.png' alt='Enlace' width=20 height=20/>
+                </a></td>";
+            }
+            else {
+                echo "<td></td>";
+            }
+            if ($tiene_sub == 1 and $entra == 1) {
                         echo "</tr>";
                         $entra = 0;
-                        $result = mysqli_query($link, "select e.nombre, e.numero_evidencia, s.nombre as nom_sub, t.nombre as nom_tipo,  e.n_s, e.capacidad, e.marca, e.modelo from evidencia e
+                        $result = mysqli_query($link, "select e.nombre, e.numero_evidencia, s.nombre as nom_sub,  e.n_s, e.capacidad, e.marca, e.modelo,e.id_evidencia, e.alias  from evidencia e
                         inner join tipo_evidencia t on t.id_tipo_evidencia=e.id_tipo_evidencia
                         inner join subtipo_evidencia s on s.id_subtipo_evidencia=e.id_subtipo_evidencia
                         inner join caso c on c.id_caso=e.id_caso
-                        where c.id_caso='$myid_caso' AND relacionado_con=$id order By id_intervencion asc");
-                        $result2 = mysqli_query($link, "select e.nombre as nom, e.numero_evidencia as num from evidencia e where id_evidencia=$id");
+                        inner join evidencia_registro er ON er.id_evidencia=e.id_evidencia
+                        where c.id_caso='$myid_caso' AND relacionado_con=$id_evidencia 
+                        GROUP BY e.id_evidencia	
+                        order By nombre asc");
+                        $result2 = mysqli_query($link, "select e.nombre as nom, e.numero_evidencia as num from evidencia e where id_evidencia=$id_evidencia");
                         $ret=mysqli_fetch_array($result2);
                         while ($line = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                            $nombre=$line['nombre'];
+                            $numero_evidencia=$line['numero_evidencia'];
+                            $subtipo=$line['nom_sub'];
+                            $n_s=$line['n_s'];
+                            $capacidad=$line['capacidad'];
+                            $marca=$line['marca'];
+                            $modelo=$line['modelo'];
+                            $id_evidencia_sub=$line['id_evidencia'];
+                            $alias=$line['alias'];
                             echo "<tr>";
-                            foreach ($line as $col_value) {
-                                if ($contador2 == 0) {
-                                    if ($entra_nombre == 0) {
-                                        echo "<td>";
-                                        $nombre_original = $col_value;
-                                        $nombre=base64_encode($nombre_original);
-                                        $entra_nombre = 1;
-                                    } else {
-                                        if ($entra_nombre == 1) {
-                                            $numero=base64_encode($col_value);
-                                            echo "<a style='color:red;' href='detalle_evidencia.php?nombre=$nombre&numero=$numero'>$nombre_original$col_value</a>";
-                                            echo "</td>";
-                                            $contador2 ++;
-                                            $entra_nombre = 0;
-                                        }
-                                    }
-                                } else {
-                                    if($contador2==1) {
-                                        echo "<td>";
-                                        echo $ret['nom'].$ret['num'];
-                                        echo "</td>";
-                                        $contador2 ++;
-                                    }
-                                    if ($contador2 < 7) {
-                                        echo "<td align='center'>";
-                                        echo $col_value;
-                                        echo "</td>";
-                                        $contador2 ++;
-                                    } 
-                                    else {
-                                        echo "<td align='center'>";
-                                        echo $col_value;
-                                        echo "</td>";
-                                        $contador2 = 0;
-                                    }
-                                }
+                            echo "<td>";
+                            $nombre_original = $nombre;
+                            $nombre=base64_encode($nombre_original);
+                            $numero=base64_encode($numero_evidencia);
+                            echo "<a style='color:red;' href='detalle_evidencia.php?nombre=$nombre&numero=$numero'>$nombre_original$numero_evidencia</a>";
+                            if(!empty($alias)) {
+                                echo "<br>($alias)";
                             }
+                            echo "</td>";
+                            echo "<td>";
+                            echo $ret['nom'].$ret['num'];
+                            echo "</td>";
+                            echo "<td>".$subtipo."</td>";
+                            echo "<td>".$n_s."</td>";
+                           // echo "<td>".$capacidad."</td>";
+                            echo "<td>".$marca."</td>";
+                            echo "<td>".$modelo."</td>";
+                            $resultado_estado=mysqli_query($link, "select max(er.id_estado_evidencia) as id_estado from evidencia_registro er
+                            where id_evidencia=$id_evidencia_sub");
+                            $ret_estado=mysqli_fetch_array($resultado_estado);
+                            $resultado_estado_nombre=mysqli_query($link, "select nombre from estado_evidencia where id_estado_evidencia=$ret_estado[id_estado]");
+                            $ret_nombre=mysqli_fetch_array($resultado_estado_nombre);
+                            $resultado_ordenador=mysqli_query($link, "select o.nombre_ordenadores as ordenador from evidencia_registro er
+                            Inner join ordenadores o on o.id_ordenadores=er.id_ordenadores
+                            where id_evidencia=$id_evidencia_sub");
+                            $ret_ordenador=mysqli_fetch_array($resultado_ordenador);
+                            echo "<td>".$ret_nombre['nombre']."</td>";
+                            if(!empty($ret_ordenador['ordenador'])) {
+                                echo "<td>".$ret_ordenador['ordenador']."</td>";
+                            }
+                            else {
+                                echo "<td></td>";
+                            }
+                            echo "<td><a href='#' onclick='preguntaEvidencia($id_evidencia_sub);'>
+    	                    <img src='img/eliminar.png' alt='Enlace' width=20 height=20/>
+    	                    </a></td>";
                             echo "</tr>";
                         }
                     }
-                }
-            }
-    
+            echo "</tr>";
         }
-        echo "</table></div>";
+        echo "</tbody></table></div>";
+
+?>
+    <div class="col-12">
+    	<ul class="actions special small">
     
-    	echo "<a href='listado_intervenciones.php' class='button special small'>Agregar Evidencia </a> ";    
-    	echo "<a href='busqueda_evidencia.php' class='button special icon solid fa-search small'>Buscar</a>";
-        
+			<li><a href="listado_intervenciones.php" class="button special small">Agregar</a></li>
+			<li><a href="busqueda_evidencia.php" class="button special small">Buscar</a></li>
+			<li><a href="configuracion_hoja.php" class="button special small">Hoja de evidencias</a></li>
+		</ul>
+	</div>	
+    	
+<?php        
     } else {
     
         ?>
@@ -623,42 +847,7 @@ if(isset($_SESSION['id_u'])) {
     	
     									
     									
-    								<!--  Botones -->
-    									<div class="col-12">
-    										<ul class="actions special">										  
-    											<li><input type='submit' value='Modificar' /></li>
-    											<?php
-    											$sql_borrar_evidencia="Select * FROM evidencia where id_caso=$myid_caso";
-    											$resultado_borrar_evidencia=mysqli_query($link, $sql_borrar_evidencia);
-    											$count_borrar_evidencia=mysqli_num_rows($resultado_borrar_evidencia);
-                                                if ($count_borrar_evidencia==0) {
-                                                    $sql_borrar_intervencion="Select * FROM intervencion where id_caso=$myid_caso";
-                                                    $resultado_borrar_intervencion=mysqli_query($link, $sql_borrar_intervencion);
-                                                    $count_borrar_intervencion=mysqli_num_rows($resultado_borrar_intervencion);
-                                                    if($count_borrar_intervencion==0) {
-                                                        $sql_borrar_sujeto="Select * FROM sujeto_activo where id_caso=$myid_caso";
-                                                        $resultado_borrar_sujeto=mysqli_query($link, $sql_borrar_sujeto);
-                                                        $count_borrar_sujeto=mysqli_num_rows($resultado_borrar_sujeto);
-                                                        if($count_borrar_sujeto==0) {
-                                                            echo "<li><input type='button' onclick='pregunta();' value='Eliminar'><br></li>";
-                                                        }
-                                                        else {
-                                                            //no se muetra el boton eliminar
-                                                        }
-                                                    }
-                                                    else {
-                                                        //no se muetra el boton eliminar
-                                                    }
-                                                }
-                                                else {
-                                                    //no se muetra el boton eliminar
-                                                }
-                                                ?>
-    											<li><input type="button" onclick="location.href='inicio.php';" value="Volver"><br></li>
-    										  							
-    										</ul>
-    										
-    									</div>								
+
     									
     								</section>
     							</form>	
@@ -667,11 +856,14 @@ if(isset($_SESSION['id_u'])) {
     		</section>		
        </div>
        
+       
+       
     </body>
     
     
     
     </html>
+
     
     
     <?php
@@ -682,3 +874,28 @@ else {
     echo "Error";
 }
 ?>
+		</div>								
+    									
+    								</section>
+    							</form>	
+							</div> <!-- row -->
+						</div> <!--coll12 -->
+    				</div>  	
+				</div>						
+    		</section>		
+       </div>
+       
+    </body>
+    
+    	
+    	<!-- Pelayo -->
+    		<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>    
+    
+    </html>
+

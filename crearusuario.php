@@ -5,7 +5,7 @@ session_start();
 #imprimimos las variables que estas enviando para saber si estan llegando completas
 
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+$link = mysqli_connect("localhost", "root", ".google.", "safe");
 
 if (mysqli_connect_errno()) {
     printf("Fallo la conexion: %s\n", mysqli_connect_error());
@@ -39,7 +39,7 @@ if($mod!="1")
     
     $myadministrador = mysqli_real_escape_string($link,$_POST['administrador']);
     
-    if($myadministrador==SI) {
+    if($myadministrador=="SI") {
         $myadministradores=2;
     }
     else {
@@ -51,22 +51,21 @@ if($mod!="1")
     
    
     
-    $myapellido1 = strtolower(mysqli_real_escape_string($link,$_POST['apellido1']));
-    $myapellido2 = strtolower(mysqli_real_escape_string($link,$_POST['apellido2'])); 
+    $myapellido1 = mysqli_real_escape_string($link,$_POST['apellido1']);
+    $myapellido2 = mysqli_real_escape_string($link,$_POST['apellido2']); 
     $mydni = mysqli_real_escape_string($link,$_POST['DNI']);
     $mycp = mysqli_real_escape_string($link,$_POST['CP']);  
     $mytelefono = mysqli_real_escape_string($link,$_POST['telefono']); 
-    $myapodo = strtolower(mysqli_real_escape_string($link,$_POST['apodo']));  
-    $mynombre = strtolower(mysqli_real_escape_string($link,$_POST['nombre']));  
-    $myemail = strtolower(mysqli_real_escape_string($link,$_POST['email'])); 
+    $myapodo = mysqli_real_escape_string($link,$_POST['apodo']);  
+    $mynombre = mysqli_real_escape_string($link,$_POST['nombre']);  
+    $myemail = mysqli_real_escape_string($link,$_POST['email']); 
     
     //if (isset($_POST['imagen'])){
     if(isset($_FILES["imagen"])) {
             if (is_uploaded_file($_FILES['imagen']['tmp_name'])) {
-                $imgContenido = addslashes(file_get_contents($_FILES['imagen']['tmp_name']));
-                
-           }
-       
+                $imgContenido = addslashes(file_get_contents($_FILES['imagen']['tmp_name']));         
+            }
+            $imgContenido=NULL;
     }
     else {
         $imgContenido=NULL;
@@ -76,9 +75,9 @@ if($mod!="1")
     
     
     $mymarca = mysqli_real_escape_string($link,$_POST['marca']);
-    $mymodelo = strtolower(mysqli_real_escape_string($link,$_POST['modelo']));
-    $mymatricula = strtolower(mysqli_real_escape_string($link,$_POST['matricula']));
-    $mycolor = strtolower(mysqli_real_escape_string($link,$_POST['color']));
+    $mymodelo = mysqli_real_escape_string($link,$_POST['modelo']);
+    $mymatricula = mysqli_real_escape_string($link,$_POST['matricula']);
+    $mycolor = mysqli_real_escape_string($link,$_POST['color']);
 }
 
 $errorusuario=0;

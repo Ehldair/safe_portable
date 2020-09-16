@@ -1,9 +1,9 @@
-<?php
+<?php 
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-    
-    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+
+    $link = mysqli_connect("localhost", "root", ".google.", "safe");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -16,7 +16,7 @@ if(isset($_SESSION['id_u'])) {
     $ret_caso=mysqli_fetch_array($result);
     $_SESSION['mod']=2;
     $respuesta=$_SESSION['respuesta'];
-    ?>
+   ?>
 
 <!DOCTYPE html>
 <html lang="es-ES">
@@ -26,14 +26,7 @@ if(isset($_SESSION['id_u'])) {
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
 	
-	<!-- Pelayo -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/jquery.dropotron.min.js"></script>
-		<script src="assets/js/jquery.scrollex.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+
 			
 	<!-- Alonso -->
 		<script src="//code.jquery.com/jquery-latest.js"></script>
@@ -59,7 +52,7 @@ if(isset($_SESSION['id_u'])) {
 				processData: false,
 				success: function(respuesta) {
 						if(respuesta==2) {
-							window.location="asunto.php";
+							window.location="detalle_evidencia.php";
 						}
 						else {
 							ctx.clearRect(0, 0, c.width, c.height);
@@ -68,11 +61,20 @@ if(isset($_SESSION['id_u'])) {
 							ctx.fillStyle = "#FF0000";
 							ctx.textAlign = "center";
 							ctx.fillText(respuesta,130,20);
+							setTimeout(borrar,5000);
 						}
 					}
 			});
 		};
 </script>
+<script type="text/javascript">
+    		function borrar() {
+    			var c = document.getElementById("mensaje");
+    			var ctx = c.getContext("2d");
+    			ctx.clearRect(0, 0, c.width, c.height);
+    		};
+    		
+    		</script>
 <script type="text/javascript">
 function cambiarsubtipo(opSelect){
 	
@@ -115,18 +117,7 @@ function cambiarsubtipo(opSelect){
 				document.getElementById("padre").style.display = 'none';
 			}
 		}
-		function habilitar_alias(value)
-		{
-			if(value==true)
-			{
-				// habilitamos
-				document.getElementById("alias").disabled=false;
-			}else if(value==false){
-				// deshabilitamos
-				document.getElementById("alias").disabled=true;
-				document.getElementById("alias").value=null;
-			}
-		}
+	
 		 function cambiar(opSelect){
 			  
 			  var inter=$('input:radio[name=intervencion]:checked').val();
@@ -251,8 +242,6 @@ function tiene_patron(value) {
 		document.getElementById('frase').style.display = 'none';
 		document.getElementById('frase2').style.display = 'none';
 		$("#nopatron *").attr("disabled", false);
-		var tiene=document.getElementById('check_alias').checked;
-		habilitar_alias(tiene); 
 		activarTipoCapacidad();
 
 			 
@@ -340,8 +329,7 @@ function tiene_patron(value) {
 	  document.getElementById('tienepatron').style.display = 'inline';
 	  $("#nopatron *").attr("disabled", false);
 	  document.getElementById('botones').style.display = 'block';
-	  var tiene=document.getElementById('check_alias').checked;
-	  habilitar_alias(tiene); 
+
 	  activarTipoCapacidad();
 	  $("input[name='patron']").attr("checked", false);
   }
@@ -350,34 +338,95 @@ function tiene_patron(value) {
 
 
 <body class="is-preload" onload="respuesta();">
+	<!-- Header -->
+    				<header id="header">
+    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
+    					<nav id="nav">
+    						<ul>
+    							<li><a href="inicio.php">Home</a></li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Casos</a>
+    								<ul>
+    									<li><a href="busqueda_Caso.php">Buscar</a></li>
+    									<li><a href="nuevoasunto.php">Nuevo</a></li>
+    
+    									<li>
+    										<a href="#">Listar</a>
+    										<ul>
+    											<li><a href="abiertos.php">Abiertos</a></li>
+    											<li><a href="cerrados.php">Cerrados</a></li>
+    											<li><a href="todos.php">Todos</a></li>
+    										</ul>
+    									</li>
+    									
+    								</ul>
+    							</li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Gestión</a>
+    								<ul>
+    									<li><a href="compensacion_usuario.php">Compensaciones</a></li>
+    									<li><a href="viajes_año.php">Viajes</a></li>
+    								</ul>	
+    							</li>
+    							<?php if ($_SESSION['admin'] ==2) {?>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Administración</a>
+    								<ul>
+    									<li>
+    										<a href="#">Usuario</a>
+    										<ul>
+    											<li><a href="nuevousuario.php">Nuevo</a></li>
+    											<li><a href="#">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Viajes</a>
+    										<ul>
+    											<li><a href="nuevoviaje.php">Nuevo</a></li>
+    											<li><a href="viajes.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Compensaciones</a>
+    										<ul>
+    											<li><a href="nuevosdias.php">Añadir días</a></li>
+    											<li><a href="pedirdias.php">Pedir días</a></li>
+    											<li><a href="gestion_dias.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Desplegables</a>
+    										<ul>
+    											<li><a href="#">Grupo</a>
+    											<ul>
+    												<li><a href="nuevogrupo.php">Nuevo grupo</a></li>
+    												<li><a href="gestion_grupo.php">Gestión grupo</a></li></ul>
+    											</li>
+    											<li><a href="#">Comisaría</a>
+    											<ul>
+    												<li><a href="nuevogrupo_comisaria.php">Nueva Comisaría</a></li>
+    												<li><a href="gestion_comisaria.php">Gestión comisaría</a></li></ul>
+    											</li>
+    											<li><a href="#">Juzgado</a>
+    											<ul>
+    												<li><a href="nuevojuzgado.php">Nuevo juzgado</a></li>
+    												<li><a href="gestion_juzgado.php">Gestión juzgado</a></li></ul>
+    											</li>
+    										</ul>
+    									</li>
+    								</ul>	
+    							</li>
+    							<?php }?>
+    							
+    							
+    							<li><a href="login.php" class="button">Cerrar</a></li>
+    						</ul>
+    					</nav>
+    				</header>
 
-<!-- Header -->
-				<header id="header">
-					<h1><a href="index.html">Alpha</a> by HTML5 UP</h1>
-					<nav id="nav">
-						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li>
-								<a href="#" class="icon solid fa-angle-down">Layouts</a>
-								<ul>
-									<li><a href="generic.html">Generic</a></li>
-									<li><a href="contact.html">Contact</a></li>
-									<li><a href="elements.html">Elements</a></li>
-									<li>
-										<a href="#">Submenu</a>
-										<ul>
-											<li><a href="#">Option One</a></li>
-											<li><a href="#">Option Two</a></li>
-											<li><a href="#">Option Three</a></li>
-											<li><a href="#">Option Four</a></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-							<li><a href="#" class="button">Sign Up</a></li>
-						</ul>
-					</nav>
-				</header>
 
 	<div id="page-wrapper">
 
@@ -548,14 +597,15 @@ echo "</table>";
 					    								<div class="col-2 col-12-mobilep">								
 					    									<input type="text" name="numero" id="numero" required pattern='\d*' placeholder="Numero">
 					    								</div>
-					    								<div class="col-3 col-12-mobilep">									    									
-					    									 <input type="checkbox"  id="check_alias" name="check_alias" onchange="habilitar_alias(this.checked);">
-					    									 <label for=check_alias><input type="text" name="alias" id="alias" disabled placeholder="Alias"></label>     	 													 
-					    								</div>
-					    								
-					    								
-    													
-    													<div class="col-6 col-12-mobilep">
+					    								<div class="col-6 col-12-mobilep">
+        											
+     													<input type="text"  name="marca" id="marca" placeholder="Marca">
+     													</div>
+     												
+     													<div class="col-6 col-12-mobilep">
+     													<input type="text"  name="modelo" id="modelo" placeholder="Modelo">
+     													</div>
+    													<div class="col-5 col-12-mobilep">
     														<input type="text"  name="n_s" id="n_s" placeholder="n/s">
     													</div>
     													
@@ -586,16 +636,9 @@ echo "</table>";
         ?>
         </select>
         											</div>
-        											
-        											
-        											<div class="col-5 col-12-mobilep">
-        											
-     													<input type="text"  name="marca" id="marca" placeholder="Marca">
-     												</div>
-     												
-     												<div class="col-5 col-12-mobilep">
-     													<input type="text"  name="modelo" id="modelo" placeholder="Modelo">
-     												</div>
+													<div class="col-3 col-12-mobilep">									    									
+					    									<input type="text" name="alias" id="alias" placeholder="Alias">     	 													 
+					    							</div>
      												
      												<div class="col-12">
     													<textarea name="observaciones" id="observaciones" placeholder="Observaciones" rows="4"></textarea>
@@ -629,8 +672,11 @@ echo "</table>";
         </select>
         									</div>
         									
-        									<div class="col-5 col-12-mobilep">
+        									<div class="col-2 col-12-mobilep">
         										<input type="text"  name="pin" id="pin" placeholder="Pin">
+        									</div>
+        									<div class="col-3 col-12-mobilep">
+        										<input type="datetime-local" name="fecha" id ="fecha" placeholder="fecha" required>
         									</div>
         									
         									<div id='checkdepende' class="col-5 col-12-mobilep">
@@ -659,7 +705,7 @@ echo "</table>";
 				    							<h3>Dibujar el Patrón</h3>
 				    							<div class="row gtr-50 gtr-uniform">
 				    							
-				    								<div class="col-12 col-12-mobilep">
+				    								<div class="col-4 col-12-mobilep">
 				    									<input type="checkbox" id="tienepatron" name="tienepatron" onchange="tiene_patron(this.checked);">	    									
 				    									
 					    									 <label for=tienepatron>Patrón</label>   
@@ -729,6 +775,15 @@ else {
 }
 
 ?>	
+
+	<!-- Pelayo -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.dropotron.min.js"></script>
+		<script src="assets/js/jquery.scrollex.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
 	
 </body>
 

@@ -11,7 +11,7 @@ $category=$_POST["category"];
 
 
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+$link = mysqli_connect("localhost", "root", ".google.", "safe");
 
 // comprobar la conexi�n
 if (mysqli_connect_errno()) {

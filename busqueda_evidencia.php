@@ -4,7 +4,7 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
 
-    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+    $link = mysqli_connect("localhost", "root", ".google.", "safe");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -22,125 +22,109 @@ if(isset($_SESSION['id_u'])) {
     	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     	<link rel="stylesheet" href="assets/css/main.css" />
     	
-    	<!-- Pelayo -->
-    		<script src="assets/js/jquery.min.js"></script>
-    		<script src="assets/js/jquery.dropotron.min.js"></script>
-    		<script src="assets/js/jquery.scrollex.min.js"></script>
-    		<script src="assets/js/browser.min.js"></script>
-    		<script src="assets/js/breakpoints.min.js"></script>
-    		<script src="assets/js/util.js"></script>
-    		<script src="assets/js/main.js"></script>
+
     			
     	<!-- Alonso -->
     		<script src="//code.jquery.com/jquery-latest.js"></script>
     		<script src="miscript.js"></script>
     		<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     		<script src="js/jquery-3.4.1.js"></script>
-      
-      
-      <script type="text/javascript">
-    
-    	$('#ca').on('change',function(){
-    		
-      var category=$("#ca").val();
-      var url="obtenerprovincia.php";
-    
-           $.ajax({
-    
-             url:url,
-             type:"POST",
-             data:{category:category}
-    
-           }).done(function(data){
-    
-                 $("#provincia").html(data);
-           })    
-       });
-    
-    	$('#provincia').on('change',function(){
-    		
-    		  var category=$("#provincia").val();
-    		  var url="obtenercomisaria.php";
-    
-    		       $.ajax({
-    
-    		         url:url,
-    		         type:"POST",
-    		         data:{category:category}
-    
-    		       }).done(function(data){
-    
-    		             $("#comisaria").html(data);
-    		       })    
-    		   });
-    
-    	$('#comisaria').on('change',function(){
-    		
-    		  var category=$("#comisaria").val();
-    		  var url="obtenergrupo.php";
-    
-    		       $.ajax({
-    
-    		         url:url,
-    		         type:"POST",
-    		         data:{category:category}
-    
-    		       }).done(function(data){
-    
-    		             $("#grupo").html(data);
-    		       })    
-    		   });
-    	  </script>
-    	  <script>
-    	  function cambiar(opSelect) {
-    		  var category=opSelect;
-    		  if(category!="0") { 
-    		  document.getElementById('año_fin').disabled = false;
-    		  var url="obtenerañofin.php";
-    			var pro= $.ajax({
-    
-    				url:url,
-    				type:"POST",
-    				data:{category:category}
-    
-    			}).done(function(data){
-    
-    				$("#año_fin").html(data);
-    			})    
-    		  }
-    		  else {
-    			  document.getElementById('año_fin').value = "";
-    			  document.getElementById('año_fin').disabled = true;
-    		  }
-    		};
-    		function cambiardil(opSelect) {
-    			  var category=opSelect;
-    			  if(category!="0") { 
-    			  document.getElementById('año_diligencias_fin').disabled = false;
-    			  var url="obtenerañofin.php";
-    				var pro= $.ajax({
-    
-    					url:url,
-    					type:"POST",
-    					data:{category:category}
-    
-    				}).done(function(data){
-    
-    					$("#año_diligencias_fin").html(data);
-    				})    
-    			  }
-    			  else {
-    				  document.getElementById('año_diligencias_fin').value = "";
-    				  document.getElementById('año_diligencias_fin').disabled = true;
-    			  }
-    			};
-    	  </script>
+ 
     	  
     	  
     </head>
     
     <body class="is-preload">
     		<div id="page-wrapper">
+	<!-- Header -->
+    				<header id="header">
+    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
+    					<nav id="nav">
+    						<ul>
+    							<li><a href="inicio.php">Home</a></li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Casos</a>
+    								<ul>
+    									<li><a href="busqueda_Caso.php">Buscar</a></li>
+    									<li><a href="nuevoasunto.php">Nuevo</a></li>
+    
+    									<li>
+    										<a href="#">Listar</a>
+    										<ul>
+    											<li><a href="abiertos.php">Abiertos</a></li>
+    											<li><a href="cerrados.php">Cerrados</a></li>
+    											<li><a href="todos.php">Todos</a></li>
+    										</ul>
+    									</li>
+    									
+    								</ul>
+    							</li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Gestión</a>
+    								<ul>
+    									<li><a href="compensacion_usuario.php">Compensaciones</a></li>
+    									<li><a href="viajes_año.php">Viajes</a></li>
+    								</ul>	
+    							</li>
+    							<?php if ($_SESSION['admin'] ==2) {?>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Administración</a>
+    								<ul>
+    									<li>
+    										<a href="#">Usuario</a>
+    										<ul>
+    											<li><a href="nuevousuario.php">Nuevo</a></li>
+    											<li><a href="#">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Viajes</a>
+    										<ul>
+    											<li><a href="nuevoviaje.php">Nuevo</a></li>
+    											<li><a href="viajes.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Compensaciones</a>
+    										<ul>
+    											<li><a href="nuevosdias.php">Añadir días</a></li>
+    											<li><a href="pedirdias.php">Pedir días</a></li>
+    											<li><a href="gestion_dias.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Desplegables</a>
+    										<ul>
+    											<li><a href="#">Grupo</a>
+    											<ul>
+    												<li><a href="nuevogrupo.php">Nuevo grupo</a></li>
+    												<li><a href="gestion_grupo.php">Gestión grupo</a></li></ul>
+    											</li>
+    											<li><a href="#">Comisaría</a>
+    											<ul>
+    												<li><a href="nuevogrupo_comisaria.php">Nueva Comisaría</a></li>
+    												<li><a href="gestion_comisaria.php">Gestión comisaría</a></li></ul>
+    											</li>
+    											<li><a href="#">Juzgado</a>
+    											<ul>
+    												<li><a href="nuevojuzgado.php">Nuevo juzgado</a></li>
+    												<li><a href="gestion_juzgado.php">Gestión juzgado</a></li></ul>
+    											</li>
+    										</ul>
+    									</li>
+    								</ul>	
+    							</li>
+    							<?php }?>
+    							
+    							
+    							<li><a href="login.php" class="button">Cerrar</a></li>
+    						</ul>
+    					</nav>
+    				</header>
+    			
     
     			<!-- Main -->
     				<section id="main" class="container">
@@ -224,10 +208,27 @@ if(isset($_SESSION['id_u'])) {
     								<div class='col-2 col-12-mobilep'>
     									<input type="text" name="alias" id="alias" placeholder="Alias"/>
     								</div>
-    								<div class="col-3 col-12-narrower">
-    								
-    								</div>	
-    								<div class="col-4 col-12-narrower">
+    								<?php 
+    								//cargo la lista de tipo evidencia
+    				                echo "<div class='col-4 col-12-mobilep'> <select name='estado' id='estado'>";
+        	                        echo "<option value=0>- Estado -</option>";
+    	                            $resultado = mysqli_query($link, "SELECT id_estado_evidencia, nombre FROM safe.estado_evidencia;");
+    	                            $contador=0;
+    	                            while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+    	                                foreach ($line as $col_value) {
+    	                                   if ($contador==0) {
+    	                                       echo "<option value='$col_value'>";
+    	                                       $contador++;
+    	                                   }
+    	                                   else {
+    	                                       echo $col_value."</option>";
+    	                                       $contador=0;
+    	                                   }
+    	                                }
+    	                            }
+    	                            echo "</select></div>";
+    	                            ?>
+    								<div class="col-5 col-12-narrower">
     								
     								</div>	
     																				
@@ -262,6 +263,17 @@ if(isset($_SESSION['id_u'])) {
     		</div>	
     
     </body>
+    
+        	<!-- Pelayo -->
+    		<script src="assets/js/jquery.min.js"></script>
+    		<script src="assets/js/jquery.dropotron.min.js"></script>
+    		<script src="assets/js/jquery.scrollex.min.js"></script>
+    		<script src="assets/js/browser.min.js"></script>
+    		<script src="assets/js/breakpoints.min.js"></script>
+    		<script src="assets/js/util.js"></script>
+    		<script src="assets/js/main.js"></script>
+    
+    
     <?php 
 }
 else {

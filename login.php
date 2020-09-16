@@ -1,22 +1,23 @@
 <html>
 	<head>
-		<title>SAFE Ciberterrorismo Comisar�a General de Informaci�n UP</title>
+		<title>SAFE Ciberterrorismo Comisaría General de Información</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="shortcut icon" href="img/favicon.ico">
 	</head>
 	<body class="landing is-preload">
 		<div id="page-wrapper">
 
 			<!-- Header menus de la cabecera-->
 				<header id="header" class="alt">
-					<h1><a href="login.php">Safe ver. PORTABLE Ciber</a> Comisar&iacute;a General de Informaci&oacute;n</h1>					
+					<h1><a href="login.php">Safe Ciber</a> Comisaría General de Información</h1>					
 				</header>
 
 			<!-- Login -->
 				<section id="banner">
 				
-					<h2>Safe Portable Ciber</h2> 
+					<h2>Safe Ciber</h2> 
 					<p>Gestión Sección Ciberterrorismo</p>
 					
 					
@@ -74,4 +75,3 @@
 
 	</body>
 </html>
->>>>>>> branch 'master' of https://github.com/pelayocibers/CiberSafe.git

@@ -4,7 +4,7 @@ session_start();
 if(isset($_SESSION['id_u'])) {
  
     
-    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+    $link = mysqli_connect("localhost", "root", ".google.", "safe");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -32,14 +32,7 @@ if(isset($_SESSION['id_u'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
     
-    <!-- Pelayo -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.dropotron.min.js"></script>
-    <script src="assets/js/jquery.scrollex.min.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
+ 
     
     <!-- Alonso -->
     <script src="//code.jquery.com/jquery-latest.js"></script>
@@ -85,24 +78,126 @@ if(isset($_SESSION['id_u'])) {
     
     <body class="is-preload" onload="respuesta();">
     		<div id="page-wrapper">
+	<!-- Header -->
+    				<header id="header">
+    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
+    					<nav id="nav">
+    						<ul>
+    							<li><a href="inicio.php">Home</a></li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Casos</a>
+    								<ul>
+    									<li><a href="busqueda_Caso.php">Buscar</a></li>
+    									<li><a href="nuevoasunto.php">Nuevo</a></li>
     
+    									<li>
+    										<a href="#">Listar</a>
+    										<ul>
+    											<li><a href="abiertos.php">Abiertos</a></li>
+    											<li><a href="cerrados.php">Cerrados</a></li>
+    											<li><a href="todos.php">Todos</a></li>
+    										</ul>
+    									</li>
+    									
+    								</ul>
+    							</li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Gestión</a>
+    								<ul>
+    									<li><a href="compensacion_usuario.php">Compensaciones</a></li>
+    									<li><a href="viajes_año.php">Viajes</a></li>
+    								</ul>	
+    							</li>
+    							<?php if ($_SESSION['admin'] ==2) {?>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Administración</a>
+    								<ul>
+    									<li>
+    										<a href="#">Usuario</a>
+    										<ul>
+    											<li><a href="nuevousuario.php">Nuevo</a></li>
+    											<li><a href="#">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Viajes</a>
+    										<ul>
+    											<li><a href="nuevoviaje.php">Nuevo</a></li>
+    											<li><a href="viajes.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Compensaciones</a>
+    										<ul>
+    											<li><a href="nuevosdias.php">Añadir días</a></li>
+    											<li><a href="pedirdias.php">Pedir días</a></li>
+    											<li><a href="gestion_dias.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Desplegables</a>
+    										<ul>
+    											<li><a href="#">Grupo</a>
+    											<ul>
+    												<li><a href="nuevogrupo.php">Nuevo grupo</a></li>
+    												<li><a href="gestion_grupo.php">Gestión grupo</a></li></ul>
+    											</li>
+    											<li><a href="#">Comisaría</a>
+    											<ul>
+    												<li><a href="nuevogrupo_comisaria.php">Nueva Comisaría</a></li>
+    												<li><a href="gestion_comisaria.php">Gestión comisaría</a></li></ul>
+    											</li>
+    											<li><a href="#">Juzgado</a>
+    											<ul>
+    												<li><a href="nuevojuzgado.php">Nuevo juzgado</a></li>
+    												<li><a href="gestion_juzgado.php">Gestión juzgado</a></li></ul>
+    											</li>
+    										</ul>
+    									</li>
+    								</ul>	
+    							</li>
+    							<?php }?>
+    							
+    							
+    							<li><a href="login.php" class="button">Cerrar</a></li>
+    						</ul>
+    					</nav>
+    				</header>
+    			
+    			
     			<!-- Main -->
     				<section id="main" class="container">
     					
     					<header>
-    						<h2>Detalle Sujeto</h2>						
+    						<h2>Detalles Sujeto</h2>						
     					</header>
     					<div align="center">
     						<canvas id="mensajes" width="300" height="30"></canvas>
     					</div>
     					<div class="box">
     						<form method="post" id="myform" action="modificarsujeto.php">
-    							Detalles de Sujeto<br><br>
+    							<h3>Detalles de Sujeto</h3>
     <?php 
     $sql="Select nombre,apellido1,apellido2 FROM sujeto_activo WHERE id_sujeto_activo=$myid_su";
     $resultado=mysqli_query($link, $sql);
     
-    echo "<br><table><tr><th>Nombre</th><th>Primer Apellido</th><th>Segundo Apellido</th></tr>";
+   
+	echo "
+								<table>
+									<thead>
+										<tr>
+											<th>Nombre</th>
+                                            <th>Primer Apellido</th>
+											<th>Segundo</th>
+                                                                                      
+										</tr>
+									</thead>
+									<tbody>
+			
+	";
     while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
         echo "<tr>";
         foreach ($line as $col_value) {
@@ -110,7 +205,7 @@ if(isset($_SESSION['id_u'])) {
             }
         echo "</tr>";
     }
-    echo "</table>";
+    echo "</tbody></table>";
     
     $sql_borrar="Select * from intervencion where id_sujeto_activo=$myid_su";
     $resultado_borrar=mysqli_query($link, $sql_borrar);
@@ -150,9 +245,21 @@ if(isset($_SESSION['id_u'])) {
     $resultado_intervencion=mysqli_query($link, $sql);
     $count=mysqli_num_rows($resultado_intervencion);
     if($count!=0) {
-        echo "<center><br><b>Intervenciones en las que participa</b><br>";
-        echo "<br><table border='1' style='border-collapse: collapse; margin:0 auto; background-color: #def;border-style: none;'><tr><th>Tipo</th><th>Dirección</th><th>Descripcion</th></tr>";
-        $contador=0;
+        echo "<h3>Intervenciones en las que participa</h3>";
+        echo "
+								<table>
+									<thead>
+										<tr>
+											<th>Tipo</th>
+                                            <th>Dirección</th>
+											<th>Descripcion</th>
+                                                                                        
+										</tr>
+									</thead>
+									<tbody>
+			
+	";
+		$contador=0;
         while ($line_intervencion = mysqli_fetch_array($resultado_intervencion, MYSQLI_ASSOC)) {
             echo "<tr>";
             foreach ($line_intervencion as $col_value) {
@@ -169,13 +276,13 @@ if(isset($_SESSION['id_u'])) {
                     }
                     else {
                         if ($contador < 3) {
-                            echo "<td align='center'>";
+                            echo "<td>";
                             echo $col_value;
                             echo "</td>";
                             $contador ++;
                         }
                         else {
-                            echo "<td align='center'>";
+                            echo "<td>";
                             echo $col_value;
                             echo "</td>";
                             $contador = 0;
@@ -185,7 +292,7 @@ if(isset($_SESSION['id_u'])) {
             }
             echo "</tr>";
         }
-        echo "</table>";
+        echo "</tbody></table>";
     }
 }
 else {
@@ -196,6 +303,14 @@ else {
 </section>
 </div>
 
+   <!-- Pelayo -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.dropotron.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
 
 </body>
 

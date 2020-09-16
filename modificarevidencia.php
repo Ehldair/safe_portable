@@ -3,8 +3,8 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-    
-    $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
+
+    $link = mysqli_connect("localhost", "root", ".google.", "safe");
     
     if (mysqli_connect_errno()) {
         printf("Falló la conexión: %s\n", mysqli_connect_error());
@@ -30,16 +30,27 @@ if(isset($_SESSION['id_u'])) {
     $mypin=mysqli_real_escape_string($link, $_POST['pin']);
     $mypatron=mysqli_real_escape_string($link, $_POST['patron']);
     if(isset($_POST['id_tipo_capacidad'])) {
-        $myid_tipo_capacidad=mysqli_real_escape_string($link, $_POST['id_tipo_capacidad']);
+    $myid_tipo_capacidad=mysqli_real_escape_string($link, $_POST['id_tipo_capacidad']);
     }
     $mytipo_capacidad=mysqli_real_escape_string($link, $_POST['tipo_capacidad']);
+    echo "select id_disco_almacenado, nombre FROM disco_almacenado where id_disco!=$myid_disco";
+
+
     
     ?>
-    <!DOCTYPE html>
-    <html lang="es-ES">
-    <head>
-      <link rel="stylesheet" type="text/css" href="Estilo.css">
-      <meta charset="utf-8">
+    
+   <!DOCTYPE html>
+<html lang="es-ES">
+<head>
+ <title>Modificar Evidencia</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	
+
+			
+	<!-- Alonso -->
+
       <script src="//code.jquery.com/jquery-latest.js"></script>
       <script src="miscript.js"></script>
       <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
@@ -268,32 +279,208 @@ if(isset($_SESSION['id_u'])) {
     	  
       }
       </script>
+
+    
+    
+   
     </head>
-    <body class="fondo" onload="prepararpagina();">
-    <div align="center"><br>
-    <h1>SAFE</h1>
-    <div align='center'>
-    <canvas id='mensaje' width='250' height='30'></canvas>
-    </div>
-    <?php 
     
-    echo "<form action='javascript:validar();' id='myform' method='post'>";
-    echo "<div id='nopatron'>";
-    echo "Nombre Evidencia:";
-    echo "<input type='text'  name='nombre_nuevo' id='nombre_nuevo' value='$mynombre' size=2 class='estilo' readonly>";
-    echo "<input type='hidden'  name='nombre_original' id='nombre_original' value='$mynombre'>";
+    <body class="is-preload" onload="prepararpagina();">
+    		<div id="page-wrapper">
+	<!-- Header -->
+    				<header id="header">
+    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
+    					<nav id="nav">
+    						<ul>
+    							<li><a href="inicio.php">Home</a></li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Casos</a>
+    								<ul>
+    									<li><a href="busqueda_Caso.php">Buscar</a></li>
+    									<li><a href="nuevoasunto.php">Nuevo</a></li>
     
-    
-    echo "<input type='text'  name='numero_nuevo' id='numero_nuevo' value='$mynumero' size=2 class='estilo' required pattern='\d*'>";
-    echo "<input type='hidden'  name='numero_original' id='numero_original' value='$mynumero'>";
-    
-    echo "Número Serie:";
-    echo "<input type='text'  name='n_s' id='n_s' value='$myn_s' size=15 class='estilo'>";
-    
-    echo "Capacidad:";
-    echo "<input type='text'  name='capacidad' id='capacidad' value='$mycapacidad' size=6 class='estilo' pattern='[-+]?[0-9]*[.,]?[0-9]+' oninput='activarTipoCapacidad();'>";
-    
-    //cargo la lista de los tipos de capacidad
+    									<li>
+    										<a href="#">Listar</a>
+    										<ul>
+    											<li><a href="abiertos.php">Abiertos</a></li>
+    											<li><a href="cerrados.php">Cerrados</a></li>
+    											<li><a href="todos.php">Todos</a></li>
+    										</ul>
+    									</li>
+    									
+    								</ul>
+    							</li>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Gestión</a>
+    								<ul>
+    									<li><a href="compensacion_usuario.php">Compensaciones</a></li>
+    									<li><a href="viajes_año.php">Viajes</a></li>
+    								</ul>	
+    							</li>
+    							<?php if ($_SESSION['admin'] ==2) {?>
+    							<li>
+    								<a href="#" class="icon solid fa-angle-down">Administración</a>
+    								<ul>
+    									<li>
+    										<a href="#">Usuario</a>
+    										<ul>
+    											<li><a href="nuevousuario.php">Nuevo</a></li>
+    											<li><a href="#">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Viajes</a>
+    										<ul>
+    											<li><a href="nuevoviaje.php">Nuevo</a></li>
+    											<li><a href="viajes.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Compensaciones</a>
+    										<ul>
+    											<li><a href="nuevosdias.php">Añadir días</a></li>
+    											<li><a href="pedirdias.php">Pedir días</a></li>
+    											<li><a href="gestion_dias.php">Gestión</a></li>
+    											<li><a href="#"></a></li>
+    										</ul>
+    									</li>
+    									<li>
+    										<a href="#">Desplegables</a>
+    										<ul>
+    											<li><a href="#">Grupo</a>
+    											<ul>
+    												<li><a href="nuevogrupo.php">Nuevo grupo</a></li>
+    												<li><a href="gestion_grupo.php">Gestión grupo</a></li></ul>
+    											</li>
+    											<li><a href="#">Comisaría</a>
+    											<ul>
+    												<li><a href="nuevogrupo_comisaria.php">Nueva Comisaría</a></li>
+    												<li><a href="gestion_comisaria.php">Gestión comisaría</a></li></ul>
+    											</li>
+    											<li><a href="#">Juzgado</a>
+    											<ul>
+    												<li><a href="nuevojuzgado.php">Nuevo juzgado</a></li>
+    												<li><a href="gestion_juzgado.php">Gestión juzgado</a></li></ul>
+    											</li>
+    										</ul>
+    									</li>
+    								</ul>	
+    							</li>
+    							<?php }?>
+    							
+    							
+    							<li><a href="login.php" class="button">Cerrar</a></li>
+    						</ul>
+    					</nav>
+    				</header>
+    			
+    		
+    			<!-- Main -->
+    				<section id="main" class="container">
+    					
+    					<header>
+    						<h2>Modificar Evidencia <b><?php echo $mynombre;?><?php echo $mynumero;?></b></h2>						
+    					</header>
+    					
+    					<div align='center'>
+    						<canvas id='mensaje' width='250' height='30'></canvas>
+    					</div>
+    					
+    					<div class="box">
+    						<form action='javascript:validar();' id='myform' method='post'>
+    							<h3>Datos de la evidencia </h3>
+    							<div id="nopatron">	
+    								
+    								<div class="row gtr-50 gtr-uniform">
+    							
+    								<div class="col-2 col-12-mobilep">	
+    									<?php
+    									 echo "<input type='text'  name='nombre_nuevo' id='nombre_nuevo' value='$mynombre' readonly>";
+    									 echo "<input type='hidden'  name='nombre_original' id='nombre_original' value='$mynombre'>";
+    									?>		
+    								</div>
+    								
+    								<div class="col-2 col-12-mobilep">
+    									<?php
+											echo "<input type='text'  name='numero_nuevo' id='numero_nuevo' value='$mynumero' required pattern='\d*'>";
+   					 						echo "<input type='hidden'  name='numero_original' id='numero_original' value='$mynumero'>";
+										?>
+    								</div> 
+    								
+    								<div class="col-4 col-12-mobilep">
+ <?php   								
+    //cargo la lista de tipos
+    echo "<select name='tipo' id='tipo' onchange='cambiarsubtipo(this.value);' required>";
+    $contador=0;
+    echo "<option value='$myid_tipo' selected>$mytipo</option>";
+    $resultado = mysqli_query($link, "select id_tipo_evidencia, nombre FROM tipo_evidencia where id_tipo_evidencia!=$myid_tipo");
+    while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+        foreach ($line as $col_value) {
+            if($contador==0) {
+                echo "<option value=$col_value>";
+                $contador++;
+            }
+            else {
+                echo "$col_value</option>";
+                $contador=0;
+            }
+            
+            
+        }
+    }
+    echo "</select>";    											
+?>
+									</div>
+									
+								   	<div class="col-4 col-12-mobilep">
+								   	<?php
+
+
+//cargo la lista de subtipos
+        echo "<select name='subtipo' id='subtipo' onchange='cambiar(this.value,$mynumero_intervencion);' required>";
+        echo "<option value='$myid_subtipo' selected>$mysubtipo</option>";
+        echo "</select>";
+
+?>	   	
+								   	</div>
+								   	
+								   		
+    								
+    								<div class="col-6 col-12-mobilep">
+    									<?php
+    										echo "<input type='text'  name='marca' id='marca' value='$mymarca' placeholder='Marca'>";
+    									?>
+    								</div>
+    								
+    								<div class="col-6 col-12-mobilep">
+    									<?php
+											 echo "<input type='text'  name='modelo' id='modelo' value='$mymodelo' placeholder='Modelo'>";
+										?>
+    								
+    								</div> 
+    								
+    								
+									<div class="col-5 col-12-mobilep">
+    									<?php
+    										echo "<input type='text'  name='n_s' id='n_s' value='$myn_s' placeholder='n/s'>";
+										?>
+    								</div>	
+    								
+    								
+    								
+    								<div class="col-2 col-12-mobilep">
+    									<?php	    								
+    										echo "<input type='text'  name='capacidad' id='capacidad' value='$mycapacidad' placeholder='Capacidad' pattern='[-+]?[0-9]*[.,]?[0-9]+' oninput='activarTipoCapacidad();'>";
+										?>
+    								</div>
+    								
+    								<div class="col-2 col-12-mobilep">
+    								
+ <?php
+
+//cargo la lista de los tipos de capacidad
     
     $contador=0;
     if($myid_tipo_capacidad!=null) {
@@ -323,91 +510,82 @@ if(isset($_SESSION['id_u'])) {
     }
     
     echo "</select>";
-    
-    echo "<br><br>";
-    echo "Marca:";
-    echo "<input type='text'  name='marca' id='marca' value='$mymarca' size=6 class='estilo'>";
-    
-    
-    echo "Modelo:";
-    echo "<input type='text'  name='modelo' id='modelo' value='$mymodelo' size=10 class='estilo'>";
-    
-    echo "Observaciones:";
-    echo "<input type='text'  name='observaciones' id='observaciones' value='$myobservaciones' size=10 class='estilo'>";
-    
-    echo "<br><br>";
-    echo "Tipo Evidencia";
-    
-    //cargo la lista de tipos
-    echo "&nbsp; <select name='tipo' id='tipo' onchange='cambiarsubtipo(this.value);' required>";
-    $contador=0;
-    echo "<option value='$myid_tipo' selected>$mytipo</option>";
-    $resultado = mysqli_query($link, "select id_tipo_evidencia, nombre FROM tipo_evidencia where id_tipo_evidencia!=$myid_tipo");
-    while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-        foreach ($line as $col_value) {
-            if($contador==0) {
-                echo "<option value=$col_value>";
-                $contador++;
-            }
-            else {
-                echo "$col_value</option>";
-                $contador=0;
-            }
-            
-            
-        }
-    }
-    echo "</select>";
-        
-        
-        //cargo la lista de subtipos
-        echo "&nbsp; <select name='subtipo' id='subtipo' onchange='cambiar(this.value,$mynumero_intervencion);' required>";
-        echo "<option value='$myid_subtipo' selected>$mysubtipo</option>";
-        echo "</select>";
-    
-    echo "";
-        
-        echo "&nbsp; <select name='disco' id='disco'>";
-        $resultado = mysqli_query($link, "select id_disco_almacenado, nombre From disco_almacenado");
-        $contador2=1;
-        $entro=0;
-        echo "<option value='$myid_disco' selected>$mydisco</option>";
-        while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-            foreach ($line as $col_value) {
-                if ($contador2==1) {
-                    if($col_value==$myid_disco) {
-                        $entro=1;
-                        $contador2=0;
-                    }
-                    else {
-                        echo "<option value='$col_value'>";
-                        $contador2=0;
-                    }
-                }
-                else {
-                    if($entro==1) {
-                        $entro=0;
-                        $contador2++;
-                    }
-                    else {
-                        echo " ".$col_value."</option>";
-                        $contador2++;
-                    }
-                }
-            }
-        }
-    echo "</select>";
-    
-    echo "Alias:";
-    echo "<input type='text'  name='alias' id='alias' value='$myalias' size=7 class='estilo'>";
-    
-    echo "<br><br>";
-    echo "PIN:";
-    echo "<input type='text'  name='pin' id='pin' value='$mypin' size=7 class='estilo'>";
-    
-    
-    echo "<br><br><div id='div_patron'";
-    if(!empty($mypatron) or $mypatron!='' or $mypatron!=null) {
+
+ 									 
+    								
+    							echo "</div>	
+    								<div class='col-3 col-12-mobilep'>";									    									
+					    								echo	"<input type='text' name='alias' id='alias' value='$myalias' placeholder='Alias'>";     	 													 
+					    							echo "</div>";
+    			?>					    								
+    								
+    								<div class="col-12">
+    									<?php
+											echo "<textarea name='observaciones' id='observaciones' value='$myobservaciones' placeholder='Observaciones'>$myobservaciones</textarea>";
+										?>
+    								
+    								</div>
+    								<div class="col-2 col-12-mobilep">
+	        										<select name="disco" id="disco">
+	        										
+                                    <?php 
+                                    if($mydisco=='0' or $mydisco==null or $mydisco=='null') {
+                                        echo "<option selected value=''>Disco</option>";
+                                        $resultado = mysqli_query($link, "select id_disco_almacenado, nombre FROM disco_almacenado");
+                                    }
+                                    else {
+                                        echo "<option selected value='$myid_disco'>$mydisco</option>";
+                                        $resultado = mysqli_query($link, "select id_disco_almacenado, nombre FROM disco_almacenado where id_disco_almacenado!=$myid_disco"); 
+                                        echo "<option value=''></option>";
+                                    }
+                                    $contador=0;
+                                    
+                                    while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+                                        foreach ($line as $col_value) {
+                                            if($contador==0) {
+                                                echo "<option value=$col_value>";
+                                                $contador++;
+                                            }
+                                            else {
+                                                echo "$col_value</option>";
+                                                $contador=0;
+                                            }
+                                           
+                                	   
+                                        }
+                                    }
+                                
+                                    ?>
+                                    </select>
+                                    </div>
+                                    <div class="col-5 col-12-mobilep">
+    									<?php
+    										echo "<input type='text'  name='pin' id='pin' value='$mypin' placeholder='Pin'>";
+										?>
+									</div>
+    								<div class="col-5 col-12-mobilep">
+        										
+        							</div>						
+    							 </div> <!-- gtr 50 -->
+					
+					
+  							
+    				
+    							</div> <!-- nopatron -->
+    							
+    							<br>
+    							
+    							<h3>Dibujar el Patrón</h3>	
+    					
+    							<div id="div_patron">	
+    							
+ <!-- dibujar el patron -->		                							    
+                				    <div class="row gtr-50 gtr-uniform">
+                				    	
+                				    	<div class="col-4 col-12-mobilep">	
+
+<?php                				    
+if(!empty($mypatron) or $mypatron!='' or $mypatron!=null) {
         echo "Patron:<br>";
         $primeronumero=0;
         $longitud=strlen($mypatron)-1;
@@ -673,62 +851,91 @@ if(isset($_SESSION['id_u'])) {
         echo "<input type='hidden' name='borrarpatron' id='borrarpatron' value=2>";
         echo "<br><br>";
         echo "<input type='button' id='borrar' name='borrar' value='Borrar Patron' class='estilo' onclick='vaciarpatron();'>";
-        echo "</div>";
+        echo "
+        </div>  <!-- col 4 -->
+        </div>    <!--  row gtr 50 -->
+        </div> <!--  patron --> 
+        ";
     }
+    
     else {
-       ?>
-       </div>
-       </div>
-       </div>
-        <input type='checkbox' id='tienepatron' name='tienepatron' onchange="tiene_patron(this.checked);"> Tiene patrón
-        <br><br>
+        
+?>
+	<div class="row gtr-50 gtr-uniform">
+                				    	
+      
+		
+		<div class="col-12 col-12-mobilep">
+			<input type='checkbox' id='tienepatron' name='tienepatron' onchange="tiene_patron(this.checked);">	    													    									
+			<label for=tienepatron>Patrón</label>   
+		</div>
+        
         <object id="svg-object" data="path/to/external.svg" type="image/svg+xml">  
         	<svg id="dibujo" width='250' height='75'>    
     		</svg>
     	</object>
-    	<br>
     	
         <div id="frase"> Pulsa el primer punto del patrón</div>
         <div id="frase2"> Pulsa el siguiente punto</div>
         <div id="frase3"> Patron grabado correctamente</div>
         
-        <div align="center" id="radiopatron">
+        <div id="radiopatron">
         
-        	<input type="radio" name="patron" id="patron" value="1" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="2" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="3" onchange="grabarnumero();"><br>
-    		<input type="radio" name="patron" id="patron" value="4" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="5" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="6" onchange="grabarnumero();"><br>
-    		<input type="radio" name="patron" id="patron" value="7" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="8" onchange="grabarnumero();">
-    		<input type="radio" name="patron" id="patron" value="9" onchange="grabarnumero();"><br><br>
-    		<input type="button" name="aceptar" id="aceptar" value="Aceptar" onclick="grabarpatron();" class="estilo">
-    		<input type="button" name="reiniciar" id="reiniciar" value="Reiniciar" onclick="rein_patron();" class="estilo">
+        	<input type="radio" name="patron" id="patron1" value="1" onchange="grabarnumero();"><label for="patron1"></label>        	
+    		<input type="radio" name="patron" id="patron2" value="2" onchange="grabarnumero();"><label for="patron2"></label>
+    		<input type="radio" name="patron" id="patron3" value="3" onchange="grabarnumero();"><label for="patron3"></label><br><br>
+    		<input type="radio" name="patron" id="patron4" value="4" onchange="grabarnumero();"><label for="patron4"></label>
+    		<input type="radio" name="patron" id="patron5" value="5" onchange="grabarnumero();"><label for="patron5"></label>
+    		<input type="radio" name="patron" id="patron6" value="6" onchange="grabarnumero();"><label for="patron6"></label><br><br>
+    		<input type="radio" name="patron" id="patron7" value="7" onchange="grabarnumero();"><label for="patron7"></label>
+    		<input type="radio" name="patron" id="patron8" value="8" onchange="grabarnumero();"><label for="patron8"></label>
+    		<input type="radio" name="patron" id="patron9" value="9" onchange="grabarnumero();"><label for="patron9"></label><br><br>
+    		<input type="button" name="aceptar" id="aceptar" value="Aceptar" onclick="grabarpatron();" class='button special small'>
+    		<input type="button" name="reiniciar" id="reiniciar" value="Reiniciar" onclick="rein_patron();"	class='button special small'>
     		<input type='hidden' name='borrarpatron' id='borrarpatron' value=1>
-        </div>
-        <br><br>
+    		
+        </div>	
+        
+      </div> <!-- gtr -->
     
-        <?php 
+<?php 
     }
     
-    ?>
+?>
     
-    <br><br>
-    <div id="botones">
-    
-    <br><br>
-    
-    <input type='submit' value='Modificar' class='estilo'>
-    </form>
-    
-    <input type="button" onclick="location.href='detalle_evidencia.php';" value="Volver" class="estilo"><br>
-    </div>
+        						<br>
+        						    
+    							<div class="col-12" id="botones">
+						    							<ul class="actions special">
+						    								<li><input type="submit" value="Modificar"></li>	
+						    								<li><input type="button" onclick="location.href='detalle_evidencia.php';" value="Volver"><br></li>							
+						    							</ul>
+								</div>
+								</div>
+								</div>
+								</div>
+								    						
+    						</form>   						
+    					</div>  <!-- box -->
+    				</section> <!-- container -->
+    		</div>	<!-- page-wrapper -->
+    		
+    			<!-- Pelayo -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.dropotron.min.js"></script>
+		<script src="assets/js/jquery.scrollex.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+    		
     </body>
+
     <?php 
 }
 else {
     echo "Error";
 }
-?>
+?>    
+   
 </html>
