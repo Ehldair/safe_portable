@@ -5,7 +5,7 @@ session_start();
 #imprimimos las variables que estas enviando para saber si estan llegando completas
 
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe");
+$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
 
 // comprobar la conexiï¿½n
 if (mysqli_connect_errno()) {

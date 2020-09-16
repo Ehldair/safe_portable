@@ -2,7 +2,7 @@
 session_start();
 
 
-$link = mysqli_connect("localhost", "root", ".google.", "safe");
+$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
 
 if (mysqli_connect_errno()) {
     printf("Fall� la conexi�n: %s\n", mysqli_connect_error());

@@ -3,7 +3,7 @@ include('FPDF/fpdf.php');
 $pdf = new FPDF("L");
 
 session_start();
-$link = mysqli_connect("localhost", "root", ".google.", "safe");
+$link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
 $myid_caso=$_SESSION['id_caso'];
 $entera=$_POST['entera'];
 if(isset($_POST['intervenciones'])) {
