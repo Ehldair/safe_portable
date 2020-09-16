@@ -137,85 +137,18 @@ if(isset($_SESSION['id_u'])) {
     							<li>
     								<a href="#" class="icon solid fa-angle-down">Casos</a>
     								<ul>
-    									<li><a href="busqueda_Caso.php">Buscar</a></li>
     									<li><a href="nuevoasunto.php">Nuevo</a></li>
-    
-    									<li>
-    										<a href="#">Listar</a>
-    										<ul>
-    											<li><a href="abiertos.php">Abiertos</a></li>
-    											<li><a href="cerrados.php">Cerrados</a></li>
-    											<li><a href="todos.php">Todos</a></li>
-    										</ul>
-    									</li>
     									
     								</ul>
     							</li>
-    							<li>
-    								<a href="#" class="icon solid fa-angle-down">Gestión</a>
-    								<ul>
-    									<li><a href="compensacion_usuario.php">Compensaciones</a></li>
-    									<li><a href="viajes_año.php">Viajes</a></li>
-    								</ul>	
-    							</li>
-    							<?php if ($_SESSION['admin'] ==2) {?>
-    							<li>
-    								<a href="#" class="icon solid fa-angle-down">Administración</a>
-    								<ul>
-    									<li>
-    										<a href="#">Usuario</a>
-    										<ul>
-    											<li><a href="nuevousuario.php">Nuevo</a></li>
-    											<li><a href="modificarusuario.php">Gestión</a></li>
-    											<li><a href="#"></a></li>
-    										</ul>
-    									</li>
-    									<li>
-    										<a href="#">Viajes</a>
-    										<ul>
-    											<li><a href="nuevoviaje.php">Nuevo</a></li>
-    											<li><a href="viajes.php">Gestión</a></li>
-    											<li><a href="#"></a></li>
-    										</ul>
-    									</li>
-    									<li>
-    										<a href="#">Compensaciones</a>
-    										<ul>
-    											<li><a href="nuevosdias.php">Añadir días</a></li>
-    											<li><a href="pedirdias.php">Pedir días</a></li>
-    											<li><a href="gestion_dias.php">Gestión</a></li>
-    											<li><a href="#"></a></li>
-    										</ul>
-    									</li>
-    									<li>
-    										<a href="#">Desplegables</a>
-    										<ul>
-    											<li><a href="#">Grupo</a>
-    											<ul>
-    												<li><a href="nuevogrupo.php">Nuevo grupo</a></li>
-    												<li><a href="gestion_grupo.php">Gestión grupo</a></li></ul>
-    											</li>
-    											<li><a href="#">Comisaría</a>
-    											<ul>
-    												<li><a href="nuevogrupo_comisaria.php">Nueva Comisaría</a></li>
-    												<li><a href="gestion_comisaria.php">Gestión comisaría</a></li></ul>
-    											</li>
-    											<li><a href="#">Juzgado</a>
-    											<ul>
-    												<li><a href="nuevojuzgado.php">Nuevo juzgado</a></li>
-    												<li><a href="gestion_juzgado.php">Gestión juzgado</a></li></ul>
-    											</li>
-    										</ul>
-    									</li>
-    								</ul>	
-    							</li>
-    							<?php }?>
+
+    							
     							
     							
     							<li><a href="login.php" class="button">Cerrar</a></li>
     						</ul>
     					</nav>
-    				</header>
+    				</header>	
 
 	<!-- Main -->
 		<section id="main" class="container">

@@ -11,13 +11,13 @@
 
 			<!-- Header menus de la cabecera-->
 				<header id="header" class="alt">
-					<h1><a href="login.php">Safe Ciber</a> Comisaría General de Información</h1>					
+					<h1><a href="login.php">Safe Ciber Portable</a> Comisaría General de Información</h1>					
 				</header>
 
 			<!-- Login -->
 				<section id="banner">
 				
-					<h2>Safe Ciber</h2> 
+					<h2>Safe Ciber Portable</h2> 
 					<p>Gestión Sección Ciberterrorismo</p>
 					
 					

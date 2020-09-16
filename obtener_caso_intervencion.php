@@ -12,15 +12,6 @@ if (mysqli_connect_errno()) {
 $myid_caso=$_GET['id_caso'];
 
 
-
-
-
-
-
-
-
-
-
 if (strpos($myid_caso, '-') !== false) {
     $datos_caso=explode("-", $myid_caso);
     $numcaso=$datos_caso[0];
