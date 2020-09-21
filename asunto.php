@@ -497,7 +497,7 @@ if(isset($_SESSION['id_u'])) {
             if(!empty($desc)) {
                echo " [".$desc."]";
             }
-            $result_equipo=mysqli_query($link, "Select apodo from equipo_intervencion e
+            $result_equipo=mysqli_query($link, "Select apodo fromn e
             inner join usuario u ON u.id_usuario=e.id_usuario
             where id_intervencion=$id_int");
             $count_equipo=mysqli_num_rows($result_equipo);

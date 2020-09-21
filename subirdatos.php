@@ -40,21 +40,12 @@ if(isset($_SESSION['id_u'])) {
                 $ret_diligencias_safe=mysqli_fetch_array($result_diligencias_safe);
                 $count_diligencias_safe = mysqli_num_rows($result_diligencias_safe);
                 if($count_diligencias_safe!=0) {
-                    // Si existen, comprobamos si están vinculadas a algun caso y si es así, no se agrega el caso.
-                    $sql_caso_diligencias = "SELECT id_caso,numero,año FROM caso  where id_diligencias=$ret_diligencias_safe[id_diligencias]";
-                    $result_caso_diligencias=mysqli_query($link,$sql_caso_diligencias);
-                    $ret_caso_diligencias=mysqli_fetch_array($result_caso_diligencias);
-                    $count_caso_diligencias = mysqli_num_rows($result_caso_diligencias);
-                    if($count_caso_diligencias!=0) {
-                        echo "Ya existen esas mismas diligencias en el caso ".$ret_caso_diligencias['numero']."_".substr( $ret_caso_diligencias['año'], 2);
-                    }
-                    else {
+                    // Si existen, no se añaden unas nuevas a la BBDD y se vinculan ese id_diligencias con el caso a subir 
                         $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret_diligencias_safe[id_diligencias],$ret_caso[id_tipo_caso],$ret_caso[id_grupo_investigacion],$ret_caso[numero],'$ret_caso[año]','$ret_caso[nombre]',NOW(),'$ret_caso[descripcion]', 1)";
                         mysqli_query($link, $sql);
                         fputs($archivo,$sql.";\n");
-                  
-                    }
                 }
+                //si no existen, se crean unas nuevas y se vinculan al caso
                 else {
                     $sql_insert_diligencias="INSERT INTO diligencias (id_juzgado, numero, año, fecha) values ($ret_diligencias[id_juzgado], $ret_diligencias[numero], $ret_diligencias[año], NOW())";
                     mysqli_query($link,$sql_insert_diligencias);

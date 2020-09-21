@@ -59,7 +59,7 @@ if(isset($_SESSION['id_u'])) {
     				ctx.strokeRect(1, 1, 299, 29);
     				ctx.fillStyle = "#3DBA26";
     				ctx.textAlign = "center";
-    				ctx.fillText("Viaje añadido",150,20);
+    				ctx.fillText("Caso subido",150,20);
     				<?php $_SESSION['respuesta']=0; ?>
     				setTimeout(borrar,5000);
 				}
@@ -179,7 +179,7 @@ if($count!=0) {
 											<th>Caso</th>
                                             <th>Operacion</th>
 											<th>Descripcion</th>
-                                            <th>Portada</th>
+                                            <th>Subir datos</th>
                                             
 										</tr>
 									</thead>
@@ -216,8 +216,8 @@ if($count!=0) {
         echo "<td align='left'>";
         
         ?>
-    						<a href="generaportada.php?id_caso=<?php echo $id_caso;?>" target="_blank" >
-    							<img src="img/iconopdf.png" alt="Enlace" width=20 height=20/>
+    						<a href="subirdatos.php?id_caso=<?php echo $id_caso;?>" target="_blank" >
+    							Subir datos
     						</a>
     
                     

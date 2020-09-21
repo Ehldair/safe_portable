@@ -232,7 +232,7 @@ if(isset($_SESSION['id_u'])) {
     </form>
     <form action="nuevoequipo.php" method="POST" id="myform2"> 
     <input type="hidden" name="intervencion" id="intervencion" value="<?php echo $myid_intervencion?>">
-    <li><input type="submit" name="AgregarEquipo" id="AgregarEquipo" value="Agregar Equipo"></li><br>
+   	<br>
     </form>
     </ul>
     
