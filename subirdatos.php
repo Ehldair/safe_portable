@@ -109,7 +109,7 @@ if(isset($_SESSION['id_u'])) {
                             // se selecionan las evidencias que dependen del caso y de la intervención
                             $sql="Select * from evidencia where id_caso=$myid_caso and id_intervencion=$fila_intervencion[0] and relacionado_con is null";
                             $result_evidencias=mysqli_query($link_portable, $sql);
-                            $count_evidencias=mysqli_num_rows($result_evidencias);
+                      /*      $count_evidencias=mysqli_num_rows($result_evidencias);
                             if($count_evidencias!=0) {
                                 while ($fila_evidencias = mysqli_fetch_row($result_evidencias)) {
                                     if(empty($fila_evidencias[9])) {
@@ -417,7 +417,7 @@ if(isset($_SESSION['id_u'])) {
                                                                     }
                                                                 }
                                                             }
-                                }
+                                }*/
                             }
                     }
                 }
