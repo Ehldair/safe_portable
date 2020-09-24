@@ -16,7 +16,7 @@ if(isset($_SESSION['id_u'])) {
     
     $sql = "SELECT id_caso,c.año, c.numero,  c.nombre, c.descripcion FROM
     caso c inner join estado_caso e ON c.id_estado_caso=e.id_estado_caso
-    WHERE e.estado='Abierto' AND id_caso!=1 ORDER BY fecha_alta_caso DESC";
+    WHERE e.estado='Abierto' AND id_caso!=1 ORDER BY año desc, numero desc";
     
     $resultado=mysqli_query($link, $sql);
     $count=mysqli_num_rows($resultado);
