@@ -96,11 +96,27 @@ if(isset($_SESSION['id_u'])) {
                     if($count_intervencion!=0) {
                         while ($fila_intervencion = mysqli_fetch_row($result_intervencion)) {
                             if($fila_intervencion[3]!=1) {
-                                $sql="INSERT INTO intervencion(id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe,$fila_intervencion[2], $ret_sujeto_safe[id_sujeto_activo], $fila_intervencion[4],'$fila_intervencion[5]','$fila_intervencion[6]')";
+                                $sql2="SELECT * from intervencion where id_caso=$myid_caso_safe and numero_intervencion=$fila_intervencion[4]";
+                                $resultado_comprobacion_intervencion=mysqli_query($link, $sql2);
+                                $count_comprobacion_intervencion=mysqli_num_rows($resultado_comprobacion_intervencion);
+                                if($count_comprobacion_intervencion==0) {
+                                    $sql="INSERT INTO intervencion(id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe,$fila_intervencion[2], 1, $fila_intervencion[4],'$fila_intervencion[5]','$fila_intervencion[6]')";
+                                }
+                                else {
+                                    $sql="Select * from caso";
+                                }
                                 fputs($archivo,$sql.";\n");
                             }
                             else {
-                                $sql="INSERT INTO intervencion(id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe,$fila_intervencion[2], 1, $fila_intervencion[4],'$fila_intervencion[5]','$fila_intervencion[6]')";
+                                $sql2="SELECT * from intervencion where id_caso=$myid_caso_safe and numero_intervencion=$fila_intervencion[4]";
+                                $resultado_comprobacion_intervencion=mysqli_query($link, $sql2);
+                                $count_comprobacion_intervencion=mysqli_num_rows($resultado_comprobacion_intervencion);
+                                if($count_comprobacion_intervencion==0) {
+                                    $sql="INSERT INTO intervencion(id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe,$fila_intervencion[2], 1, $fila_intervencion[4],'$fila_intervencion[5]','$fila_intervencion[6]')";
+                                }
+                                else {
+                                    $sql="Select * from caso";
+                                }
                                 fputs($archivo,$sql.";\n");
                             }
                             mysqli_query($link, $sql);
@@ -109,7 +125,7 @@ if(isset($_SESSION['id_u'])) {
                             // se selecionan las evidencias que dependen del caso y de la intervención
                             $sql="Select * from evidencia where id_caso=$myid_caso and id_intervencion=$fila_intervencion[0] and relacionado_con is null";
                             $result_evidencias=mysqli_query($link_portable, $sql);
-                      /*      $count_evidencias=mysqli_num_rows($result_evidencias);
+                            $count_evidencias=mysqli_num_rows($result_evidencias);
                             if($count_evidencias!=0) {
                                 while ($fila_evidencias = mysqli_fetch_row($result_evidencias)) {
                                     if(empty($fila_evidencias[9])) {
@@ -265,8 +281,16 @@ if(isset($_SESSION['id_u'])) {
                 $count_intervencion=mysqli_num_rows($result_intervencion);
                 if($count_intervencion!=0) {
                     while ($fila_intervencion = mysqli_fetch_row($result_intervencion)) {
-                            $sql="INSERT INTO intervencion(id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe,$fila_intervencion[2], 1, $fila_intervencion[4],'$fila_intervencion[5]','$fila_intervencion[6]')";
-                            fputs($archivo,$sql.";\n");
+                            $sql2="SELECT * from intervencion where id_caso=$myid_caso_safe and numero_intervencion=$fila_intervencion[4]";
+                            $resultado_comprobacion_intervencion=mysqli_query($link, $sql2);
+                            $count_comprobacion_intervencion=mysqli_num_rows($resultado_comprobacion_intervencion);
+                            if($count_comprobacion_intervencion==0) {
+                                $sql="INSERT INTO intervencion(id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe,$fila_intervencion[2], 1, $fila_intervencion[4],'$fila_intervencion[5]','$fila_intervencion[6]')";
+                                fputs($archivo,$sql.";\n");
+                            }
+                            else {
+                                $sql="Select * from caso";
+                            }
                             mysqli_query($link, $sql);
                             $query_intervencion=mysqli_query($link, "Select id_intervencion from intervencion WHERE id_caso=$myid_caso_safe and id_sujeto_activo=1 AND numero_intervencion=$fila_intervencion[4]");
                             $ret_intervencion_safe=mysqli_fetch_array($query_intervencion);
@@ -417,7 +441,7 @@ if(isset($_SESSION['id_u'])) {
                                                                     }
                                                                 }
                                                             }
-                                }*/
+                                }
                             }
                     }
                 }
@@ -426,7 +450,7 @@ if(isset($_SESSION['id_u'])) {
      fclose($archivo);
    $_SESSION['respuesta']=1;
    echo '<script type="text/javascript">
-	   location.href = "inicio.php";
+	   window.location.replace("inicio.php");
         </script>';
         
 }
