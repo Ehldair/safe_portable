@@ -314,40 +314,26 @@ if(isset($_SESSION['id_u'])) {
     
     								//cargo la lista de CA								
     								echo "<div class='col-6 col-12-mobilep'>";
-                                    echo "<select name='ca' id='ca' onchange='sel_provincia(this.value);' required>
-       											<option value=''>Comunidad Autónoma</option> ";
-    								$resultado = mysqli_query($link, "select id_ca,nombre_ca FROM CA");
-    								$contador=0;
-    								while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
-    	    							foreach ($line as $col_value) {
-    	        							if ($contador==0) {
-    	           					 			echo "<option value='$col_value'>";
-    	            							$contador++;
-    	        							}
-    	        							else {
-    	            							echo " ".$col_value."</option>";
-    	            							$contador=0;
-    	        							}
-    	    							}
-    								}
+                                    echo "<select name='ca' id='ca' required>
+       											<option value='13'>Madrid, Comunidad de</option> ";
     								echo "</select></div>";
     
     								//cargo la lista de provincias segun la CA seleccionada									
     								echo "<div class='col-6 col-12-mobilep'>";
-    								echo "<select id='provincia' name='provincia' onchange='sel_comisaria(this.value);' required>";
-    								echo "<option value=''>Provincia</option>";
+    								echo "<select id='provincia' name='provincia' required>";
+    								echo "<option value='28'>Madrid</option>";
     								echo "</select></div>";
     	
     								//cargo la lista de comisarias segun la provincia seleccionada
     								echo "<div class='col-6 col-12-mobilep'>";
-    								echo "<select id='comisaria' name='comisaria' onchange='sel_grupo(this.value);' required>";
-    								echo "<option value=''>Comisaria</option>";
+    								echo "<select id='comisaria' name='comisaria' required>";
+    								echo "<option value='1'>CGI</option>";
     								echo "</select></div>";
     	
     								//cargo la lista de grupos segun la comisaria seleccionada								
     								echo "<div class='col-6 col-12-mobilep'>";
     								echo "<select id='grupo' name='grupo' required>";
-    								echo "<option value=''>Grupo</option>";
+    								echo "<option value='1'>UCIE - Cataluña</option>";
     								echo "</select></div>";
      
     								

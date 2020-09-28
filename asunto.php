@@ -47,9 +47,6 @@ if(isset($_SESSION['id_u'])) {
     $resultado_disco=mysqli_query($link, "SELECT distinct d.nombre as nom from disco_almacenado d
     inner join evidencia e on e.id_disco_almacenado=d.id_disco_almacenado
     where e.id_caso=$myid_caso");
-    echo "SELECT distinct d.nombre as nom from disco_almacenado d
-    inner join evidencia e on e.id_disco_almacenado=d.id_disco_almacenado
-    where e.id_caso=$myid_caso";
     $count_disco = mysqli_num_rows($resultado_disco);
 
     

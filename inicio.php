@@ -122,6 +122,26 @@ if(isset($_SESSION['id_u'])) {
     			ctx.clearRect(0, 0, c.width, c.height);
     		}
     		</script>
+    		<script>
+    		function pregunta_Caso(opSelect){ 
+    			var category=opSelect;
+        		var url="eliminarcaso.php?mod=1";
+    			if (confirm('¿Estas seguro de eliminar el caso?')){ 
+    				$.ajax({
+    					url:url,
+    		        	type:"POST",
+    		        	data:{category:category}
+
+    		      	}).done(function(data){
+						
+    		    		  location.href = "inicio.php";   
+    		      	});  
+       			}
+     			else {
+     				
+     	 		} 	
+    		} 
+    		</script> 
 
     
     </head>
@@ -180,6 +200,7 @@ if($count!=0) {
                                             <th>Operacion</th>
 											<th>Descripcion</th>
                                             <th>Subir datos</th>
+                                            <th>Eliminar</th>
                                             
 										</tr>
 									</thead>
@@ -199,7 +220,7 @@ if($count!=0) {
         echo "<tr>
         					<td style='text-align: left'>
                             	<form>";
-        
+        $id_caso_original=$id_caso;
         $id_caso=base64_encode($id_caso);
         $ano2=substr($ano,2,2);
        
@@ -223,6 +244,9 @@ if($count!=0) {
                     
         <?php 
         echo "</td>";
+        echo "<td><a href='#' onclick='pregunta_Caso($id_caso_original);'>
+                <img src='img/eliminar.png' alt='Enlace' width=20 height=20/>
+                </a></td>";
         echo "</form>";
         echo "</tr>";
     }//while
