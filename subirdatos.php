@@ -438,17 +438,17 @@ if(isset($_SESSION['id_u'])) {
                                                                             mysqli_query($link, $sql);
                                                                             fputs($archivo,$sql.";\n");
                                                                             $query_evidencia=mysqli_query($link, "Select id_evidencia from evidencia WHERE id_caso=$myid_caso_safe and id_intervencion=$ret_intervencion_safe[id_intervencion] AND nombre='$fila_evidencias_dependientes[6]' AND numero_evidencia='$fila_evidencias_dependientes[15]'");
-                                                                            $ret_evidencia_safe=mysqli_fetch_array($query_evidencia);
+                                                                            $ret_evidencia_dependiente_safe=mysqli_fetch_array($query_evidencia);
                                                                             // se comprueba si la evidencia añadida tiene hashes asociados y en su caso se añaden
                                                                             $sql="Select * from hash where id_evidencia=$fila_evidencias_dependientes[0]";
                                                                             $result_hash=mysqli_query($link_portable, $sql);
                                                                             $count_hash=mysqli_num_rows($result_hash);
                                                                             if($count_hash!=0){
                                                                                 while ($fila_hash = mysqli_fetch_row($result_hash)) {
-                                                                                    $sql = "INSERT INTO hash(id_evidencia, id_tipo_hash, hash) values ($ret_evidencia_safe[id_evidencia], $fila_hash[2], '$fila_hash[3]')";
+                                                                                    $sql = "INSERT INTO hash(id_evidencia, id_tipo_hash, hash) values ($ret_evidencia_dependiente_safe[id_evidencia], $fila_hash[2], '$fila_hash[3]')";
                                                                                     mysqli_query($link, $sql);
                                                                                     fputs($archivo,$sql.";\n");
-                                                                                    $query_hash=mysqli_query($link, "SELECT id_hash from hash where id_evidencia=$ret_evidencia_safe[id_evidencia] and hash='$fila_hash[3]'");
+                                                                                    $query_hash=mysqli_query($link, "SELECT id_hash from hash where id_evidencia=$ret_evidencia_dependiente_safe[id_evidencia] and hash='$fila_hash[3]'");
                                                                                     $ret_hash_safe=mysqli_fetch_array($query_hash);
                                                                                     //se añade el registro asociado a ese hash
                                                                                     $sql="Select * from evidencia_registro where id_hash=$fila_hash[0]";
@@ -460,7 +460,7 @@ if(isset($_SESSION['id_u'])) {
                                                                                                 $fila_registro[4]='null';
                                                                                             }
                                                                                             $sql = "INSERT INTO evidencia_registro(id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash,
-                                                                                            observaciones,fecha_alta_estado) values ($ret_evidencia_safe[id_evidencia], $fila_registro[2], $fila_registro[3],
+                                                                                            observaciones,fecha_alta_estado) values ($ret_evidencia_dependiente_safe[id_evidencia], $fila_registro[2], $fila_registro[3],
                                                                                             $fila_registro[4], $fila_registro[5],  $fila_registro[6] ,$ret_hash_safe[id_hash], '$fila_registro[8]','$fila_registro[9]')";
                                                                                             mysqli_query($link, $sql);
                                                                                             fputs($archivo,$sql.";\n");
@@ -487,7 +487,7 @@ if(isset($_SESSION['id_u'])) {
                                                                                         $fila_registro[7]='null';
                                                                                     }
                                                                                     $sql = "INSERT INTO evidencia_registro(id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash,
-                                                                                    observaciones,fecha_alta_estado) values ($ret_evidencia_safe[id_evidencia], $fila_registro[2], $fila_registro[3],
+                                                                                    observaciones,fecha_alta_estado) values ($ret_evidencia_dependiente_safe[id_evidencia], $fila_registro[2], $fila_registro[3],
                                                                                     $fila_registro[4], $fila_registro[5], $fila_registro[6] ,$fila_registro[7], '$fila_registro[8]','$fila_registro[9]')";
                                                                                     mysqli_query($link, $sql);
                                                                                     fputs($archivo,$sql.";\n");
