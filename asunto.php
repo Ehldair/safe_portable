@@ -258,33 +258,22 @@ if(isset($_SESSION['id_u'])) {
      				location.href = "asunto.php";
      			} 	
     		}
+			function cabecera(){
+    			
+    			$('#cabecera').load('cabecera.php');                
+    			respuesta();
+    			
+    		};
     		</script> 
     
     </head>
     
-    <body class="is-preload" onload="respuesta();">
+    <body class="is-preload" onload="cabecera();">
     	<div id="page-wrapper">
 	<!-- Header -->
-    				<header id="header">
-    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
-    					<nav id="nav">
-    						<ul>
-    							<li><a href="inicio.php">Home</a></li>
-    							<li>
-    								<a href="#" class="icon solid fa-angle-down">Casos</a>
-    								<ul>
-    									<li><a href="nuevoasunto.php">Nuevo</a></li>
-    									
-    								</ul>
-    							</li>
-
-    							
-    							
-    							
-    							<li><a href="login.php" class="button">Cerrar</a></li>
-    						</ul>
-    					</nav>
-    				</header>
+    <div id="cabecera">
+    
+    </div>
 
     	<!-- Main -->
     		<section id="main" class="container">

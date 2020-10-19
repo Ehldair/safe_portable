@@ -59,7 +59,7 @@ if(isset($_SESSION['id_u'])) {
     				ctx.strokeRect(1, 1, 299, 29);
     				ctx.fillStyle = "#3DBA26";
     				ctx.textAlign = "center";
-    				ctx.fillText("Caso subido",150,20);
+    				ctx.fillText("Caso portable creado",150,20);
     				<?php $_SESSION['respuesta']=0; ?>
     				setTimeout(borrar,5000);
 				}
@@ -141,36 +141,22 @@ if(isset($_SESSION['id_u'])) {
      				
      	 		} 	
     		} 
+			function cabecera(){
+    			
+    			$('#cabecera').load('cabecera.php');                
+    			respuesta();
+    			
+    		};
     		</script> 
 
     
     </head>
     
-    <body class="is-preload" onload="respuesta();">
+    <body class="is-preload" onload="cabecera();">
 	<div id="page-wrapper">
-	<!-- Header -->
-    				<header id="header">
-    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
-    					<nav id="nav">
-    						<ul>
-    							<li><a href="inicio.php">Home</a></li>
-    							<li>
-    								<a href="#" class="icon solid fa-angle-down">Casos</a>
-    								<ul>
-    									<li><a href="nuevoasunto.php">Nuevo</a></li>
-    									
-    								</ul>
-    							</li>
-
-    							
-    							
-    							
-    							<li><a href="login.php" class="button">Cerrar</a></li>
-    						</ul>
-    					</nav>
-    				</header>	
-
-	<!-- Main -->
+	<div id="cabecera">
+    
+    </div>
 		<section id="main" class="container">
 			<header>
 				<h2> Casos</h2>
@@ -199,7 +185,7 @@ if($count!=0) {
 											<th>Caso</th>
                                             <th>Operacion</th>
 											<th>Descripcion</th>
-                                            <th>Subir datos</th>
+                                            <th></th>
                                             <th>Eliminar</th>
                                             
 										</tr>
@@ -237,8 +223,8 @@ if($count!=0) {
         echo "<td align='left'>";
         
         ?>
-    						<a href="subirdatos.php?id_caso=<?php echo $id_caso;?>">
-    							Subir datos
+    						<a href="crear_casoportable.php?id_caso=<?php echo $id_caso;?>">
+    							Crear Caso Portable
     						</a>
     
                     

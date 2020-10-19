@@ -67,34 +67,21 @@ if(isset($_SESSION['id_u'])) {
     		document.getElementById('tipo_hash').disabled = false;
     	}
     }
+    function cabecera(){
+		
+		$('#cabecera').load('cabecera.php');                
+		function cambiarhash();
+	};
     
     </script>
     
     </head>
     
-    <body class="is-preload" onload="cambiarhash()">
+    <body class="is-preload" onload="cabecera()">
     		<div id="page-wrapper">
-	<!-- Header -->
-    				<header id="header">
-    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
-    					<nav id="nav">
-    						<ul>
-    							<li><a href="inicio.php">Home</a></li>
-    							<li>
-    								<a href="#" class="icon solid fa-angle-down">Casos</a>
-    								<ul>
-    									<li><a href="nuevoasunto.php">Nuevo</a></li>
-    									
-    								</ul>
-    							</li>
-
-    							
-    							
-    							
-    							<li><a href="login.php" class="button">Cerrar</a></li>
-    						</ul>
-    					</nav>
-    				</header>
+	<div id="cabecera">
+    
+    </div>
     			
     			
     			<!-- Main -->

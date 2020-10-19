@@ -240,6 +240,12 @@ if(isset($_SESSION['id_u'])) {
     			alert("No se puede eliminar la evidencia porque hay otras dependiendo de ella");
     		}
     	}
+    	function cabecera(){
+			
+			$('#cabecera').load('cabecera.php');                
+			respuesta();
+			
+		};
     	</script> 
     <!-- XXXXXX incluyo esto  -->
     
@@ -248,29 +254,12 @@ if(isset($_SESSION['id_u'])) {
 
 
 
-	<body class="is-preload" onload="respuesta();">
+	<body class="is-preload" onload="cabecera();">
     	<div id="page-wrapper">
 	<!-- Header -->
-    				<header id="header">
-    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
-    					<nav id="nav">
-    						<ul>
-    							<li><a href="inicio.php">Home</a></li>
-    							<li>
-    								<a href="#" class="icon solid fa-angle-down">Casos</a>
-    								<ul>
-    									<li><a href="nuevoasunto.php">Nuevo</a></li>
-    									
-    								</ul>
-    							</li>
-
-    							
-    							
-    							
-    							<li><a href="login.php" class="button">Cerrar</a></li>
-    						</ul>
-    					</nav>
-    				</header>
+    <div id="cabecera">
+    
+    </div>
 
    
     	<!-- Main -->
@@ -381,7 +370,7 @@ if(!empty($ret['pin'])) {
 <?php    												
     											
         if(!empty($ret['pat'])) {
-            echo "<b>Patron:</><br>";
+            echo "<b>Patron:</b></><br>";
             $primeronumero=0;
             $patron=$ret['pat'];
             $longitud=strlen($patron)-1;
@@ -677,7 +666,6 @@ if(!empty($ret['pin'])) {
     									</div>
     									<br>
     									<div class="col-12 col-12-mobilep">
-    									
     									
     									
     									<?php
