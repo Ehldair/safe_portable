@@ -2,7 +2,7 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-     
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -12,14 +12,14 @@ if(isset($_SESSION['id_u'])) {
     
     
     if(isset($_SESSION['id_caso'])) {
-            $myid_caso=$_SESSION['id_caso'];
+        $myid_caso=$_SESSION['id_caso'];
     }
     
     $resultado = mysqli_query($link, "SELECT c.numero as num_caso, c.año as año_caso, c.nombre as nom_caso FROM caso c WHERE c.id_caso=$myid_caso");
     $ret = mysqli_fetch_array($resultado);
     
     // cargo lista de sujetos
-
+    
     $resultado_intervencion = mysqli_query($link, "select id_intervencion,numero_intervencion,direccion from intervencion where id_caso=$myid_caso");
     $ret_intervencion=mysqli_fetch_array($resultado_intervencion);
     $id_intervencion_real=$ret_intervencion['id_intervencion'];
@@ -41,6 +41,12 @@ if(isset($_SESSION['id_u'])) {
     		<script src="js/jquery-3.4.1.js"></script>
     		
     		<script type="text/javascript">
+			function cabecera(){
+    			
+    			$('#cabecera').load('cabecera.php');                
+    			inicio();
+    			
+    		};
     		function inicio(){ 
         		document.getElementById("intervencion").style.display = 'none';
         		document.getElementById("intervenciones").disabled='true';
@@ -130,6 +136,7 @@ if(isset($_SESSION['id_u'])) {
     		}
 			function seleccion_evidencias() {
 				document.getElementById("evidencias").style.display = 'block';
+				document.getElementById("evidencias").disabled = false;
 			}
 			function cambiar_intervencion(value) {
 				 
@@ -150,29 +157,12 @@ if(isset($_SESSION['id_u'])) {
     
     </head>
     
-    <body class="is-preload" onload="inicio();">
+    <body class="is-preload" onload="cabecera();">
     	<div id="page-wrapper">
 	<!-- Header -->
-    				<header id="header">
-    					<h1><a href="">Safe Ciber</a> Gestión Sección Ciberterrorismo</h1>
-    					<nav id="nav">
-    						<ul>
-    							<li><a href="inicio.php">Home</a></li>
-    							<li>
-    								<a href="#" class="icon solid fa-angle-down">Casos</a>
-    								<ul>
-    									<li><a href="nuevoasunto.php">Nuevo</a></li>
-    									
-    								</ul>
-    							</li>
-
-    							
-    							
-    							
-    							<li><a href="login.php" class="button">Cerrar</a></li>
-    						</ul>
-    					</nav>
-    				</header>
+    <div id="cabecera">
+    
+    </div>
 
     	<!-- Main -->
     		<section id="main" class="container">
