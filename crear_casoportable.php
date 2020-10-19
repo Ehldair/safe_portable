@@ -20,7 +20,7 @@ if(isset($_SESSION['id_u'])) {
     $myid_caso=base64_decode(mysqli_real_escape_string($link,$_GET['id_caso']));
     $select_caso=mysqli_query($link_portable, "Select * FROM caso WHERE id_caso=$myid_caso");
     $ret_caso=mysqli_fetch_array($select_caso);
-    $nombre_archivo=$ret_caso['numero']."_".substr($ret_caso['año'], 2);
+    $nombre_archivo="caso_portable";
     $direccion='../../../Scripts/'.$nombre_archivo.'.sql';
     $archivo = fopen($direccion,"w");
     $comprobacion_caso=mysqli_query($link, "Select * from caso where numero=$ret_caso[numero] and año=$ret_caso[año]");
@@ -33,7 +33,7 @@ if(isset($_SESSION['id_u'])) {
             $select_diligencias=mysqli_query($link_portable, "Select * FROM diligencias WHERE id_diligencias=$ret_caso[id_diligencias]");
             $ret_diligencias=mysqli_fetch_array($select_diligencias);
             if($ret_caso['id_diligencias']!=null or $ret_caso['diligencias']!='') {
-                $sql_insert_diligencias="INSERT INTO diligencias (id_diligencias, id_juzgado, numero, año, fecha) values (Xid_diligenciasX,$ret_diligencias[id_juzgado], $ret_diligencias[numero], $ret_diligencias[año], NOW())";
+                $sql_insert_diligencias="INSERT INTO diligencias (id_juzgado, numero, año, fecha) values ($ret_diligencias[id_juzgado], $ret_diligencias[numero], $ret_diligencias[año], NOW())";
                 //mysqli_query($link,$sql_insert_diligencias);
                 fputs($archivo,$sql_insert_diligencias.";\n");
                 $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values (Xid_diligenciasX, $ret_caso[id_tipo_caso],$ret_caso[id_grupo_investigacion],$ret_caso[numero],'$ret_caso[año]','$ret_caso[nombre]',NOW(),'$ret_caso[descripcion]', 1)";
