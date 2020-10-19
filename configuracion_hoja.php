@@ -84,6 +84,8 @@ if(isset($_SESSION['id_u'])) {
         		document.getElementById("no_todos_datos_ev").checked= false;
         		document.getElementById("todas_int").checked=false;
    				document.getElementById("no_todas_int").checked=false;
+   				document.getElementById("evidencias").style.display = 'none';
+				document.getElementById("evidencias").disabled = 'true';
        		} 
     		function desplegar(){ 
         		document.getElementById("intervencion").style.display = 'block';
