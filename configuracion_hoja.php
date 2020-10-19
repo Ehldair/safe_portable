@@ -20,9 +20,7 @@ if(isset($_SESSION['id_u'])) {
     
     // cargo lista de sujetos
     
-    $resultado_intervencion = mysqli_query($link, "select id_intervencion,numero_intervencion,direccion from intervencion where id_caso=$myid_caso");
-    $ret_intervencion=mysqli_fetch_array($resultado_intervencion);
-    $id_intervencion_real=$ret_intervencion['id_intervencion'];
+   
     $resultado_intervencion2 = mysqli_query($link, "select id_intervencion,numero_intervencion,direccion from intervencion where id_caso=$myid_caso");
     ?>
     
