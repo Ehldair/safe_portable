@@ -237,7 +237,7 @@ if($count!=0) {
         echo "<td align='left'>";
         
         ?>
-    						<a href="subirdatos.php?id_caso=<?php echo $id_caso;?>" target="_blank" >
+    						<a href="subirdatos.php?id_caso=<?php echo $id_caso;?>">
     							Subir datos
     						</a>
     
