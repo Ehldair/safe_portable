@@ -404,7 +404,7 @@ if(isset($_SESSION['id_u'])) {
         $count_intervencion=mysqli_num_rows($result_intervencion);
         if($count_intervencion!=0) {
             while ($fila_intervencion = mysqli_fetch_row($result_intervencion)) {
-                $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe,$fila_intervencion[2], 1, $fila_intervencion[4],'$fila_intervencion[5]','$fila_intervencion[6]')";
+                $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe, $fila_intervencion[2], 1, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]')";
                 fputs($archivo,$sql.";\n");
                 //mysqli_query($link, $sql);
                 // se selecionan las evidencias que dependen del caso y de la intervención
