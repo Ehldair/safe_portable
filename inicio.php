@@ -11,8 +11,9 @@ if(isset($_SESSION['id_u'])) {
         printf("Fall� la conexi�n: %s\n", mysqli_connect_error());
         exit();
     }
-    
-    $respuesta=$_SESSION['respuesta'];
+    if(isset($_SESSION['respuesta'])) {
+        $respuesta=$_SESSION['respuesta'];
+    }
     
     $año=date("Y");
     $sql="Select año from año_viajes where año=$año";

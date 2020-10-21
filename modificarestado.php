@@ -70,14 +70,14 @@ if(isset($_SESSION['id_u'])) {
     function cabecera(){
 		
 		$('#cabecera').load('cabecera.php');                
-		function cambiarhash();
+		cambiarhash();
 	};
     
     </script>
     
     </head>
     
-    <body class="is-preload" onload="cabecera()">
+    <body class="is-preload" onload="cabecera();">
     		<div id="page-wrapper">
 	<div id="cabecera">
     
