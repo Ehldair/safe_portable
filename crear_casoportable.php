@@ -232,6 +232,7 @@ if(isset($_SESSION['id_u'])) {
                     }
                 }
             }
+            //en caso de que existan el mismo numero de sujetos que de intervenciones y al menos una de las intervenciones es sin detenido, las añadimos aqui
             else {
                 $sql="select * from intervencion where id_caso=$myid_caso and (id_sujeto_activo=1)";
                 $result_intervencion=mysqli_query($link_portable, $sql);
@@ -397,6 +398,7 @@ if(isset($_SESSION['id_u'])) {
                 }
             }
         }
+        //comprobamos si existen intervenciones sin sujeto en un  caso que tiene mas intervenciones que sujetos y en su caso se añaden aqui
         $sql="select * from intervencion where id_caso=$myid_caso and (id_sujeto_activo=1)";
         $result_intervencion=mysqli_query($link_portable, $sql);
         $count_intervencion=mysqli_num_rows($result_intervencion);
