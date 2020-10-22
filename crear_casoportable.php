@@ -397,6 +397,169 @@ if(isset($_SESSION['id_u'])) {
                 }
             }
         }
+        $sql="select * from intervencion where id_caso=$myid_caso and (id_sujeto_activo=1)";
+        $result_intervencion=mysqli_query($link_portable, $sql);
+        $count_intervencion=mysqli_num_rows($result_intervencion);
+        if($count_intervencion!=0) {
+            while ($fila_intervencion = mysqli_fetch_row($result_intervencion)) {
+                $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe, $fila_intervencion[2], 1, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]')";
+                fputs($archivo,$sql.";\n");
+                //mysqli_query($link, $sql);
+                // se selecionan las evidencias que dependen del caso y de la intervención
+                $sql="Select * from evidencia where id_caso=$myid_caso and id_intervencion=$fila_intervencion[0] and relacionado_con is null";
+                $result_evidencias=mysqli_query($link_portable, $sql);
+                $count_evidencias=mysqli_num_rows($result_evidencias);
+                if($count_evidencias!=0) {
+                    while ($fila_evidencias = mysqli_fetch_row($result_evidencias)) {
+                        if(empty($fila_evidencias[3])) {
+                            $fila_evidencias[3]='null';
+                        }
+                        if(empty($fila_evidencias[9])) {
+                            $fila_evidencias[9]='null';
+                        }
+                        if(empty($fila_evidencias[14])) {
+                            $fila_evidencias[14]='null';
+                        }
+                        if(empty($fila_evidencias[19])) {
+                            $fila_evidencias[19]='null';
+                        }
+                        $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias[1], $fila_evidencias[2], $fila_evidencias[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias[6]', '$fila_evidencias[7]', '$fila_evidencias[8]', $fila_evidencias[9], '$fila_evidencias[10]', '$fila_evidencias[11]', '$fila_evidencias[12]', '$fila_evidencias[13]', $fila_evidencias[14], '$fila_evidencias[15]', '$fila_evidencias[16]', '$fila_evidencias[17]', '$fila_evidencias[18]', $fila_evidencias[19])";
+                        //mysqli_query($link, $sql);
+                        fputs($archivo,$sql.";\n");
+                        // se comprueba si la evidencia añadida tiene hashes asociados y si es así, se agrega el hash a la BBDD
+                        $sql="Select * from hash where id_evidencia=$fila_evidencias[0]";
+                        $result_hash=mysqli_query($link_portable, $sql);
+                        $count_hash=mysqli_num_rows($result_hash);
+                        if($count_hash!=0){
+                            while ($fila_hash = mysqli_fetch_row($result_hash)) {
+                                $sql = "INSERT INTO hash (id_evidencia, id_tipo_hash, hash) values ($myid_evidencia, $fila_hash[2], '$fila_hash[3]')";
+                                //mysqli_query($link, $sql);
+                                fputs($archivo,$sql.";\n");
+                                //se añade el registro asociado a ese hash
+                                $sql="Select * from evidencia_registro where id_hash=$fila_hash[0]";
+                                $result_registro=mysqli_query($link_portable, $sql);
+                                $count_registro=mysqli_num_rows($result_registro);
+                                if($count_registro!=0) {
+                                    while ($fila_registro = mysqli_fetch_row($result_registro)) {
+                                        if(empty($fila_registro[4])) {
+                                            $fila_registro[4]='null';
+                                        }
+                                        if(empty($fila_registro[5])) {
+                                            $fila_registro[5]='null';
+                                        }
+                                        if(empty($fila_registro[6])) {
+                                            $fila_registro[6]='null';
+                                        }
+                                        $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
+                                        //mysqli_query($link, $sql);
+                                        fputs($archivo,$sql.";\n");
+                                    }
+                                }
+                            }
+                            
+                        }
+                        // se añaden el resto de registros que no tienen hashes asociados
+                        $sql="Select * from evidencia_registro where id_evidencia=$fila_evidencias[0] and id_hash is null";
+                        $result_registro=mysqli_query($link_portable, $sql);
+                        $count_registro=mysqli_num_rows($result_registro);
+                        if($count_registro!=0) {
+                            while ($fila_registro = mysqli_fetch_row($result_registro)) {
+                                if(empty($fila_registro[4])) {
+                                    $fila_registro[4]='null';
+                                }
+                                if(empty($fila_registro[5])) {
+                                    $fila_registro[5]='null';
+                                }
+                                if(empty($fila_registro[6])) {
+                                    $fila_registro[6]='null';
+                                }
+                                if(empty($fila_registro[7])) {
+                                    $fila_registro[7]='null';
+                                }
+                                $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $fila_registro[7], '$fila_registro[8]', '$fila_registro[9]')";
+                                //mysqli_query($link, $sql);
+                                fputs($archivo,$sql.";\n");
+                            }
+                        }
+                        // se comprueba si existen evidencias que dependen de la que acabamos de añadir y en su caso se añaden
+                        $sql="Select * from evidencia where relacionado_con=$fila_evidencias[0]";
+                        $result_evidencias_dependientes=mysqli_query($link_portable, $sql);
+                        $count_evidencias_dependientes=mysqli_num_rows($result_evidencias_dependientes);
+                        if($count_evidencias_dependientes!=0) {
+                            while ($fila_evidencias_dependientes = mysqli_fetch_row($result_evidencias_dependientes)) {
+                                if(empty($fila_evidencias_dependientes[3])) {
+                                    $fila_evidencias_dependientes[3]='null';
+                                }
+                                if(empty($fila_evidencias_dependientes[9])) {
+                                    $fila_evidencias_dependientes[9]='null';
+                                }
+                                if(empty($fila_evidencias_dependientes[19])) {
+                                    $fila_evidencias_dependientes[19]='null';
+                                }
+                                $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[6]', '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[15]', '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
+                                //mysqli_query($link, $sql);
+                                fputs($archivo,$sql.";\n");
+                                // se comprueba si la evidencia añadida tiene hashes asociados y en su caso se añaden
+                                $sql="Select * from hash where id_evidencia=$fila_evidencias_dependientes[0]";
+                                $result_hash=mysqli_query($link_portable, $sql);
+                                $count_hash=mysqli_num_rows($result_hash);
+                                if($count_hash!=0){
+                                    while ($fila_hash = mysqli_fetch_row($result_hash)) {
+                                        $sql = "INSERT INTO hash (id_evidencia, id_tipo_hash, hash) values ($myid_evidencia_dependiente, $fila_hash[2], '$fila_hash[3]')";
+                                        //mysqli_query($link, $sql);
+                                        fputs($archivo,$sql.";\n");
+                                        //se añade el registro asociado a ese hash
+                                        $sql="Select * from evidencia_registro where id_hash=$fila_hash[0]";
+                                        $result_registro=mysqli_query($link_portable, $sql);
+                                        $count_registro=mysqli_num_rows($result_registro);
+                                        if($count_registro!=0) {
+                                            while ($fila_registro = mysqli_fetch_row($result_registro)) {
+                                                if(empty($fila_registro[4])) {
+                                                    $fila_registro[4]='null';
+                                                }
+                                                if(empty($fila_registro[5])) {
+                                                    $fila_registro[5]='null';
+                                                }
+                                                if(empty($fila_registro[6])) {
+                                                    $fila_registro[6]='null';
+                                                }
+                                                $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash,observaciones, fecha_alta_estado) values ($myid_evidencia_dependiente, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
+                                                //mysqli_query($link, $sql);
+                                                fputs($archivo,$sql.";\n");
+                                            }
+                                        }
+                                    }
+                                }
+                                // se añaden el resto de registros que no tienen hashes asociados
+                                $sql="Select * from evidencia_registro where id_evidencia=$fila_evidencias_dependientes[0] and id_hash is null";
+                                $result_registro=mysqli_query($link_portable, $sql);
+                                $count_registro=mysqli_num_rows($result_registro);
+                                if($count_registro!=0) {
+                                    while ($fila_registro = mysqli_fetch_row($result_registro)) {
+                                        if(empty($fila_registro[4])) {
+                                            $fila_registro[4]='null';
+                                        }
+                                        if(empty($fila_registro[5])) {
+                                            $fila_registro[5]='null';
+                                        }
+                                        if(empty($fila_registro[6])) {
+                                            $fila_registro[6]='null';
+                                        }
+                                        if(empty($fila_registro[7])) {
+                                            $fila_registro[7]='null';
+                                        }
+                                        $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash,observaciones, fecha_alta_estado) values ($myid_evidencia_dependiente, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $fila_registro[7], '$fila_registro[8]', '$fila_registro[9]')";
+                                        //mysqli_query($link, $sql);
+                                        fputs($archivo,$sql.";\n");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
     }
     else {
         $sql="select * from intervencion where id_caso=$myid_caso and id_sujeto_activo=1";
@@ -570,10 +733,10 @@ if(isset($_SESSION['id_u'])) {
     
     fclose($archivo);
     
-  /*  $_SESSION['respuesta']=1;
+    $_SESSION['respuesta']=1;
     echo '<script type="text/javascript">
 	   window.location.replace("inicio.php");
-        </script>';*/
+        </script>';
 }
 else {
     echo "Error";
