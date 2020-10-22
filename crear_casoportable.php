@@ -32,14 +32,14 @@ if(isset($_SESSION['id_u'])) {
                 $sql_insert_diligencias="INSERT INTO diligencias (numero, año, id_juzgado, fecha) values ($ret_diligencias[numero], $ret_diligencias[año], $ret_diligencias[id_juzgado], NOW())";
                 //mysqli_query($link,$sql_insert_diligencias);
                 fputs($archivo,$sql_insert_diligencias.";\n");
-                $sql = "INSERT INTO caso (numero, año, id_diligencias, id_tipo_caso, id_grupo_investigacion, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret_caso[numero],$ret_caso[año], Xid_diligenciasX, $ret_caso[id_tipo_caso],$ret_caso[id_grupo_investigacion],'$ret_caso[nombre]',NOW(),'$ret_caso[descripcion]', 1)";
+                $sql = "INSERT INTO caso (numero, año, id_diligencias, id_tipo_caso, id_grupo_investigacion, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret_caso[numero], $ret_caso[año], Xid_diligenciasX, $ret_caso[id_tipo_caso], $ret_caso[id_grupo_investigacion], '$ret_caso[nombre]', NOW(), '$ret_caso[descripcion]', 1)";
                 //mysqli_query($link, $sql);
                 fputs($archivo,$sql.";\n");
                 
             }
     }
     else {
-        $sql = "INSERT INTO caso (numero, año, id_tipo_caso, id_grupo_investigacion, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret_caso[numero],$ret_caso[año],$ret_caso[id_tipo_caso],$ret_caso[id_grupo_investigacion],'$ret_caso[nombre]',NOW(),'$ret_caso[descripcion]', 1)";
+        $sql = "INSERT INTO caso (numero, año, id_tipo_caso, id_grupo_investigacion, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret_caso[numero], $ret_caso[año], $ret_caso[id_tipo_caso], $ret_caso[id_grupo_investigacion], '$ret_caso[nombre]', NOW(), '$ret_caso[descripcion]', 1)";
         //mysqli_query($link, $sql);
         fputs($archivo,$sql.";\n");
         
