@@ -71,6 +71,7 @@ else {
 }
 if($mymod!=1) {
     if($myhash!='0') {
+        $myhash=trim($myhash);
         $sql= mysqli_query($link, "INSERT INTO hash (id_evidencia,id_tipo_hash,hash) VALUES ($myid_ev, $mytipo_hash, '$myhash')");
         $sql= mysqli_query($link, "SELECT MAX(id_hash) as id_hash FROM hash WHERE id_evidencia=$myid_ev and hash='$myhash'");
         $count_hash=mysqli_num_rows($sql);

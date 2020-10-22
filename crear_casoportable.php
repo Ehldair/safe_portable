@@ -123,7 +123,7 @@ if(isset($_SESSION['id_u'])) {
                                             if(empty($fila_registro[6])) {
                                                 $fila_registro[6]='null';
                                             }
-                                            $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ( $myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6] , $myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
+                                            $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
                                             //mysqli_query($link, $sql);
                                             fputs($archivo,$sql.";\n");
                                         }
@@ -149,7 +149,7 @@ if(isset($_SESSION['id_u'])) {
                                     if(empty($fila_registro[7])) {
                                         $fila_registro[7]='null';
                                     }
-                                    $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6] , $fila_registro[7], '$fila_registro[8]', '$fila_registro[9]')";
+                                    $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $fila_registro[7], '$fila_registro[8]', '$fila_registro[9]')";
                                     //mysqli_query($link, $sql);
                                     fputs($archivo,$sql.";\n");
                                 }
@@ -286,7 +286,7 @@ if(isset($_SESSION['id_u'])) {
                                                 if(empty($fila_registro[6])) {
                                                     $fila_registro[6]='null';
                                                 }
-                                                $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ( $myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6] , $myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
+                                                $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
                                                 //mysqli_query($link, $sql);
                                                 fputs($archivo,$sql.";\n");
                                             }
@@ -312,7 +312,7 @@ if(isset($_SESSION['id_u'])) {
                                         if(empty($fila_registro[7])) {
                                             $fila_registro[7]='null';
                                         }
-                                        $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6] , $fila_registro[7], '$fila_registro[8]', '$fila_registro[9]')";
+                                        $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $fila_registro[7], '$fila_registro[8]', '$fila_registro[9]')";
                                         //mysqli_query($link, $sql);
                                         fputs($archivo,$sql.";\n");
                                     }
@@ -452,7 +452,7 @@ if(isset($_SESSION['id_u'])) {
                                             if(empty($fila_registro[6])) {
                                                 $fila_registro[6]='null';
                                             }
-                                            $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5],  $fila_registro[6] ,$myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
+                                            $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
                                             //mysqli_query($link, $sql);
                                             fputs($archivo,$sql.";\n");
                                         }
@@ -488,8 +488,10 @@ if(isset($_SESSION['id_u'])) {
                             $result_evidencias_dependientes=mysqli_query($link_portable, $sql);
                             $count_evidencias_dependientes=mysqli_num_rows($result_evidencias_dependientes);
                             if($count_evidencias_dependientes!=0) {
+                                echo "Entro";
                                 while ($fila_evidencias_dependientes = mysqli_fetch_row($result_evidencias_dependientes)) {
-                                    if($count_evidencias_dependientes==0){
+                                    echo "SALGO";
+                                    if($count_evidencias_dependientes!=0){
                                         if(empty($fila_evidencias_dependientes[3])) {
                                             $fila_evidencias_dependientes[3]='null';
                                         }
@@ -500,6 +502,7 @@ if(isset($_SESSION['id_u'])) {
                                             $fila_evidencias_dependientes[19]='null';
                                         }
                                         $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[6]', '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[15]', '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
+                                        echo $sql;
                                         //mysqli_query($link, $sql);
                                         fputs($archivo,$sql.";\n");
                                         // se comprueba si la evidencia añadida tiene hashes asociados y en su caso se añaden
@@ -526,7 +529,7 @@ if(isset($_SESSION['id_u'])) {
                                                         if(empty($fila_registro[6])) {
                                                             $fila_registro[6]='null';
                                                         }
-                                                        $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia_dependiente, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5],  $fila_registro[6], $myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
+                                                        $sql = "INSERT INTO evidencia_registro (id_evidencia, id_estado_evidencia, id_usuario, id_ordenadores, id_programa, id_accion_programa, id_hash, observaciones, fecha_alta_estado) values ($myid_evidencia_dependiente, $fila_registro[2], $fila_registro[3], $fila_registro[4], $fila_registro[5], $fila_registro[6], $myid_hash, '$fila_registro[8]', '$fila_registro[9]')";
                                                         //mysqli_query($link, $sql);
                                                         fputs($archivo,$sql.";\n");
                                                     }
@@ -567,10 +570,10 @@ if(isset($_SESSION['id_u'])) {
     
     fclose($archivo);
     
-    $_SESSION['respuesta']=1;
+  /*  $_SESSION['respuesta']=1;
     echo '<script type="text/javascript">
 	   window.location.replace("inicio.php");
-        </script>';
+        </script>';*/
 }
 else {
     echo "Error";
