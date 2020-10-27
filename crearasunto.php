@@ -328,7 +328,6 @@ else {
     }
     
 }
-echo $mydescripcion;
 mysqli_close($link);
 ?>
 
