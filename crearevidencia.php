@@ -48,6 +48,8 @@ if($mod!="1") {
     $mymarca = mysqli_real_escape_string($link,$_POST['marca']);
     $mymodelo = mysqli_real_escape_string($link,$_POST['modelo']);
     $myobservaciones = mysqli_real_escape_string($link,$_POST['observaciones']);
+    $myobservaciones = trim($myobservaciones);
+    
     $mysubtipo = mysqli_real_escape_string($link,$_POST['subtipo']);
     $mydisco = mysqli_real_escape_string($link,$_POST['disco']);
     if(isset($_POST['tipo_capacidad'])) {
@@ -147,6 +149,7 @@ else {
     
     if(isset($_POST['observaciones'])) {
         $myobservaciones = mysqli_real_escape_string($link,$_POST['observaciones']);
+        $myobservaciones=trim($myobservaciones);
     }
     if(isset($_POST['tipo'])) {
         $mytipo = mysqli_real_escape_string($link,$_POST['tipo']);

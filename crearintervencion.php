@@ -18,8 +18,10 @@ if(isset($_SESSION['id_intervencion'])) {
 }
 $myid_caso = $_SESSION['id_caso'];
 $mydireccion = mysqli_real_escape_string($link,$_POST['direccion']);
+$mydireccion = trim($mydireccion);
 $mytipo = mysqli_real_escape_string($link,$_POST['tipo']);
 $mydescripcion = mysqli_real_escape_string($link,$_POST['descripcion']);
+$mydescripcion = trim($mydescripcion);
 
 
 

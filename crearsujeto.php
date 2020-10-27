@@ -19,8 +19,11 @@ $mymod=$_SESSION['mod'];
 
 $myid_caso = $_SESSION['id_caso'];
 $myapellido1=mysqli_real_escape_string($link,$_POST['apellido1']);
+$myapellido1 = trim($myapellido1);
 $myapellido2=mysqli_real_escape_string($link,$_POST['apellido2']);
+$myapellido2 = trim($myapellido2);
 $mynombre=mysqli_real_escape_string($link,$_POST['nombre']);
+$mynombre = trim($mynombre);
 if($mymod==0) {
     $sql= "INSERT INTO sujeto_activo (id_caso, nombre, apellido1, apellido2) VALUES ($myid_caso,'$mynombre','$myapellido1', '$myapellido2')";
     mysqli_query($link,$sql);

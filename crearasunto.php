@@ -34,12 +34,14 @@ if($mod!="1") {
     $myaño = mysqli_real_escape_string($link,$_POST['año']);
     if(isset($_POST["nombre"])) {
         $mynombre = mysqli_real_escape_string($link,$_POST['nombre']);
+        $mynombre = trim($mynombre);
     }
     else {
         $mynombre=null;
     }
     if (isset($_POST["descripcion"])){
         $mydescripcion = mysqli_real_escape_string($link,$_POST['descripcion']);
+        $mydescripcion = trim($mydescripcion);
     }
     else {
         $mydescripcion= null;
@@ -150,6 +152,7 @@ else {
     $myaño_original=mysqli_real_escape_string($link,$_POST['año_original']);
     $mynombre=mysqli_real_escape_string($link,$_POST['nombre']);
     $mydescripcion=mysqli_real_escape_string($link,$_POST['descripcion']);
+    $mydescripcion = trim($mydescripcion);
     $myfecha=mysqli_real_escape_string($link,$_POST['fecha']);
     if(isset($_POST['diligencias_nuevo'])) {
         $mydiligencias_nuevo = mysqli_real_escape_string($link, $_POST['diligencias_nuevo']);

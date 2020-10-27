@@ -18,6 +18,7 @@ if(isset($_SESSION['id_u'])) {
     $myid_caso=base64_decode($_GET['id_caso']);
     $select_caso=mysqli_query($link_portable, "Select * FROM caso WHERE id_caso=$myid_caso");
     $ret_caso=mysqli_fetch_array($select_caso);
+    $nombre=strtr($ret_caso['nombre'], " ", "_");
     $nombre_archivo=$ret_caso['numero']."_".substr($ret_caso['año'], 2);
     $direccion='../../../Scripts/'.$nombre_archivo.'.sql';
     $archivo = fopen($direccion,"w");
@@ -32,14 +33,14 @@ if(isset($_SESSION['id_u'])) {
                 $sql_insert_diligencias="INSERT INTO diligencias (numero, año, id_juzgado, fecha) values ($ret_diligencias[numero], $ret_diligencias[año], $ret_diligencias[id_juzgado], NOW())";
                 //mysqli_query($link,$sql_insert_diligencias);
                 fputs($archivo,$sql_insert_diligencias.";\n");
-                $sql = "INSERT INTO caso (numero, año, id_diligencias, id_tipo_caso, id_grupo_investigacion, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret_caso[numero], $ret_caso[año], Xid_diligenciasX, $ret_caso[id_tipo_caso], $ret_caso[id_grupo_investigacion], '$ret_caso[nombre]', NOW(), '$ret_caso[descripcion]', 1)";
+                $sql = "INSERT INTO caso (numero, año, id_diligencias, id_tipo_caso, id_grupo_investigacion, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret_caso[numero], $ret_caso[año], Xid_diligenciasX, $ret_caso[id_tipo_caso], $ret_caso[id_grupo_investigacion], '$nombre', NOW(), '$ret_caso[descripcion]', 1)";
                 //mysqli_query($link, $sql);
                 fputs($archivo,$sql.";\n");
                 
             }
     }
     else {
-        $sql = "INSERT INTO caso (numero, año, id_tipo_caso, id_grupo_investigacion, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret_caso[numero], $ret_caso[año], $ret_caso[id_tipo_caso], $ret_caso[id_grupo_investigacion], '$ret_caso[nombre]', NOW(), '$ret_caso[descripcion]', 1)";
+        $sql = "INSERT INTO caso (numero, año, id_tipo_caso, id_grupo_investigacion, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret_caso[numero], $ret_caso[año], $ret_caso[id_tipo_caso], $ret_caso[id_grupo_investigacion], '$nombre', NOW(), '$ret_caso[descripcion]', 1)";
         //mysqli_query($link, $sql);
         fputs($archivo,$sql.";\n");
         
@@ -60,7 +61,10 @@ if(isset($_SESSION['id_u'])) {
     $count_sujeto=mysqli_num_rows($result_sujeto);
     if($count_sujeto!=0) {
         while ($fila_sujeto = mysqli_fetch_row($result_sujeto)) {
-            $sql="INSERT INTO sujeto_activo (id_caso, nombre, apellido1, apellido2) values ($myid_caso_safe, '$fila_sujeto[1]', '$fila_sujeto[2]', '$fila_sujeto[3]')";
+            $nombre=strtr($fila_sujeto[1], " ", "_");
+            $apellido1=strtr($fila_sujeto[2], " ", "_");
+            $apellido2=strtr($fila_sujeto[3], " ", "_");
+            $sql="INSERT INTO sujeto_activo (id_caso, nombre, apellido1, apellido2) values ($myid_caso_safe, '$nombre', '$apellido1', '$apellido2')";
             //mysqli_query($link, $sql);
             fputs($archivo,$sql.";\n");
             //se selecionan las intervenciones a añadir y se procede a ello, diferenciando si el id_sujeto_activo es 1(SIN DETENIDO) o no
@@ -96,7 +100,7 @@ if(isset($_SESSION['id_u'])) {
                             if(empty($fila_evidencias[19])) {
                                 $fila_evidencias[19]='null';
                             }
-                            $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias[1], $fila_evidencias[2], $fila_evidencias[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias[6]', '$fila_evidencias[7]', '$fila_evidencias[8]', $fila_evidencias[9], '$fila_evidencias[10]', '$fila_evidencias[11]', '$fila_evidencias[12]', '$fila_evidencias[13]', $fila_evidencias[14], '$fila_evidencias[15]', '$fila_evidencias[16]', '$fila_evidencias[17]', '$fila_evidencias[18]', $fila_evidencias[19])";
+                            $sql = "INSERT INTO evidencia (nombre, numero_evidencia, id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, alias, patron, pin, id_tipo_capacidad ) values ('$fila_evidencias[6]', '$fila_evidencias[15]', $fila_evidencias[1], $fila_evidencias[2], $fila_evidencias[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias[7]', '$fila_evidencias[8]', $fila_evidencias[9], '$fila_evidencias[10]', '$fila_evidencias[11]', '$fila_evidencias[12]', '$fila_evidencias[13]', $fila_evidencias[14], '$fila_evidencias[16]', '$fila_evidencias[17]', '$fila_evidencias[18]', $fila_evidencias[19])";
                             //mysqli_query($link, $sql);
                             fputs($archivo,$sql.";\n");
                             // se comprueba si la evidencia añadida tiene hashes asociados y si es así, se agrega el hash a la BBDD
@@ -169,7 +173,7 @@ if(isset($_SESSION['id_u'])) {
                                     if(empty($fila_evidencias_dependientes[19])) {
                                         $fila_evidencias_dependientes[19]='null';
                                     }
-                                    $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[6]', '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[15]', '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
+                                    $sql = "INSERT INTO evidencia (nombre, numero_evidencia, id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, alias, patron, pin, id_tipo_capacidad ) values ( '$fila_evidencias_dependientes[6]',  '$fila_evidencias_dependientes[15]', $fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
                                     //mysqli_query($link, $sql);
                                     fputs($archivo,$sql.";\n");
                                     // se comprueba si la evidencia añadida tiene hashes asociados y en su caso se añaden
@@ -260,7 +264,7 @@ if(isset($_SESSION['id_u'])) {
                                 if(empty($fila_evidencias[19])) {
                                     $fila_evidencias[19]='null';
                                 }
-                                $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias[1], $fila_evidencias[2], $fila_evidencias[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias[6]', '$fila_evidencias[7]', '$fila_evidencias[8]', $fila_evidencias[9], '$fila_evidencias[10]', '$fila_evidencias[11]', '$fila_evidencias[12]', '$fila_evidencias[13]', $fila_evidencias[14], '$fila_evidencias[15]', '$fila_evidencias[16]', '$fila_evidencias[17]', '$fila_evidencias[18]', $fila_evidencias[19])";
+                                $sql = "INSERT INTO evidencia (nombre, numero_evidencia, id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, alias, patron, pin, id_tipo_capacidad ) values ('$fila_evidencias[6]', '$fila_evidencias[15]', $fila_evidencias[1], $fila_evidencias[2], $fila_evidencias[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias[7]', '$fila_evidencias[8]', $fila_evidencias[9], '$fila_evidencias[10]', '$fila_evidencias[11]', '$fila_evidencias[12]', '$fila_evidencias[13]', $fila_evidencias[14], '$fila_evidencias[16]', '$fila_evidencias[17]', '$fila_evidencias[18]', $fila_evidencias[19])";
                                 //mysqli_query($link, $sql);
                                 fputs($archivo,$sql.";\n");
                                 // se comprueba si la evidencia añadida tiene hashes asociados y si es así, se agrega el hash a la BBDD
@@ -333,7 +337,7 @@ if(isset($_SESSION['id_u'])) {
                                         if(empty($fila_evidencias_dependientes[19])) {
                                             $fila_evidencias_dependientes[19]='null';
                                         }
-                                        $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[6]', '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[15]', '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
+                                        $sql = "INSERT INTO evidencia (nombre, numero_evidencia, id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, alias, patron, pin, id_tipo_capacidad ) values ( '$fila_evidencias_dependientes[6]',  '$fila_evidencias_dependientes[15]', $fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
                                         //mysqli_query($link, $sql);
                                         fputs($archivo,$sql.";\n");
                                         // se comprueba si la evidencia añadida tiene hashes asociados y en su caso se añaden
@@ -425,7 +429,7 @@ if(isset($_SESSION['id_u'])) {
                         if(empty($fila_evidencias[19])) {
                             $fila_evidencias[19]='null';
                         }
-                        $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias[1], $fila_evidencias[2], $fila_evidencias[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias[6]', '$fila_evidencias[7]', '$fila_evidencias[8]', $fila_evidencias[9], '$fila_evidencias[10]', '$fila_evidencias[11]', '$fila_evidencias[12]', '$fila_evidencias[13]', $fila_evidencias[14], '$fila_evidencias[15]', '$fila_evidencias[16]', '$fila_evidencias[17]', '$fila_evidencias[18]', $fila_evidencias[19])";
+                        $sql = "INSERT INTO evidencia (nombre, numero_evidencia, id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, alias, patron, pin, id_tipo_capacidad ) values ('$fila_evidencias[6]', '$fila_evidencias[15]', $fila_evidencias[1], $fila_evidencias[2], $fila_evidencias[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias[7]', '$fila_evidencias[8]', $fila_evidencias[9], '$fila_evidencias[10]', '$fila_evidencias[11]', '$fila_evidencias[12]', '$fila_evidencias[13]', $fila_evidencias[14], '$fila_evidencias[16]', '$fila_evidencias[17]', '$fila_evidencias[18]', $fila_evidencias[19])";
                         //mysqli_query($link, $sql);
                         fputs($archivo,$sql.";\n");
                         // se comprueba si la evidencia añadida tiene hashes asociados y si es así, se agrega el hash a la BBDD
@@ -498,7 +502,7 @@ if(isset($_SESSION['id_u'])) {
                                 if(empty($fila_evidencias_dependientes[19])) {
                                     $fila_evidencias_dependientes[19]='null';
                                 }
-                                $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[6]', '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[15]', '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
+                                $sql = "INSERT INTO evidencia (nombre, numero_evidencia, id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, alias, patron, pin, id_tipo_capacidad ) values ( '$fila_evidencias_dependientes[6]',  '$fila_evidencias_dependientes[15]', $fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
                                 //mysqli_query($link, $sql);
                                 fputs($archivo,$sql.";\n");
                                 // se comprueba si la evidencia añadida tiene hashes asociados y en su caso se añaden
@@ -590,7 +594,7 @@ if(isset($_SESSION['id_u'])) {
                             if(empty($fila_evidencias[19])) {
                                 $fila_evidencias[19]='null';
                             }
-                            $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias[1], $fila_evidencias[2], $fila_evidencias[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias[6]', '$fila_evidencias[7]', '$fila_evidencias[8]', $fila_evidencias[9], '$fila_evidencias[10]', '$fila_evidencias[11]', '$fila_evidencias[12]', '$fila_evidencias[13]', $fila_evidencias[14], '$fila_evidencias[15]', '$fila_evidencias[16]', '$fila_evidencias[17]', '$fila_evidencias[18]', $fila_evidencias[19])";
+                            $sql = "INSERT INTO evidencia (nombre, numero_evidencia, id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, alias, patron, pin, id_tipo_capacidad ) values ('$fila_evidencias[6]', '$fila_evidencias[15]', $fila_evidencias[1], $fila_evidencias[2], $fila_evidencias[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias[7]', '$fila_evidencias[8]', $fila_evidencias[9], '$fila_evidencias[10]', '$fila_evidencias[11]', '$fila_evidencias[12]', '$fila_evidencias[13]', $fila_evidencias[14], '$fila_evidencias[16]', '$fila_evidencias[17]', '$fila_evidencias[18]', $fila_evidencias[19])";
                             //mysqli_query($link, $sql);
                             fputs($archivo,$sql.";\n");
                             // se comprueba si la evidencia añadida tiene hashes asociados y si es así, se agrega el hash a la BBDD
@@ -666,7 +670,7 @@ if(isset($_SESSION['id_u'])) {
                                         if(empty($fila_evidencias_dependientes[19])) {
                                             $fila_evidencias_dependientes[19]='null';
                                         }
-                                        $sql = "INSERT INTO evidencia (id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, nombre, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, numero_evidencia, alias, patron, pin, id_tipo_capacidad ) values ($fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[6]', '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[15]', '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
+                                        $sql = "INSERT INTO evidencia (nombre, numero_evidencia, id_tipo_evidencia, id_subtipo_evidencia, id_disco_almacenado, id_caso, id_intervencion, fecha_alta_evidencia, n_s, capacidad, marca, modelo, observaciones, tiene_subevidencias, relacionado_con, alias, patron, pin, id_tipo_capacidad ) values ( '$fila_evidencias_dependientes[6]',  '$fila_evidencias_dependientes[15]', $fila_evidencias_dependientes[1], $fila_evidencias_dependientes[2], $fila_evidencias_dependientes[3], $myid_caso_safe, $myid_intervencion, '$fila_evidencias_dependientes[7]', '$fila_evidencias_dependientes[8]', $fila_evidencias_dependientes[9], '$fila_evidencias_dependientes[10]', '$fila_evidencias_dependientes[11]', '$fila_evidencias_dependientes[12]', '$fila_evidencias_dependientes[13]', $myid_evidencia, '$fila_evidencias_dependientes[16]', '$fila_evidencias_dependientes[17]', '$fila_evidencias_dependientes[18]', $fila_evidencias_dependientes[19])";
                                         echo $sql;
                                         //mysqli_query($link, $sql);
                                         fputs($archivo,$sql.";\n");
