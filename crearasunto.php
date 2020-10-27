@@ -34,14 +34,14 @@ if($mod!="1") {
     $myaño = mysqli_real_escape_string($link,$_POST['año']);
     if(isset($_POST["nombre"])) {
         $mynombre = mysqli_real_escape_string($link,$_POST['nombre']);
-        $mynombre = trim($mynombre);
     }
     else {
         $mynombre=null;
     }
     if (isset($_POST["descripcion"])){
         $mydescripcion = mysqli_real_escape_string($link,$_POST['descripcion']);
-        $mydescripcion = trim($mydescripcion);
+        $mydescripcion=str_replace("\\r",".",$mydescripcion);
+        $mydescripcion=str_replace("\\n"," ",$mydescripcion);
     }
     else {
         $mydescripcion= null;
@@ -70,7 +70,7 @@ if($mod!="1") {
         if($count!=0) {
             $sql_caso = "SELECT numero,año FROM caso  where id_diligencias=$ret[id_dil]";
             $result_caso=mysqli_query($link,$sql_caso);
-            $ret_caso=mysqli_fetch_array($result_caso);  
+            $ret_caso=mysqli_fetch_array($result_caso);
             $sql = "INSERT INTO caso(id_diligencias, id_tipo_caso, id_grupo_investigacion, numero, año, nombre, fecha_alta_caso, descripcion, id_estado_caso) values ($ret[id_dil],$mytipo_caso,$mygrupo,$mynumero,'$myaño','$mynombre','$myfecha','$mydescripcion', 1)";
             mysqli_query($link,$sql);
             $sql = "SELECT id_caso FROM caso WHERE numero=$mynumero AND año=$myaño";
@@ -152,7 +152,8 @@ else {
     $myaño_original=mysqli_real_escape_string($link,$_POST['año_original']);
     $mynombre=mysqli_real_escape_string($link,$_POST['nombre']);
     $mydescripcion=mysqli_real_escape_string($link,$_POST['descripcion']);
-    $mydescripcion = trim($mydescripcion);
+    $mydescripcion=str_replace("\\r",".",$mydescripcion);
+    $mydescripcion=str_replace("\\n"," ",$mydescripcion);
     $myfecha=mysqli_real_escape_string($link,$_POST['fecha']);
     if(isset($_POST['diligencias_nuevo'])) {
         $mydiligencias_nuevo = mysqli_real_escape_string($link, $_POST['diligencias_nuevo']);
@@ -221,16 +222,16 @@ else {
                 $resultado=mysqli_query($link, $sql);
                 $ret=mysqli_fetch_array($resultado);
                 $count=mysqli_num_rows($resultado);
-                    if($mydiligencias_nuevo==0) {
-                        echo "Las diligencias no pueden ser 0.";
-                        $errordiligencias=1;
-                        $errorcaso=1;
-                    }
-                    else {
-                        $nuevasdiligencias=0;
-                        $cambiardiligencias=1;
-                        $errordiligencias=0;
-                    }
+                if($mydiligencias_nuevo==0) {
+                    echo "Las diligencias no pueden ser 0.";
+                    $errordiligencias=1;
+                    $errorcaso=1;
+                }
+                else {
+                    $nuevasdiligencias=0;
+                    $cambiardiligencias=1;
+                    $errordiligencias=0;
+                }
             }
             else {
                 if($mydiligencias_nuevo==0) {
@@ -262,16 +263,16 @@ else {
                 $resultado=mysqli_query($link, $sql);
                 $ret=mysqli_fetch_array($resultado);
                 $count=mysqli_num_rows($resultado);
-                    if($mydiligencias_nuevo==0) {
-                        echo "Las diligencias no pueden ser 0.";
-                        $errordiligencias=1;
-                        $errorcaso=1;
-                    }
-                    else {
-                        $errordiligencias=0;
-                        $nuevasdiligencias=0;
-                        $cambiardiligencias=1;
-                    }
+                if($mydiligencias_nuevo==0) {
+                    echo "Las diligencias no pueden ser 0.";
+                    $errordiligencias=1;
+                    $errorcaso=1;
+                }
+                else {
+                    $errordiligencias=0;
+                    $nuevasdiligencias=0;
+                    $cambiardiligencias=1;
+                }
             }
             else {
                 if($mydiligencias_nuevo==0) {
@@ -325,8 +326,9 @@ else {
         $_SESSION['respuesta']=1;
         echo 1;
     }
+    
 }
-
+echo $mydescripcion;
 mysqli_close($link);
 ?>
 
