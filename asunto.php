@@ -511,7 +511,9 @@ if(isset($_SESSION['id_u'])) {
                     }
                 }
             }
-            echo "[".$fecha_alta_intervencion."]";
+            if(!empty($fecha_alta_intervencion)) {
+                echo "[".$fecha_alta_intervencion."]";
+            }
             echo "</li>";
         }
     
