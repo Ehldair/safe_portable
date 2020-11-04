@@ -747,6 +747,7 @@ if(isset($_SESSION['id_u'])) {
 			<li><a href="listado_intervenciones.php" class="button special small">Agregar</a></li>
 			<li><a href="busqueda_evidencia.php" class="button special small">Buscar</a></li>
 			<li><a href="configuracion_hoja.php" class="button special small">Hoja de evidencias</a></li>
+			<li><a href="hashes.php" class="button special small">Listado Hashes</a></li>
 		</ul>
 	</div>	
     	
