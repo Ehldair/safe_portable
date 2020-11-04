@@ -66,7 +66,7 @@ if(isset($_SESSION['id_u'])) {
     INNER JOIN tipo_intervencion t ON t.id_tipo_intervencion=i.id_tipo_intervencion
     INNER JOIN sujeto_activo s ON s.id_sujeto_activo=i.id_sujeto_activo
     INNER JOIN caso c ON c.id_caso=i.id_caso
-    WHERE i.id_caso=$myid_caso ORDER BY id_intervencion");
+    WHERE i.id_caso=$myid_caso ORDER BY numero_intervencion");
     $count_intervenciones = mysqli_num_rows($resultado_intervenciones);
     
     
