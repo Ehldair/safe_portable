@@ -512,7 +512,7 @@ if(isset($_SESSION['id_u'])) {
     										echo "<li><input type='hidden' name='borrar' id='borrar' value=$borrar></li>";
     										echo "<li><input type='hidden' name='sonnuevas' id='sonnuevas' value=$sonnuevas></li>";
     										echo "<li><input type='submit' id='modificar' value='Modificar' ></li>";
-    										
+    										z
     ?>
     										<li><input type="button" onclick="location.href='asunto.php';" value="Volver"></li>						
     									</ul>
