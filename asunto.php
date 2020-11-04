@@ -3,7 +3,7 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
     
-  
+    
     
     
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
@@ -48,7 +48,7 @@ if(isset($_SESSION['id_u'])) {
     inner join evidencia e on e.id_disco_almacenado=d.id_disco_almacenado
     where e.id_caso=$myid_caso");
     $count_disco = mysqli_num_rows($resultado_disco);
-
+    
     
     
     // cargo lista de sujetos
@@ -60,8 +60,8 @@ if(isset($_SESSION['id_u'])) {
     
     // cargo lista de intervenciones
     
-    $resultado_intervenciones = mysqli_query($link, "select i.id_intervencion as id_int,  t.nombre as nom_tipo, t.descripcion as des_tipo, 
-    s.nombre as nom, s.apellido1 as ape1, s.apellido2 as ape2, i.direccion as dir, i.descripcion as des, numero_intervencion as num
+    $resultado_intervenciones = mysqli_query($link, "select i.id_intervencion as id_int,  t.nombre as nom_tipo, t.descripcion as des_tipo,
+    s.nombre as nom, s.apellido1 as ape1, s.apellido2 as ape2, i.direccion as dir, i.descripcion as des, numero_intervencion as num, date_format(fecha_alta_intervencion, '%d/%m/%Y') as fecha_original
     FROM intervencion i
     INNER JOIN tipo_intervencion t ON t.id_tipo_intervencion=i.id_tipo_intervencion
     INNER JOIN sujeto_activo s ON s.id_sujeto_activo=i.id_sujeto_activo
@@ -78,8 +78,8 @@ if(isset($_SESSION['id_u'])) {
     inner join subtipo_evidencia s on s.id_subtipo_evidencia=e.id_subtipo_evidencia
     inner join caso c on c.id_caso=e.id_caso
     inner join evidencia_registro er ON er.id_evidencia=e.id_evidencia
-    where c.id_caso=$myid_caso AND relacionado_con is null 
-    GROUP BY e.id_evidencia	
+    where c.id_caso=$myid_caso AND relacionado_con is null
+    GROUP BY e.id_evidencia
     order By nombre asc, numero_evidencia");
     $count_evidencias = mysqli_num_rows($resultado_evidencias);
     
@@ -472,6 +472,7 @@ if(isset($_SESSION['id_u'])) {
             $dir=$line_intervenciones['dir'];
             $desc=$line_intervenciones['des'];
             $num=$line_intervenciones['num'];
+            $fecha_alta_intervencion=$line_intervenciones['fecha_original'];
     		echo "<li>";
             $id_intervencion=base64_encode($id_int);
             echo "<a href='detalle_intervencion.php?id_intervencion=$id_intervencion'>".$num."</a>"; 
@@ -483,8 +484,34 @@ if(isset($_SESSION['id_u'])) {
             if(!empty($desc)) {
                echo " [".$desc."]";
             }
-           
-            
+            $result_equipo=mysqli_query($link, "Select apodo from equipo_intervencion e
+            inner join usuario u ON u.id_usuario=e.id_usuario
+            where id_intervencion=$id_int");
+            $count_equipo=mysqli_num_rows($result_equipo);
+            if($count_equipo!=0) {
+                $contador=0;
+                echo "[Equipo: ";
+                while($line_equipo=mysqli_fetch_array($result_equipo)) {
+                    $apodo=$line_equipo['apodo'];
+                    if($contador==0) {
+                        echo $apodo;
+                        $contador++;
+                    }
+                    else {
+                        if($contador==$count_equipo-1) {
+                            echo " y ".$apodo."]";
+                        }
+                        else {
+                            echo ", ".$apodo;
+                            $contador++;
+                        }
+                    }
+                    if($count_equipo==1) {
+                        echo "]";
+                    }
+                }
+            }
+            echo "[".$fecha_alta_intervencion."]";
             echo "</li>";
         }
     

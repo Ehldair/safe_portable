@@ -18,10 +18,9 @@ if(isset($_SESSION['id_intervencion'])) {
 }
 $myid_caso = $_SESSION['id_caso'];
 $mydireccion = mysqli_real_escape_string($link,$_POST['direccion']);
-$mydireccion = trim($mydireccion);
 $mytipo = mysqli_real_escape_string($link,$_POST['tipo']);
 $mydescripcion = mysqli_real_escape_string($link,$_POST['descripcion']);
-$mydescripcion = trim($mydescripcion);
+$myfecha=$_POST['fecha'];
 
 
 
@@ -29,7 +28,7 @@ $mydescripcion = trim($mydescripcion);
 $mysujeto= mysqli_real_escape_string($link,$_POST['sujeto']);
 $sql= mysqli_query($link,"SELECT * FROM intervencion WHERE id_caso=$myid_caso");
 if($mymod==3) {
-    $sql= "UPDATE intervencion SET id_sujeto_activo=$mysujeto, id_tipo_intervencion=$mytipo, direccion='$mydireccion', descripcion='$mydescripcion' WHERE id_intervencion=$myid_intervencion";
+    $sql= "UPDATE intervencion SET id_sujeto_activo=$mysujeto, id_tipo_intervencion=$mytipo, direccion='$mydireccion', descripcion='$mydescripcion', fecha_alta_intervencion='$myfecha' WHERE id_intervencion=$myid_intervencion";
     mysqli_query($link,$sql);
     $_SESSION['respuesta']=1;
     echo '<script type="text/javascript">
@@ -41,7 +40,7 @@ else {
     $comprobacion_intervencion=mysqli_query($link,"Select * From INTERVENCION where id_caso=$myid_caso AND numero_intervencion=$mynumero");
     $count=mysqli_num_rows($comprobacion_intervencion);
     if($count==0) {
-        $sql= "INSERT INTO intervencion (id_caso,id_tipo_intervencion,id_sujeto_activo,numero_intervencion,direccion,descripcion) VALUES ($myid_caso,$mytipo,$mysujeto,$mynumero,'$mydireccion','$mydescripcion')";
+        $sql= "INSERT INTO intervencion (id_caso,id_tipo_intervencion,id_sujeto_activo,numero_intervencion,direccion,descripcion,fecha_alta_intervencion) VALUES ($myid_caso,$mytipo,$mysujeto,$mynumero,'$mydireccion','$mydescripcion','$myfecha')";
         mysqli_query($link,$sql);
         if($mymod==1 or $mymod==0) {
             $_SESSION['respuesta']=4;

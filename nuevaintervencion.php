@@ -23,6 +23,9 @@ if(isset($_SESSION['id_u'])) {
     $respuesta=$_SESSION['respuesta'];
     
     $myid_caso=$_SESSION['id_caso'];
+    $sql="select fecha_alta_caso FROM caso WHERE id_caso=$myid_caso";
+    $result=mysqli_query($link, $sql);
+    $ret_fecha=mysqli_fetch_array($result);
     
     //cargo la lista de sujetos
     
@@ -103,18 +106,18 @@ if(isset($_SESSION['id_u'])) {
     			asignarnumero();
     			
     		};
-			
 
     		</script>
     
     </head>
     
     <body class="is-preload" onload="cabecera()">
-    	<div id="page-wrapper">
-	<div id="cabecera">
+    <div id="cabecera">
     
     </div>
-    		
+    	<div id="page-wrapper">
+	<!-- Header -->
+    				
     	<!-- Main -->
     		<section id="main" class="container">
     			<header>
@@ -229,6 +232,10 @@ if(isset($_SESSION['id_u'])) {
         
         echo "Descripción:";
         echo "<input type='text' name='descripcion' id='descripcion' placeholder='Por ejemplo, domicilio del detenido (No poner equipo aquí)'>";
+        
+        echo "Fecha:";
+        echo "<br><input type='date' name='fecha' id='fecha' value=$ret_fecha[fecha_alta_caso] required>";
+        	
       
     ?>	
     

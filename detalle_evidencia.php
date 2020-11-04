@@ -3,7 +3,7 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -47,8 +47,8 @@ if(isset($_SESSION['id_u'])) {
     
     
     $resultado = mysqli_query($link, "SELECT i.numero_intervencion as nom_i, e.id_evidencia as id_ev, e.nombre as nom_ev, e.numero_evidencia as num_ev,i.id_intervencion as id_int,
-    i.direccion as int_dir, e.id_tipo_evidencia as id_tip, e.numero_evidencia as num_ev, e.id_subtipo_evidencia as id_sub,t.nombre as nom_tip, s.nombre as nom_sub, 
-    e.id_disco_almacenado as id_disc, d.nombre as nom_disc, e.id_caso as id_caso, e.n_s as n_s, e.capacidad, e.marca, e.modelo, e.observaciones as obs_ev, e.alias as al, e.patron as pat, 
+    i.direccion as int_dir, e.id_tipo_evidencia as id_tip, e.numero_evidencia as num_ev, e.id_subtipo_evidencia as id_sub,t.nombre as nom_tip, s.nombre as nom_sub,
+    e.id_disco_almacenado as id_disc, d.nombre as nom_disc, e.id_caso as id_caso, e.n_s as n_s, e.capacidad, e.marca, e.modelo, e.observaciones as obs_ev, e.alias as al, e.patron as pat,
     e.pin as pin, tp.tipo_capacidad as tipo_capacidad, e.id_tipo_capacidad as id_tipo_capacidad
     FROM evidencia e
     INNER JOIN tipo_evidencia t ON e.id_tipo_evidencia=t.id_tipo_evidencia
@@ -64,9 +64,9 @@ if(isset($_SESSION['id_u'])) {
     
     /*incluyo estas dos lineas*/
     $resultado_dependientes=mysqli_query($link, "SELECT id_evidencia from evidencia where relacionado_con=$myid_ev");
-
+    
     $contador_relacionado_con=mysqli_num_rows($resultado_dependientes);
- 
+    
     
     
     ?>
@@ -255,11 +255,13 @@ if(isset($_SESSION['id_u'])) {
 
 
 	<body class="is-preload" onload="cabecera();">
-    	<div id="page-wrapper">
-	<!-- Header -->
-    <div id="cabecera">
+	
+	<div id="cabecera">
     
     </div>
+    	<div id="page-wrapper">
+	<!-- Header -->
+    
 
    
     	<!-- Main -->
@@ -370,7 +372,7 @@ if(!empty($ret['pin'])) {
 <?php    												
     											
         if(!empty($ret['pat'])) {
-            echo "<b>Patron:</b></><br>";
+            echo "<b>Patron:</></b><br>";
             $primeronumero=0;
             $patron=$ret['pat'];
             $longitud=strlen($patron)-1;
@@ -668,6 +670,7 @@ if(!empty($ret['pin'])) {
     									<div class="col-12 col-12-mobilep">
     									
     									
+    									
     									<?php
     
     //compruebo si tiene subevidencias y en caso afirmativo cargo la tabla
@@ -810,7 +813,6 @@ if(!empty($ret['pin'])) {
     											<th>Programa</th>
                                                 <th>Acción Programa</th>
                                                 <th>HASH</th>
-                                           
                                                 <th>Fecha</th>
                                                 <th>Ordenador</th>
     										</tr>
@@ -1030,8 +1032,11 @@ if(!empty($ret['pin'])) {
     
     -->
     							<div class="col-3 col-12-mobilep">
-								
-									<input type="datetime-local" name="fecha" id ="fecha" placeholder="fecha" required>
+    							<?php 
+    							$hoy=date("Y-m-d\TH:i");
+    							echo "<input type='datetime-local' name='fecha' id ='fecha' value=$hoy required>";
+    							?>
+									
 								</div>
 								
 								<div class="col-3 col-12-mobilep">

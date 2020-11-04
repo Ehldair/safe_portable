@@ -3,7 +3,7 @@
 session_start();
 
 if(isset($_SESSION['id_u'])) {
-
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -59,10 +59,11 @@ if(isset($_SESSION['id_u'])) {
     </head>
     
     <body class="is-preload" onload="cabecera();">
-	<div id="cabecera">
+    <div id="cabecera">
     
     </div>
-    	
+	<!-- Header -->
+    				
     	<div id="page-wrapper">
     
     	<!-- Main -->
@@ -150,7 +151,7 @@ if(isset($_SESSION['id_u'])) {
     										<div class="col-6 col-12-mobilep">
     											<h4>Datos de la intervención:</h4>
     <?php										
-    $sql_intervencion="Select id_tipo_intervencion,direccion,descripcion FROM intervencion WHERE id_intervencion=$myid_intervencion";
+    $sql_intervencion="Select id_tipo_intervencion,direccion,descripcion,fecha_alta_intervencion FROM intervencion WHERE id_intervencion=$myid_intervencion";
     $resultado_intervencion=mysqli_query($link, $sql_intervencion);
     $ret_intervencion=mysqli_fetch_array($resultado_intervencion);
     $sql_tipo="Select nombre From tipo_intervencion where id_tipo_intervencion=$ret_intervencion[id_tipo_intervencion]";
@@ -194,6 +195,8 @@ if(isset($_SESSION['id_u'])) {
         
         echo "Descripción:";
         echo "<input type='text' name='descripcion' id='descripcion' value='$ret_intervencion[descripcion]' placeholder='(No poner equipo aquí)'>";
+        echo "Fecha:";
+        echo "<br><input type='date' name='fecha' id='fecha' value=$ret_intervencion[fecha_alta_intervencion] required>";
       
     ?>	
     

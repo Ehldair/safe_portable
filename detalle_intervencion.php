@@ -5,7 +5,7 @@ session_start();
 
 if(isset($_SESSION['id_u'])) {
     
-
+    
     $link = mysqli_connect("localhost", "root", ".google.", "safe_portable");
     
     if (mysqli_connect_errno()) {
@@ -125,10 +125,12 @@ if(isset($_SESSION['id_u'])) {
     </head>
     
     <body class="is-preload" onload="cabecera();">
-    		<div id="page-wrapper">
-	<div id="cabecera">
+    <div id="cabecera">
     
     </div>
+    		<div id="page-wrapper">
+	<!-- Header -->
+    
     			
     
     			<!-- Main -->
@@ -144,7 +146,7 @@ if(isset($_SESSION['id_u'])) {
     						<form method="post" id="myform" action="modificarintervencion.php">
     							<h3>Detalles de la Intervención</h3>
     <?php 
-    $sql="Select id_tipo_intervencion,direccion,descripcion FROM intervencion WHERE id_intervencion=$myid_intervencion";
+    $sql="Select id_tipo_intervencion,direccion,descripcion,date_format(fecha_alta_intervencion, '%d/%m/%Y') as fecha FROM intervencion WHERE id_intervencion=$myid_intervencion";
     $resultado=mysqli_query($link, $sql);
     
     
@@ -156,49 +158,43 @@ if(isset($_SESSION['id_u'])) {
 											<th>Interveción</th>
                                             <th>Dirección</th>
 											<th>Descripcion</th>
+                                            <th>Fecha</th>
                                                                                         
 										</tr>
 									</thead>
 									<tbody>
 			
 	";
-    $contador=0;
     while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
+        $id_intervencion=$line['id_tipo_intervencion'];
+        $direccion=$line['direccion'];
+        $descripcion=$line['descripcion'];
+        $fecha=$line['fecha'];
         echo "<tr>";
-        foreach ($line as $col_value) {
-            if($contador==0) {
-                $sql_tipo="Select nombre From tipo_intervencion where id_tipo_intervencion=$col_value";
+                $sql_tipo="Select nombre From tipo_intervencion where id_tipo_intervencion=$id_intervencion";
                 $resultado_tipo=mysqli_query($link, $sql_tipo);
                 $ret_tipo=mysqli_fetch_array($resultado_tipo);
                 echo "<td>".$ret_tipo['nombre']."</td>";
-                $contador++;
-            }
-            else {
-                if($contador<2) {
-                    echo "<td>".$col_value."</td>";
-                    $contador++;
-                }
-                else {
-                    echo "<td>".$col_value."</td>";
-                    $contador=0;
-                }
-            } 
-        }
+                echo "<td>".$direccion."</td>";
+                echo "<td>".$descripcion."</td>";
+                echo "<td>".$fecha."</td>";
         echo "</tr>";
     }
     echo "</tbody></table>";
     
     $sql_borrar="Select * from evidencia where id_intervencion=$myid_intervencion";
     $resultado_borrar=mysqli_query($link, $sql_borrar);
-    $count_borrar=mysqli_num_rows($resultado_borrar)
-    
+    $count_borrar=mysqli_num_rows($resultado_borrar);
+    $sql_borrar="Select * from equipo_intervencion where id_intervencion=$myid_intervencion";
+    $resultado_borrar=mysqli_query($link, $sql_borrar);
+    $count_borrar2=mysqli_num_rows($resultado_borrar);
     ?>
     <div class="col-12">
     <ul class="actions special">
     
     <li><input type='submit' value='Modificar' />
     <?php
-    if ($count_borrar==0) {
+    if ($count_borrar==0 and $count_borrar2==0) {
         echo "<li><input type='button' onclick='pregunta();' value='Eliminar'><br></li>";
     }
     else {
@@ -217,10 +213,6 @@ if(isset($_SESSION['id_u'])) {
     <form action="listado_intervenciones.php" method="post" id="myform">
     <input type="hidden" name="intervencion" id="intervencion" value="<?php echo $ret['numero_intervencion']?>">
     <li><input type="submit" name="Agregar" id="Agregar" value="Agregar Evidencia"></li><br>
-    </form>
-    <form action="nuevoequipo.php" method="POST" id="myform2"> 
-    <input type="hidden" name="intervencion" id="intervencion" value="<?php echo $myid_intervencion?>">
-   	<br>
     </form>
     </ul>
     
