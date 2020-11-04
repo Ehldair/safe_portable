@@ -73,12 +73,13 @@ if(isset($_SESSION['id_u'])) {
             $count_intervencion=mysqli_num_rows($result_intervencion);
             if($count_intervencion!=0) {
                 while ($fila_intervencion = mysqli_fetch_row($result_intervencion)) {
+                    $fila_intervencion[7]=substr($fila_intervencion[7], 0, -9);
                     if($fila_intervencion[3]!=1) {
-                        $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe, $fila_intervencion[2], $myid_sujeto_activo_safe, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]')";
+                        $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion, fecha_alta_intervencion) values ($myid_caso_safe, $fila_intervencion[2], $myid_sujeto_activo_safe, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]', '$fila_intervencion[7]')";
                         fputs($archivo,$sql.";\n");
                     }
                     else {
-                        $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe, $fila_intervencion[2], 1, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]')";
+                        $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion, fecha_alta_intervencion) values ($myid_caso_safe, $fila_intervencion[2], 1, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]', '$fila_intervencion[7]')";
                         fputs($archivo,$sql.";\n");
                     }
                     //mysqli_query($link, $sql);
@@ -243,7 +244,8 @@ if(isset($_SESSION['id_u'])) {
                 $count_intervencion=mysqli_num_rows($result_intervencion);
                 if($count_intervencion!=0) {
                     while ($fila_intervencion = mysqli_fetch_row($result_intervencion)) {
-                        $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe, $fila_intervencion[2], 1, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]')";
+                        $fila_intervencion[7]=substr($fila_intervencion[7], 0, -9);
+                        $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion, fecha_alta_intervencion) values ($myid_caso_safe, $fila_intervencion[2], $myid_sujeto_activo_safe, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]', '$fila_intervencion[7]')";
                         fputs($archivo,$sql.";\n");
                         //mysqli_query($link, $sql);
                         // se selecionan las evidencias que dependen del caso y de la intervención
@@ -408,7 +410,8 @@ if(isset($_SESSION['id_u'])) {
         $count_intervencion=mysqli_num_rows($result_intervencion);
         if($count_intervencion!=0) {
             while ($fila_intervencion = mysqli_fetch_row($result_intervencion)) {
-                $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe, $fila_intervencion[2], 1, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]')";
+                $fila_intervencion[7]=substr($fila_intervencion[7], 0, -9);
+                $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion, fecha_alta_intervencion) values ($myid_caso_safe, $fila_intervencion[2], $myid_sujeto_activo_safe, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]', '$fila_intervencion[7]')";
                 fputs($archivo,$sql.";\n");
                 //mysqli_query($link, $sql);
                 // se selecionan las evidencias que dependen del caso y de la intervención
@@ -573,7 +576,8 @@ if(isset($_SESSION['id_u'])) {
         $count_intervencion=mysqli_num_rows($result_intervencion);
         if($count_intervencion!=0) {
             while ($fila_intervencion = mysqli_fetch_row($result_intervencion)) {
-                $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion) values ($myid_caso_safe, $fila_intervencion[2], 1, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]')";
+                $fila_intervencion[7]=substr($fila_intervencion[7], 0, -9);
+                $sql="INSERT INTO intervencion (id_caso, id_tipo_intervencion, id_sujeto_activo, numero_intervencion, direccion, descripcion, fecha_alta_intervencion) values ($myid_caso_safe, $fila_intervencion[2], $myid_sujeto_activo_safe, $fila_intervencion[4], '$fila_intervencion[5]', '$fila_intervencion[6]', '$fila_intervencion[7]')";
                 fputs($archivo,$sql.";\n");
                 //mysqli_query($link, $sql);
                 // se selecionan las evidencias que dependen del caso y de la intervención

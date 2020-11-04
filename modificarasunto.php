@@ -512,12 +512,7 @@ if(isset($_SESSION['id_u'])) {
     										echo "<li><input type='hidden' name='borrar' id='borrar' value=$borrar></li>";
     										echo "<li><input type='hidden' name='sonnuevas' id='sonnuevas' value=$sonnuevas></li>";
     										echo "<li><input type='submit' id='modificar' value='Modificar' ></li>";
-    										if (! empty($_POST['id_diligencias'])) {
-    											echo "<li><input type='button' id='btn1' value='Borrar Diligencias' class='caso' onclick='eliminar()'></li>";
-    										}
-    										else {
-    											echo "<li><input type='button' id='btn1' value='Agregar Diligencias' class='caso' onclick='agregar()'></li>";
-    										}
+    										
     ?>
     										<li><input type="button" onclick="location.href='asunto.php';" value="Volver"></li>						
     									</ul>

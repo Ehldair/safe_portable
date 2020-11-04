@@ -249,7 +249,7 @@ if(isset($_SESSION['id_u'])) {
     								
     							    
     								<div class="col-4 col-12-mobilep">	
-    									<input type="text" name="diligencias" id="diligencias" pattern="\d*" placeholder="Número Diligencias">
+    									<input type="text" name="diligencias" id="diligencias" pattern="\d*" placeholder="Número Diligencias" disabled>
     								</div>
     								
     													
@@ -257,7 +257,7 @@ if(isset($_SESSION['id_u'])) {
     									<?php 
     								// cargo la lista de años de diligencias
     							
-    								echo "<select name='año_diligencias' id='año_diligencias'>";
+    								echo "<select name='año_diligencias' id='año_diligencias' disabled>";
     								$resultado = mysqli_query($link, "select año FROM año_viajes order by año");
     								$count=mysqli_num_rows($resultado);
     								$contador=1;
@@ -277,7 +277,7 @@ if(isset($_SESSION['id_u'])) {
     							
     
     								//cargo la lista de juzgados
-    								echo "<div class='col-6 col-12-mobilep'> <select name='juzgado' id='juzgado'>";
+    								echo "<div class='col-6 col-12-mobilep'> <select name='juzgado' id='juzgado' disabled>";
     								$resultado = mysqli_query($link, "select id_juzgado, nombre, numero, jurisdiccion FROM juzgado where id_juzgado!=0");
     								$contador=3;
     								while ($line = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
