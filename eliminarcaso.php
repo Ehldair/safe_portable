@@ -39,9 +39,17 @@ else {
             $id_evidencia=$line_evidencias['id_evidencia'];
             $sql_hash="Select * from hash where id_evidencia=$id_evidencia";
             $result_hash=mysqli_query($link, $sql_hash);
-            $count_hash=mysqli_num_rows($result_hash);
+            $count_hash=mysqli_num_rows($result_hash);;
             if($count_hash!=0) {                
                 $sql_del_hash="delete FROM hash WHERE id_evidencia=$id_evidencia";
+                echo $sql_del_hash;
+                $sql_evidencia_registro="Select * from evidencia_registro where id_evidencia=$id_evidencia";
+                $result_evidencia_registro=mysqli_query($link, $sql_evidencia_registro);
+                $count_evidencia_registro=mysqli_num_rows($result_evidencia_registro);
+                if($count_evidencia_registro!=0) {
+                    $sql_del_evidencia_registro="delete FROM evidencia_registro WHERE id_evidencia=$id_evidencia";
+                    mysqli_query($link, $sql_del_evidencia_registro);
+                }
                 mysqli_query($link, $sql_del_hash);
             }
             $sql_evidencia_registro="Select * from evidencia_registro where id_evidencia=$id_evidencia";
@@ -72,6 +80,7 @@ else {
     }
     $sql="delete FROM caso WHERE id_caso=$myid_caso";
     mysqli_query($link, $sql);
+    
     $_SESSION['respuesta']=2;
 }
 ?>
